@@ -61,7 +61,7 @@ export default function TopBar() {
 
   const handleClick = useCallback(
     (e) => {
-      if (!(e.key in EXTERNAL_LINKS)) {
+      if (!(e.key in EXTERNAL_LINKS) && (e.key[0] !== "_")) {
         history.push(e.key);
       }
     },
@@ -139,7 +139,7 @@ export default function TopBar() {
       />
       <Wrapper>
         <LogoWrapper onClick={() => history.push(tradePageUrl)}>
-          <img src={logo} alt="" />
+          <img src={logo} alt="solsurfer logo" />
           {'SolSurfer'}
         </LogoWrapper>
         <Menu
@@ -159,14 +159,14 @@ export default function TopBar() {
               ADD NFT
             </Menu.Item>
           )}
-          {(!searchFocussed || location.pathname === '/faq') && (
-            <Menu.Item key="/faq" style={{ margin: '0 10px' }}>
-              FAQ
-            </Menu.Item>
-          )}
           {(!searchFocussed || location.pathname === '/nft-gallery') && (
             <Menu.Item key="/nft-gallery" style={{ margin: '0 10px' }}>
               YOUR NFTS
+            </Menu.Item>
+          )}
+          {(!searchFocussed || location.pathname === '/faq') && (
+            <Menu.Item key="/faq" style={{ margin: '0 10px' }}>
+              FAQ
             </Menu.Item>
           )}
           {!searchFocussed && (
@@ -176,7 +176,7 @@ export default function TopBar() {
               style={{ margin: '0 0px 0 10px' }}
             >
               {learnItems.map(learnItem => (
-                <Menu.Item key={`learn-${learnItem.id}-${learnItem.lessonTitle}`} onClick={handleLearnItemClick}>
+                <Menu.Item key={`_learn-${learnItem.id}-${learnItem.lessonTitle}`} onClick={handleLearnItemClick}>
                   {learnItem.lessonTitle}
                 </Menu.Item>
               ))}
