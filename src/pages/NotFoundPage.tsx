@@ -1,6 +1,7 @@
 import React from 'react'
-import { Button, Typography } from 'antd'
 import { useHistory } from 'react-router-dom';
+import { Button } from 'antd' 
+import { PageHeader } from '../components/PageHeader/PageHeader'
 
 const NotFoundPage = () => {
   const history = useHistory();
@@ -11,7 +12,7 @@ const NotFoundPage = () => {
 
   return (
     <div>
-      <Typography>Page Not Found!</Typography>
+      <PageHeader title="Page Not Found" />
       <Button onClick={() => navigateHome()}>Go Back</Button>
     </div>
   )

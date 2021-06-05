@@ -2,8 +2,10 @@ import {
   InfoCircleOutlined,
   PlusCircleOutlined,
   SettingOutlined,
+  BulbOutlined,
+  BulbFilled,
 } from '@ant-design/icons';
-import { Button, Col, Menu, Popover, Row, Select } from 'antd';
+import { Button, Col, Menu, Popover, Row, Select, Tooltip } from 'antd';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import logo from '../assets/logo.svg';
@@ -17,7 +19,8 @@ import { notify } from '../utils/notifications';
 import { Connection } from '@solana/web3.js';
 import WalletConnect from './WalletConnect';
 import AppSearch from './AppSearch';
-import learnItems from '../data/learn.data'
+import learnItems from '../data/learn.data';
+import { colors } from '../styles/colors';
 
 const Wrapper = styled.div`
   background-color: #0d1017;
@@ -30,7 +33,8 @@ const Wrapper = styled.div`
 const LogoWrapper = styled.div`
   display: flex;
   align-items: center;
-  color: #2abdd2;
+  color: ${(props) => props.theme.colors.white};
+  font-size: 22px;
   font-weight: bold;
   cursor: pointer;
   img {
@@ -57,10 +61,11 @@ export default function TopBar() {
   const location = useLocation();
   const history = useHistory();
   const [searchFocussed, setSearchFocussed] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(true);
 
   const handleClick = useCallback(
     (e) => {
-      if (!(e.key in EXTERNAL_LINKS) && (e.key[0] !== "_")) {
+      if (!(e.key in EXTERNAL_LINKS) && e.key[0] !== '_') {
         history.push(e.key);
       }
     },
@@ -110,8 +115,8 @@ export default function TopBar() {
   };
 
   const handleLearnItemClick = (event) => {
-    console.log('learn item clicked with event:', event)
-  }
+    console.log('learn item clicked with event:', event);
+  };
 
   const endpointInfoCustom = endpointInfo && endpointInfo.custom;
   useEffect(() => {
@@ -124,6 +129,10 @@ export default function TopBar() {
     return () => window.removeEventListener('beforeunload', handler);
   }, [endpointInfoCustom, setEndpoint]);
 
+  const toggleDarkMode = () => {
+    setIsDarkMode((prevTheme) => !prevTheme);
+  };
+
   return (
     <>
       <CustomClusterEndpointDialog
@@ -133,7 +142,7 @@ export default function TopBar() {
         onClose={() => setAddEndpointVisible(false)}
       />
       <Wrapper>
-        <LogoWrapper onClick={() => history.push("/")}>
+        <LogoWrapper onClick={() => history.push('/')}>
           <img src={logo} alt="solsurfer logo" />
           {'SolSurfer'}
         </LogoWrapper>
@@ -150,38 +159,53 @@ export default function TopBar() {
           }}
         >
           {(!searchFocussed || location.pathname === '/add-nft') && (
-            <Menu.Item key="/add-nft" style={{ margin: '0 10px 0 20px', textTransform: "uppercase" }}>
+            <Menu.Item
+              key="/add-nft"
+              style={{ margin: '0 10px 0 20px', textTransform: 'uppercase' }}
+            >
               Add Nft
             </Menu.Item>
           )}
           {(!searchFocussed || location.pathname === '/nft-gallery') && (
-            <Menu.Item key="/nft-gallery" style={{ margin: '0 10px', textTransform: "uppercase" }}>
+            <Menu.Item
+              key="/nft-gallery"
+              style={{ margin: '0 10px', textTransform: 'uppercase' }}
+            >
               Gallery
             </Menu.Item>
           )}
           {(!searchFocussed || location.pathname === '/faq') && (
-            <Menu.Item key="/faq" style={{ margin: '0 10px', textTransform: "uppercase" }}>
+            <Menu.Item
+              key="/faq"
+              style={{ margin: '0 10px', textTransform: 'uppercase' }}
+            >
               Faq
             </Menu.Item>
           )}
           {!searchFocussed && (
             <Menu.SubMenu
               key="/learn"
-              title={"Learn"}
-              onTitleClick={() => history.push("/learn")}
-              style={{ margin: '0 0px 0 10px', textTransform: "uppercase" }}
+              title={'Learn'}
+              onTitleClick={() => history.push('/learn')}
+              style={{ margin: '0 0px 0 10px', textTransform: 'uppercase' }}
             >
-              {learnItems.map(learnItem => (
-                <Menu.Item key={`_learn-${learnItem.id}-${learnItem.lessonTitle}`} onClick={handleLearnItemClick}>
+              {learnItems.map((learnItem) => (
+                <Menu.Item
+                  key={`_learn-${learnItem.id}-${learnItem.lessonTitle}`}
+                  onClick={handleLearnItemClick}
+                >
                   {learnItem.lessonTitle}
                 </Menu.Item>
               ))}
             </Menu.SubMenu>
           )}
           {!searchFocussed && (
-            <Menu.Item key="/docs" style={{ margin: '0 10px', textTransform: "uppercase" }}>
+            <Menu.Item
+              key="/docs"
+              style={{ margin: '0 10px', textTransform: 'uppercase' }}
+            >
               <a
-                href={"https://gitbook.com"}
+                href={'https://gitbook.com'}
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -190,6 +214,22 @@ export default function TopBar() {
             </Menu.Item>
           )}
         </Menu>
+            
+
+        {/* TopBar - Right Side */}
+        <div className="dark-toggle-container" style={{paddingRight: 10, paddingLeft: 5}}>
+          <Tooltip title={isDarkMode ? 'go light' : 'go dark'}>
+            <Button
+              style={{ border: 'none', outline: 'none', textAlign:'center' }}
+              type="primary"
+              ghost
+              shape="circle"
+              size="large"
+              icon={isDarkMode ? <BulbOutlined /> : <BulbFilled />}
+              onClick={toggleDarkMode}
+            />
+          </Tooltip>
+        </div>
         <div
           style={{
             display: 'flex',
@@ -212,7 +252,7 @@ export default function TopBar() {
           >
             <Col>
               <PlusCircleOutlined
-                style={{ color: '#2abdd2' }}
+                style={{ color: colors.purple2 }}
                 onClick={() => setAddEndpointVisible(true)}
               />
             </Col>
@@ -223,7 +263,7 @@ export default function TopBar() {
                 title="URL"
                 trigger="hover"
               >
-                <InfoCircleOutlined style={{ color: '#2abdd2' }} />
+                <InfoCircleOutlined style={{ color: colors.purple2 }} />
               </Popover>
             </Col>
             <Col>

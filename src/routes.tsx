@@ -1,5 +1,8 @@
 import React from 'react';
+import { ThemeProvider as StyledThemeProvider } from 'styled-components'
 import { HashRouter, Route, Switch } from 'react-router-dom';
+import { theme, darkTheme } from './styles/themes'
+
 import BasicLayout from './components/BasicLayout';
 
 import HomePage from './pages/HomePage';
@@ -23,7 +26,8 @@ import OpenOrdersPage from './pages/OpenOrdersPage';
 
 export function Routes() {
   return (
-    <>
+    // TODO: toggle theme with context
+    <StyledThemeProvider theme={darkTheme}>
       <HashRouter basename={'/'}>
         <BasicLayout>
           <Switch>
@@ -59,12 +63,13 @@ export function Routes() {
               <PoolPage />
             </Route>
             
+            {/* Not Found catch-all, prompts to redirect user back to Home */}
             <Route path="/">
               <NotFoundPage />
             </Route>
           </Switch>
         </BasicLayout>
       </HashRouter>
-    </>
+    </StyledThemeProvider>
   );
 }

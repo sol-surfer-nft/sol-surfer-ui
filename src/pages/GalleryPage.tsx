@@ -1,11 +1,12 @@
 import React from 'react'
+import { PageHeader } from '../components/PageHeader/PageHeader'
 
 const GalleryPage = () => {
 
 
   return (
     <div>
-      Gallery Page!
+      <PageHeader title="Gallery Page!" />
     </div>
   )
 }

@@ -21,7 +21,6 @@ const learnItems: LearnItem[] = [
     lessonTitle: "Importing an NFT from Ethereum",
     numberOfLessons: 4
   },
-  // Fractional NFT Ownership?
 ]
 
 export default learnItems
