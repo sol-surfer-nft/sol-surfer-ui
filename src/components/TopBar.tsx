@@ -17,7 +17,7 @@ import { notify } from '../utils/notifications';
 import { Connection } from '@solana/web3.js';
 import WalletConnect from './WalletConnect';
 import AppSearch from './AppSearch';
-import { getTradePageUrl } from '../utils/markets';
+import learnItems from '../data/learn.data'
 
 const Wrapper = styled.div`
   background-color: #0d1017;
@@ -40,14 +40,7 @@ const LogoWrapper = styled.div`
 `;
 
 const EXTERNAL_LINKS = {
-  '/learn': 'https://serum-academy.com/en/serum-dex/',
-  '/add-market': 'https://serum-academy.com/en/add-market/',
-  '/wallet-support': 'https://serum-academy.com/en/wallet-support',
-  '/dex-list': 'https://serum-academy.com/en/dex-list/',
-  '/developer-resources': 'https://serum-academy.com/en/developer-resources/',
-  '/explorer': 'https://explorer.solana.com',
-  '/srm-faq': 'https://projectserum.com/srm-faq',
-  '/swap': 'https://swap.projectserum.com',
+  '/docs': 'https://gitbook.com',
 };
 
 export default function TopBar() {
@@ -67,7 +60,7 @@ export default function TopBar() {
 
   const handleClick = useCallback(
     (e) => {
-      if (!(e.key in EXTERNAL_LINKS)) {
+      if (!(e.key in EXTERNAL_LINKS) && (e.key[0] !== "_")) {
         history.push(e.key);
       }
     },
@@ -116,6 +109,10 @@ export default function TopBar() {
     }
   };
 
+  const handleLearnItemClick = (event) => {
+    console.log('learn item clicked with event:', event)
+  }
+
   const endpointInfoCustom = endpointInfo && endpointInfo.custom;
   useEffect(() => {
     const handler = () => {
@@ -127,10 +124,6 @@ export default function TopBar() {
     return () => window.removeEventListener('beforeunload', handler);
   }, [endpointInfoCustom, setEndpoint]);
 
-  const tradePageUrl = location.pathname.startsWith('/market/')
-    ? location.pathname
-    : getTradePageUrl();
-
   return (
     <>
       <CustomClusterEndpointDialog
@@ -140,9 +133,9 @@ export default function TopBar() {
         onClose={() => setAddEndpointVisible(false)}
       />
       <Wrapper>
-        <LogoWrapper onClick={() => history.push(tradePageUrl)}>
-          <img src={logo} alt="" />
-          {'SERUM'}
+        <LogoWrapper onClick={() => history.push("/")}>
+          <img src={logo} alt="solsurfer logo" />
+          {'SolSurfer'}
         </LogoWrapper>
         <Menu
           mode="horizontal"
@@ -156,103 +149,45 @@ export default function TopBar() {
             flex: 1,
           }}
         >
-          <Menu.Item key={tradePageUrl} style={{ margin: '0 10px 0 20px' }}>
-            TRADE
-          </Menu.Item>
-          {!searchFocussed && (
-            <Menu.Item key="/swap" style={{ margin: '0 10px' }}>
-              <a
-                href={EXTERNAL_LINKS['/swap']}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                SWAP
-              </a>
+          {(!searchFocussed || location.pathname === '/add-nft') && (
+            <Menu.Item key="/add-nft" style={{ margin: '0 10px 0 20px', textTransform: "uppercase" }}>
+              Add Nft
             </Menu.Item>
           )}
-          {connected && (!searchFocussed || location.pathname === '/balances') && (
-            <Menu.Item key="/balances" style={{ margin: '0 10px' }}>
-              BALANCES
+          {(!searchFocussed || location.pathname === '/nft-gallery') && (
+            <Menu.Item key="/nft-gallery" style={{ margin: '0 10px', textTransform: "uppercase" }}>
+              Gallery
             </Menu.Item>
           )}
-          {connected && (!searchFocussed || location.pathname === '/orders') && (
-            <Menu.Item key="/orders" style={{ margin: '0 10px' }}>
-              ORDERS
-            </Menu.Item>
-          )}
-          {connected && (!searchFocussed || location.pathname === '/convert') && (
-            <Menu.Item key="/convert" style={{ margin: '0 10px' }}>
-              CONVERT
-            </Menu.Item>
-          )}
-          {(!searchFocussed || location.pathname === '/list-new-market') && (
-            <Menu.Item key="/list-new-market" style={{ margin: '0 10px' }}>
-              ADD MARKET
+          {(!searchFocussed || location.pathname === '/faq') && (
+            <Menu.Item key="/faq" style={{ margin: '0 10px', textTransform: "uppercase" }}>
+              Faq
             </Menu.Item>
           )}
           {!searchFocussed && (
             <Menu.SubMenu
-              title="LEARN"
-              onTitleClick={() =>
-                window.open(EXTERNAL_LINKS['/learn'], '_blank')
-              }
-              style={{ margin: '0 0px 0 10px' }}
+              key="/learn"
+              title={"Learn"}
+              onTitleClick={() => history.push("/learn")}
+              style={{ margin: '0 0px 0 10px', textTransform: "uppercase" }}
             >
-              <Menu.Item key="/add-market">
-                <a
-                  href={EXTERNAL_LINKS['/add-market']}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Adding a market
-                </a>
-              </Menu.Item>
-              <Menu.Item key="/wallet-support">
-                <a
-                  href={EXTERNAL_LINKS['/wallet-support']}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Supported wallets
-                </a>
-              </Menu.Item>
-              <Menu.Item key="/dex-list">
-                <a
-                  href={EXTERNAL_LINKS['/dex-list']}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  DEX list
-                </a>
-              </Menu.Item>
-              <Menu.Item key="/developer-resources">
-                <a
-                  href={EXTERNAL_LINKS['/developer-resources']}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Developer resources
-                </a>
-              </Menu.Item>
-              <Menu.Item key="/explorer">
-                <a
-                  href={EXTERNAL_LINKS['/explorer']}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Solana block explorer
-                </a>
-              </Menu.Item>
-              <Menu.Item key="/srm-faq">
-                <a
-                  href={EXTERNAL_LINKS['/srm-faq']}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  SRM FAQ
-                </a>
-              </Menu.Item>
+              {learnItems.map(learnItem => (
+                <Menu.Item key={`_learn-${learnItem.id}-${learnItem.lessonTitle}`} onClick={handleLearnItemClick}>
+                  {learnItem.lessonTitle}
+                </Menu.Item>
+              ))}
             </Menu.SubMenu>
+          )}
+          {!searchFocussed && (
+            <Menu.Item key="/docs" style={{ margin: '0 10px', textTransform: "uppercase" }}>
+              <a
+                href={"https://gitbook.com"}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Docs
+              </a>
+            </Menu.Item>
           )}
         </Menu>
         <div

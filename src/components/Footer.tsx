@@ -1,20 +1,26 @@
 import React from 'react';
 import { Layout, Row, Col, Grid } from 'antd';
 import Link from './Link';
-import { helpUrls } from './HelpUrls';
 const { Footer } = Layout;
 const { useBreakpoint } = Grid;
 
+export const links = {
+  github: "https://github.com/sol-surfer-nft",
+  website: "https://solsurfer.io",
+  solanaSzn: "https://solana.com/solanaszn",
+  wormhole: "https://solana.com/wormhole",
+  opensea: "https://opensea.io",
+  documentation: "https://gitbook.com"
+}
 const footerElements = [
+  { description: 'GitHub', link: links.github },
+  { description: 'Documentation', link: links.documentation },
   {
-    description: 'Serum Developer Resources',
-    link: helpUrls.developerResources,
+    description: 'SolanaSzn',
+    link: links.solanaSzn,
   },
-  { description: 'Discord', link: helpUrls.discord },
-  { description: 'Telegram', link: helpUrls.telegram },
-  { description: 'GitHub', link: helpUrls.github },
-  { description: 'Project Serum', link: helpUrls.projectSerum },
-  { description: 'Solana Network', link: helpUrls.solanaBeach },
+  { description: 'Wormhole', link: links.wormhole },
+  { description: 'Opensea', link: links.opensea },
 ];
 
 export const CustomFooter = () => {
