@@ -5,6 +5,7 @@ export interface NFTItem {
   price?: number
   usdcPrice?: number
   description?: string
+  url?: string
 }
 
 // Use to define the nft data in the smart contract

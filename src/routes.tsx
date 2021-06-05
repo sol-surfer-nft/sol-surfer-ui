@@ -37,7 +37,7 @@ export function Routes() {
             <Route exact path="/add-nft" component={AddNFTPage} />
             <Route exact path="/marketplace" component={MarketplacePage} />
             <Route exact path="/nft-gallery" component={GalleryPage} />
-            <Route exact path="/marketplace/:nft-id" component={NFTDetailPage} />
+            <Route exact path="/marketplace/:nftId" component={NFTDetailPage} />
             <Route exact path="/learn" component={LearnPage} />
             <Route exact path="/faq" component={FAQPage} />
 
