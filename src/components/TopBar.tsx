@@ -125,10 +125,6 @@ export default function TopBar() {
     return () => window.removeEventListener('beforeunload', handler);
   }, [endpointInfoCustom, setEndpoint]);
 
-  const tradePageUrl = location.pathname.startsWith('/market/')
-    ? location.pathname
-    : getTradePageUrl();
-
   return (
     <>
       <CustomClusterEndpointDialog
@@ -138,7 +134,7 @@ export default function TopBar() {
         onClose={() => setAddEndpointVisible(false)}
       />
       <Wrapper>
-        <LogoWrapper onClick={() => history.push(tradePageUrl)}>
+        <LogoWrapper onClick={() => history.push("/")}>
           <img src={logo} alt="solsurfer logo" />
           {'SolSurfer'}
         </LogoWrapper>
@@ -155,25 +151,26 @@ export default function TopBar() {
           }}
         >
           {(!searchFocussed || location.pathname === '/add-nft') && (
-            <Menu.Item key="/add-nft" style={{ margin: '0 10px 0 20px' }}>
-              ADD NFT
+            <Menu.Item key="/add-nft" style={{ margin: '0 10px 0 20px', textTransform: "uppercase" }}>
+              Add Nft
             </Menu.Item>
           )}
           {(!searchFocussed || location.pathname === '/nft-gallery') && (
-            <Menu.Item key="/nft-gallery" style={{ margin: '0 10px' }}>
-              YOUR NFTS
+            <Menu.Item key="/nft-gallery" style={{ margin: '0 10px', textTransform: "uppercase" }}>
+              Gallery
             </Menu.Item>
           )}
           {(!searchFocussed || location.pathname === '/faq') && (
-            <Menu.Item key="/faq" style={{ margin: '0 10px' }}>
-              FAQ
+            <Menu.Item key="/faq" style={{ margin: '0 10px', textTransform: "uppercase" }}>
+              Faq
             </Menu.Item>
           )}
           {!searchFocussed && (
             <Menu.SubMenu
               key="/learn"
-              title={"LEARN"}
-              style={{ margin: '0 0px 0 10px' }}
+              title={"Learn"}
+              onTitleClick={() => history.push("/learn")}
+              style={{ margin: '0 0px 0 10px', textTransform: "uppercase" }}
             >
               {learnItems.map(learnItem => (
                 <Menu.Item key={`_learn-${learnItem.id}-${learnItem.lessonTitle}`} onClick={handleLearnItemClick}>
@@ -183,13 +180,13 @@ export default function TopBar() {
             </Menu.SubMenu>
           )}
           {!searchFocussed && (
-            <Menu.Item key="/docs" style={{ margin: '0 10px' }}>
+            <Menu.Item key="/docs" style={{ margin: '0 10px', textTransform: "uppercase" }}>
               <a
                 href={"https://gitbook.com"}
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                DOCS
+                Docs
               </a>
             </Menu.Item>
           )}
