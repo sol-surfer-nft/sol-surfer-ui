@@ -24,7 +24,7 @@ const MarketplacePage = () => {
                 <Link to={`/marketplace/${nftItem.id}`}>
                   <div className="nft-item-image-container">
                     <Image
-                      // width={300}
+                      width="auto"
                       height={400}
                       preview={false}
                       src={nftItem.url || ""}
@@ -67,12 +67,14 @@ const StyledMarketplace = styled.div`
     cursor: pointer;
     background: ${props => props.theme.colors.bg2};
     box-shadow: 0 2rem 5rem rgba(0, 0, 0, 0.75);
+    border-radius: 5px;
 
     .nft-item-bottom-bar {
       padding: 1rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      border-top: 1px solid ${props => props.theme.colors.bg1};
 
       .nft-item-bottom-bar-left {
         flex: 1;
