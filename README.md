@@ -1,6 +1,7 @@
 # Sol Surfer UI
 
 An implementation of a UI for Sol Surfer, as part of the SolanaSzn Hackathon. The boilerplate for this repo was taken from serum-dex-ui.
+[solsurfer.xyz](solsurfer.xyz)
 
 ### App Pages
 
