@@ -7,6 +7,7 @@ import {
 } from '@ant-design/icons';
 import { Button, Col, Menu, Popover, Row, Select, Tooltip } from 'antd';
 import React, { useCallback, useEffect, useState } from 'react';
+import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { useHistory, useLocation } from 'react-router-dom';
 import logo from '../assets/logo.svg';
 import styled from 'styled-components';
@@ -21,6 +22,7 @@ import WalletConnect from './WalletConnect';
 import AppSearch from './AppSearch';
 import learnItems from '../data/learn.data';
 import { colors } from '../styles/colors';
+import { darkModeState, joyrideState } from '../atoms';
 
 const Wrapper = styled.div`
   // background-color: #0d1017;
@@ -59,10 +61,14 @@ export default function TopBar() {
   } = useConnectionConfig();
   const [addEndpointVisible, setAddEndpointVisible] = useState(false);
   const [testingConnection, setTestingConnection] = useState(false);
+  const [searchFocussed, setSearchFocussed] = useState(false);
   const location = useLocation();
   const history = useHistory();
-  const [searchFocussed, setSearchFocussed] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(true);
+
+  const isDarkMode = useRecoilValue(darkModeState)
+  const setIsDarkMode = useSetRecoilState(darkModeState);
+  const { steps/*, progress, activeLessonId, isJoyrideActive*/ } = useRecoilValue(joyrideState)
+  const setJoyrideState = useSetRecoilState(joyrideState)
 
   const handleClick = useCallback(
     (e) => {
@@ -115,8 +121,23 @@ export default function TopBar() {
     }
   };
 
-  const handleLearnItemClick = (event) => {
-    console.log('learn item clicked with event:', event);
+  const handleLearnItemClick = (lessonId: string) => {
+    console.log('learn item clicked with id:', lessonId);
+
+    if(steps[lessonId]) {
+      if(lessonId === "0")
+        history.push("/")
+      else if(lessonId === "1")
+        history.push("/add-nft")
+      else
+        history.push("/") // TODO: update for rest of tutorials as they become available
+
+      setJoyrideState(oldJoyrideState => ({
+        ...oldJoyrideState,
+        activeLessonId: lessonId,
+        isJoyrideActive: true
+      }))
+    }
   };
 
   const endpointInfoCustom = endpointInfo && endpointInfo.custom;
@@ -195,7 +216,7 @@ export default function TopBar() {
                 <Menu.Item
                   key={`_learn-${learnItem.id}-${learnItem.lessonTitle}`}
                   style={{background: "#212121 !important"}}
-                  onClick={handleLearnItemClick}
+                  onClick={() => handleLearnItemClick(learnItem.id)}
                 >
                   {learnItem.lessonTitle}
                 </Menu.Item>

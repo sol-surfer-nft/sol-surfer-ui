@@ -1,11 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { ThemeProvider as StyledThemeProvider } from 'styled-components'
-import { Button } from 'antd'
 import { HashRouter, Route, Switch } from 'react-router-dom';
-import { /*theme,*/ darkTheme } from './styles/themes'
+import { theme, darkTheme } from './styles/themes'
 import Joyride, { CallBackProps, } from 'react-joyride' //  ACTIONS, EVENTS, LIFECYCLE, STATUS
-import allSteps from './data/steps.data'
-import { Step } from 'react-joyride'
 
 import BasicLayout from './components/BasicLayout';
 
@@ -20,57 +18,60 @@ import FAQPage from './pages/FAQPage';
 import NotFoundPage from './pages/NotFoundPage';
 
 // TODO: Remove old Serum Pages
-import ListNewMarketPage from './pages/ListNewMarketPage';
-import NewPoolPage from './pages/pools/NewPoolPage';
-import PoolPage from './pages/pools/PoolPage';
-import PoolListPage from './pages/pools/PoolListPage';
-import BalancesPage from './pages/BalancesPage';
-import ConvertPage from './pages/ConvertPage';
-import TradePage from './pages/TradePage';
-import OpenOrdersPage from './pages/OpenOrdersPage';
+// import ListNewMarketPage from './pages/ListNewMarketPage';
+// import NewPoolPage from './pages/pools/NewPoolPage';
+// import PoolPage from './pages/pools/PoolPage';
+// import PoolListPage from './pages/pools/PoolListPage';
+// import BalancesPage from './pages/BalancesPage';
+// import ConvertPage from './pages/ConvertPage';
+// import TradePage from './pages/TradePage';
+// import OpenOrdersPage from './pages/OpenOrdersPage';
+
 import { ContentLayout } from './components/ContentLayout'
+import { darkModeState, joyrideState } from './atoms'
 import { colors } from './styles/colors';
 
 export function Routes() {
-  const [activeSteps, setActiveSteps] = useState<Step[]>([])
-  const [isJoyrideActive, setIsJoyrideActive] = useState(false)
+  const isDarkMode = useRecoilValue(darkModeState)
+  const { steps, isJoyrideActive, activeLessonId } = useRecoilValue(joyrideState)
+  const setJoyrideState = useSetRecoilState(joyrideState)
   
   const handleJoyrideCallback = (event: CallBackProps) => {
     console.log('react joyride callback event:', event)
-    if(event.action === "stop") {
-      setIsJoyrideActive(false)
+    if(event.lifecycle === "complete" && event.status === "finished") {
+      setJoyrideState(oldJoyrideState => ({...oldJoyrideState, isJoyrideActive: false }))
+    }
+    else if(event.action === "stop") {
+      setJoyrideState(oldJoyride => ({...oldJoyride, isJoyrideActive: false }))
     }
   }
 
-  const getStepsById = (id: string) => allSteps[id]
-
-  const toggleJoyride = (lessonId: string) => {
-    setActiveSteps(getStepsById(lessonId))
-    setIsJoyrideActive(prevActive => !prevActive)
-  }
+  // const toggleJoyride = (lessonId: string) => {
+  //   setJoyrideState(oldJoyride => ({...oldJoyride, activeLessonId: lessonId, isJoyrideActive: !oldJoyride.isJoyrideActive }))
+  // }
 
   return (
-    // TODO: toggle theme with context
-    <StyledThemeProvider theme={darkTheme}>
+    <StyledThemeProvider theme={isDarkMode ? darkTheme : theme}>
       <HashRouter basename={'/'}>
         {/* ToDo: Move to its own component */}
         <Joyride
           continuous
           showProgress
           showSkipButton
+          // stepIndex={progress[activeLessonId]}
           styles={{
             options: {
               primaryColor: colors.purple1
             }
           }}
           run={isJoyrideActive}
-          steps={activeSteps}
+          steps={steps && activeLessonId && steps[activeLessonId] ? steps[activeLessonId] : []}
           callback={handleJoyrideCallback}
         />
         <BasicLayout>
           <ContentLayout isContainer={true}>
-            <Button onClick={() => toggleJoyride("0")}>{isJoyrideActive ? "end joyride 1" : "start joyride 1"}</Button>
-            <Button onClick={() => toggleJoyride("1")}>{isJoyrideActive ? "end joyride 2" : "start joyride 2"}</Button>
+            {/* <Button onClick={() => toggleJoyride("0")}>{(isJoyrideActive && activeLessonId==="0") ? "end tutorial 1" : "start tutorial 1"}</Button>
+            <Button onClick={() => toggleJoyride("1")}>{(isJoyrideActive && activeLessonId==="1") ? "end tutorial 2" : "start tutorial 2"}</Button> */}
             <Switch>
               <Route exact path="/" component={HomePage} />
               <Route exact path="/add-nft" component={AddNFTPage} />
@@ -82,28 +83,6 @@ export function Routes() {
               <Route exact path="/learn" component={LearnPage} />
               <Route exact path="/faq" component={FAQPage} />
 
-              {/* TODO: Remove old Serum Routes */}
-              <Route exact path="/market/:marketAddress">
-                <TradePage />
-              </Route>
-              <Route exact path="/orders" component={OpenOrdersPage} />
-              <Route exact path="/balances" component={BalancesPage} />
-              <Route exact path="/convert" component={ConvertPage} />
-              <Route
-                exact
-                path="/list-new-market"
-                component={ListNewMarketPage}
-              />
-              <Route exact path="/pools">
-                <PoolListPage />
-              </Route>
-              <Route exact path="/pools/new">
-                <NewPoolPage />
-              </Route>
-              <Route exact path="/pools/:poolAddress">
-                <PoolPage />
-              </Route>
-              
               {/* Not Found catch-all, prompts to redirect user back to Home */}
               <Route path="/">
                 <NotFoundPage />

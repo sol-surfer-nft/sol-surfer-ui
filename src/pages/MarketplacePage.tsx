@@ -1,14 +1,16 @@
 import React from 'react'
+import { useRecoilValue } from 'recoil'
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
 import { Typography, Image } from 'antd'
 // import { HeartOutlined } from '@ant-design/icons'
-import { nftItems } from '../data/marketplace.data'
 import { PageHeader } from '../components/PageHeader/PageHeader'
 import usdcLogo from '../assets/usdc-coin-logo.png'
 import solLogo from '../assets/sol-logo.png'
+import { nftItemsState } from '../atoms'
 
 const MarketplacePage = () => {
+  const nftItems = useRecoilValue(nftItemsState)
 
   // const handleItemHeartClick = (e: any, nftId: string) => {
   //   e.preventDefault()

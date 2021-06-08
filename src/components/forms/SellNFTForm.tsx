@@ -5,11 +5,22 @@ import { NFTItem } from '../../types/NFTItem'
 import { nftItems } from '../../data/marketplace.data'
 
 interface SellNFTFormProps {
+  sellNft: (data: any) => void
   nftId?: string
 }
 
+export interface SellNftFormData {
+  id: string
+  title: string
+  price?: number
+  usdcPrice?: number
+  currency: 'sol' | 'SOL' | 'usdc' | 'USDC'
+  owner: string
+}
+
 export const SellNFTForm: React.FC<SellNFTFormProps> = ({
-  nftId
+  nftId,
+  sellNft,
 }) => {
   const [form] = Form.useForm()
 
@@ -27,13 +38,37 @@ export const SellNFTForm: React.FC<SellNFTFormProps> = ({
 
     return () => {
       form.resetFields()
+      setNftData(null)
     }
   }, [form, nftId])
 
   const handleFinishedForm = (e: any) => {
-    console.log('finished form. values:', form.getFieldsValue())
-    alert("thank you for your submissino")
-    form.setFieldsValue({ "sell-nft-price": 0 })
+    
+    const formValues = form.getFieldsValue(true)
+    
+    console.log('submitting form with values:', formValues)
+    
+    if(!formValues["sell-nft-title"] || !formValues["sell-nft-price"] || !formValues["sell-nft-currency"]) {
+      alert("There are invalid form fields")
+    }
+    else {
+      let currencySelected = formValues["sell-nft-currency"]
+      let nftSolPrice =  currencySelected && currencySelected === "sol" ? formValues["sell-nft-price"] : undefined
+      let nftUsdcPrice = currencySelected && currencySelected === "usdc" ? formValues["sell-nft-price"] : undefined
+
+      if(!nftSolPrice && !nftUsdcPrice) {
+        alert("currency has not been selected! please select one")
+      }
+      else {
+        sellNft({
+          title: formValues["sell-nft-title"],
+          price: nftSolPrice,
+          usdcPrice: nftUsdcPrice,
+          currency: currencySelected,
+          owner: "temp-user"
+        })
+      }
+    }
   }
 
   const handleFinishFailed = (e: any) => {
@@ -57,7 +92,7 @@ export const SellNFTForm: React.FC<SellNFTFormProps> = ({
         <Row>
           <Col>
             <Form.Item name="sell-nft-price" noStyle rules={[{ required: true }]}>
-              <Input id="tour-3-nft-price" type="number" min={0} max={10000000} />
+              <Input id="sell-nft-price" type="number" min={0} max={10000000} />
             </Form.Item>
           </Col>
           <Col>

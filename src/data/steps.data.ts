@@ -1,7 +1,25 @@
 import { Step } from 'react-joyride'
 
-interface TourSteps {
+export interface TourSteps {
   [id: string]: Step[]
+}
+
+export interface TourProgress {
+  [stepKey: string]: TourItem
+}
+
+export interface TourItem {
+  progress: number
+  maxSteps: number
+}
+
+export const initialTourProgress = {
+  "0": 0,
+  "1": 0,
+  "2": 0,
+  "3": 0,
+  "4": 0,
+  "5": 0
 }
 
 // export interface Step {
@@ -34,12 +52,12 @@ interface TourSteps {
 
 // Connecting Your Wallet / Connection Details (Advanced)
 
-const allSteps: TourSteps = {
+export const steps: TourSteps = {
   "0": [ // getting-started
-    {
-      target: "#tour-1-question",
-      content: "answer the question",
-    },
+    // {
+    //   target: "#tour-1-question",
+    //   content: "answer the question",
+    // },
     {
       target: "#tour-1-wallet",
       content: "connect your wallet",
@@ -67,8 +85,16 @@ const allSteps: TourSteps = {
       content: "make sure to give your nft a title!"
     },
     {
+      target: "#add-nft-price",
+      content: "make sure you set a price for your nft, and specify the currency this price should be viewed in next to it."
+    },
+    {
       target: "#tour-2-upload-image",
       content: "then upload the image of the nft you want to create!"
+    },
+    {
+      target: "#add-nft-submit-button",
+      content: "then submit the nft form to initiate the transaction to mint your NFT"
     }
   ],
   "2": [ // viewing-your-nfts
@@ -95,7 +121,7 @@ const allSteps: TourSteps = {
       content: "click the 'sell' button below the nft to get started selling it",
     },
     {
-      target: "#tour-4-sell-price",
+      target: "#sell-nft-price",
       content: "set the price you would like to sell your nft for. you can choose 'SOL' or 'USDC'",
     },
     {
@@ -106,7 +132,11 @@ const allSteps: TourSteps = {
       target: "",
       content: "",
     },
+  ],
+  "4": [
+    {
+      target: "",
+      content: ""
+    }
   ]
 }
-
-export default allSteps
