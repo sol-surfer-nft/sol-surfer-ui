@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { Form, Input, Upload, Typography, Button } from 'antd'
 import { PictureOutlined } from '@ant-design/icons'
+import { AddNFTFormData } from '../../pages/AddNFTPage'
 // import { UploadChangeParam } from 'antd/lib/upload';
 // import { RcFile, UploadFile } from 'antd/lib/upload/interface';
 
 interface AddNFTFormProps {
-
+  addNft: (formData: AddNFTFormData) => void
 }
 
 const layout = {
@@ -24,7 +25,9 @@ const initialValues = {
 
 const supportedFiles = ["png", "jpg", "jpeg"]
 
-export const AddNFTForm: React.FC<AddNFTFormProps> = () => {
+export const AddNFTForm: React.FC<AddNFTFormProps> = ({
+  addNft
+}) => {
   // const [imageUrl, setImageUrl] = useState("")
   // const [imageTitle, setImageTitle] = useState("")
   const [fileList, setFileList] = useState<any[]>([])
@@ -37,10 +40,17 @@ export const AddNFTForm: React.FC<AddNFTFormProps> = () => {
     }
   }, [form])
 
-  const onFinish = (values: any) => {
-    console.log('Success:', values);
+  const onFinish = (e: any) => {
+    console.log('Success:', e);
 
     // TODO: set the image url, set preview
+    const values = form.getFieldsValue(true) // gets all field values
+    if(!values.title || !values.file) {
+      alert('error: missing form fields. cannot submit nft')
+    }
+    else {
+      addNft({ title: values.title, file: values.file })
+    }
   };
 
   // function getBase64(file) {
