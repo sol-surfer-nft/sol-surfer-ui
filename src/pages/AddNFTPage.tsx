@@ -46,7 +46,8 @@ const AddNFTPage = () => {
         owner:  addNftFormData.owner,
         price: addNftFormData.price,
         usdcPrice: addNftFormData.usdcPrice,
-        currency: addNftFormData.currency
+        currency: addNftFormData.currency,
+        url: "https://source.unsplash.com/random"
       }
     ])
 
