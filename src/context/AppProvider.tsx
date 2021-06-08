@@ -9,7 +9,7 @@ export const AppContext = createContext(initialState)
 const AppProvider = ({ children }) => {
   const [isDarkMode, setIsDarkMode] = useState(true);
 
-  const value = { isDarkMode, setIsDarkMode }
+  const value = { isDarkMode: isDarkMode, setIsDarkMode }
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>
 }

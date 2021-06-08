@@ -9,13 +9,14 @@ export const colors = {
   lime: "#EFFFCE",
   gray: "#333",
   white: "#fff",
+  black: "#000"
 }
 
 export const darkColors = {
   dark1: "#181818",
   dark2: "#212121",
   dark3: "#3D3D3D",
-  white: "#fff"
+  white: "#fff",
 }
 
 export interface ThemeColors {
@@ -32,4 +33,5 @@ export interface ThemeColors {
   bg1: string
   bg2: string
   bg3: string
+  font: string
 }

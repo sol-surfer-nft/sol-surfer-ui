@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react'
+import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
-import { Typography, Button } from 'antd'
+import { Typography } from 'antd'
 import { CheckOutlined, PlayCircleOutlined } from '@ant-design/icons'
 import { PageHeader } from '../components/PageHeader/PageHeader'
 import lessonItems from '../data/learn.data'
+import allSteps from '../data/steps.data'
+// import { Step } from 'react-joyride'
 
 interface LessonProgress {
   lessonId: string
@@ -12,22 +15,39 @@ interface LessonProgress {
 
 const initialProgress: LessonProgress[] = [
   {
-    lessonId: "1",
+    lessonId: "0",
     progress: 4
   }
 ]
 
 const LearnPage = () => {
   const [lessonProgress, setLessonProgress] = useState<LessonProgress[]>(initialProgress)
+  const [isTourActive, setIsTourActive] = useState(false)
+  // const [activeSteps, setActiveSteps] = useState<Step[]>([])
+
+  const history = useHistory()
 
   useEffect(() => {
     // query local storage for lesson item progress
     console.log('lessons mounted. query local storage for user progress')
+    setLessonProgress(initialProgress)
   }, [])
 
   const handleItemClick = (lessonId: string) => {
     console.log('clicked lesson with id:', lessonId)
     // Begin intro with the given id
+    let steps = allSteps[lessonId]
+    if(!steps) {
+      alert("error starting lesson")
+      return;
+    }
+
+    // setActiveSteps(steps);
+    if(!isTourActive) setIsTourActive(true)
+
+    if(lessonId === "0") {
+      history.push("/")
+    }
   }
 
   const isLessonComplete = (lessonId: string, numberOfLessons: number) => {
@@ -43,9 +63,23 @@ const LearnPage = () => {
     return "0";
   }
 
+  // const handleCloseTour = () => {
+  //   setIsTourActive(false)
+  //   setActiveSteps([])
+  // }
+
   return (
     <StyledLearnPage>
-      <PageHeader title="Learn Page!" />
+      {/* <Tour
+        steps={activeSteps}
+        isOpen={isTourActive}
+        accentColor={"#5D5FEF"}
+        onRequestClose={handleCloseTour}
+        style={{color: "#333"}}
+      /> */}
+      <div id="tour-1-question">
+        <PageHeader title="Learn Page!" />
+      </div>
       <div className="lessons-container">
         {lessonItems.map((lessonItem, index) => (
           <div className="lesson-item" onClick={() => handleItemClick(lessonItem.id)}>

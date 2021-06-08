@@ -1,5 +1,13 @@
 import { NFTItem } from '../types/NFTItem'
 
+export interface NFTBid {
+  id: string
+  bidPrice: number
+  timestamp: any
+  bidder: string
+  bidCurrency: 'sol' | 'SOL' | 'usdc' | 'USDC'
+}
+
 export const nftItems: NFTItem[] = [
   {
     id: "1",
@@ -35,5 +43,32 @@ export const nftItems: NFTItem[] = [
     owner: "LegitSalt",
     usdcPrice: 1,
     url: "https://source.unsplash.com/random"
+  },
+]
+
+export const nftBids: NFTBid[] = [
+  {
+    id: "1",
+    bidPrice: 50,
+    bidCurrency: 'SOL',
+    // generates a day between 1 and 10 days in the past
+    timestamp: new Date().setDate((new Date().getDate()) - (Math.ceil(Math.random() * 10))),
+    bidder: "nico"
+  },
+  {
+    id: "2",
+    bidPrice: 125,
+    bidCurrency: 'SOL',
+    // generates a day between 1 and 10 days in the past
+    timestamp: new Date().setDate((new Date().getDate()) - (Math.ceil(Math.random() * 10))),
+    bidder: "eric"
+  },
+  {
+    id: "3",
+    bidPrice: 500,
+    bidCurrency: 'SOL',
+    // generates a day between 1 and 10 days in the past
+    timestamp: new Date().setDate((new Date().getDate()) - (Math.ceil(Math.random() * 10))),
+    bidder: "conor"
   },
 ]
