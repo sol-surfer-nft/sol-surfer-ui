@@ -7,11 +7,11 @@ const { useBreakpoint } = Grid;
 
 export const links = {
   github: "https://github.com/sol-surfer-nft",
-  website: "https://solsurfer.io",
+  // website: "https://solsurfer.xyz",
   solanaSzn: "https://solana.com/solanaszn",
   wormhole: "https://solana.com/wormhole",
   opensea: "https://opensea.io",
-  documentation: "https://gitbook.com"
+  documentation: "https://sol-surfer.gitbook.io/solsurfer/"
 }
 const footerElements = [
   { description: 'GitHub', link: links.github },

@@ -208,7 +208,7 @@ export default function TopBar() {
               style={{ margin: '0 10px', textTransform: 'uppercase' }}
             >
               <a
-                href={'https://gitbook.com'}
+                href={"https://sol-surfer.gitbook.io/solsurfer/"}
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -217,7 +217,6 @@ export default function TopBar() {
             </Menu.Item>
           )}
         </Menu>
-            
 
         {/* TopBar - Right Side */}
         <div className="dark-toggle-container" style={{paddingRight: 10, paddingLeft: 5}}>
