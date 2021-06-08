@@ -32,11 +32,15 @@ const Wrapper = styled.div`
   justify-content: flex-end;
   padding: 0px 30px;
   flex-wrap: wrap;
+
+  .navbar-menu-item-link {
+    color: ${props => props.theme.colors.font};
+  }
 `;
 const LogoWrapper = styled.div`
   display: flex;
   align-items: center;
-  color: ${(props) => props.theme.colors.white};
+  color: ${(props) => props.theme.colors.font};
   font-size: 22px;
   font-weight: bold;
   cursor: pointer;
@@ -227,9 +231,11 @@ export default function TopBar() {
             <Menu.Item
               key="/docs"
               style={{ margin: '0 10px', textTransform: 'uppercase' }}
+              className="navbar-menu-item-link"
             >
               <a
                 href={"https://sol-surfer.gitbook.io/solsurfer/"}
+                className="navbar-menu-item-link"
                 target="_blank"
                 rel="noopener noreferrer"
               >

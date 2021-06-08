@@ -28,6 +28,13 @@ const StyledLayout = styled(Layout)`
   min-height: 100vh;
   flex-direction: column;
 
+  .ant-typography {
+    color: ${(props) => props.theme.colors.font};
+  }
+  .ant-menu-item {
+    color: ${(props) => props.theme.colors.font};
+  }
+
   .basic-layout-header {
     background-color: ${(props) => props.theme.colors.bg2} !important;
   }
