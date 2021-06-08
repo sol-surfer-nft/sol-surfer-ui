@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
-import { Form, Input, Upload, message, Typography, Button } from 'antd'
+import { Form, Input, Upload, Typography, Button } from 'antd'
 import { PictureOutlined } from '@ant-design/icons'
-import { UploadChangeParam } from 'antd/lib/upload';
-import { RcFile, UploadFile } from 'antd/lib/upload/interface';
+// import { UploadChangeParam } from 'antd/lib/upload';
+// import { RcFile, UploadFile } from 'antd/lib/upload/interface';
 
 interface AddNFTFormProps {
 
@@ -14,9 +14,9 @@ const layout = {
   wrapperCol: { span: 12 },
 };
 
-const tailLayout = {
-  wrapperCol: { offset: 8, span: 16 },
-};
+// const tailLayout = {
+//   wrapperCol: { offset: 8, span: 16 },
+// };
 
 const initialValues = {
   supply: 1
@@ -25,11 +25,17 @@ const initialValues = {
 const supportedFiles = ["png", "jpg", "jpeg"]
 
 export const AddNFTForm: React.FC<AddNFTFormProps> = () => {
-  const [imageUrl, setImageUrl] = useState("")
-  const [imageTitle, setImageTitle] = useState("")
+  // const [imageUrl, setImageUrl] = useState("")
+  // const [imageTitle, setImageTitle] = useState("")
   const [fileList, setFileList] = useState<any[]>([])
 
   const [form] = Form.useForm();
+
+  useEffect(() => {
+    return () => {
+      form.resetFields()
+    }
+  }, [form])
 
   const onFinish = (values: any) => {
     console.log('Success:', values);
@@ -37,14 +43,14 @@ export const AddNFTForm: React.FC<AddNFTFormProps> = () => {
     // TODO: set the image url, set preview
   };
 
-  function getBase64(file) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = error => reject(error);
-    });
-  }
+  // function getBase64(file) {
+  //   return new Promise((resolve, reject) => {
+  //     const reader = new FileReader();
+  //     reader.readAsDataURL(file);
+  //     reader.onload = () => resolve(reader.result);
+  //     reader.onerror = error => reject(error);
+  //   });
+  // }
 
   const onFinishFailed = (errorInfo: any) => {
     console.log('Failed:', errorInfo);
@@ -54,7 +60,7 @@ export const AddNFTForm: React.FC<AddNFTFormProps> = () => {
     console.log('upload change param info:', file)
     console.log('uploading status:', file.status)
     // if(file.status === "done") {
-      setImageUrl(file.url || file.thumbUrl || "")
+      // setImageUrl(file.url || file.thumbUrl || "")
       console.log('finished uploading:', file)
       setFileList(fileList)
       console.log('file list:', fileList)
@@ -77,53 +83,53 @@ export const AddNFTForm: React.FC<AddNFTFormProps> = () => {
     // }
   }
 
-  const beforeUpload = async (file, fileList) => {
-    // console.log("dropped file:", file.dataTransfer.files
-    console.log('upload change param info:', file)
-    console.log('uploading status:', file.status)
-    setImageUrl(file.url || file.thumbUrl || "")
-    setFileList(fileList)
-    console.log('file list:', fileList)
-    if(fileList.length < 1) return;
-    let newFile = fileList[0]
-    let src = newFile.url;
-    console.log('new file:', newFile)
-    if (!src) {
-      src = await new Promise(resolve => {
-        const reader = new FileReader();
-        reader.readAsDataURL(newFile);
-        reader.onload = () => resolve(reader.result);
-      });
-    }
-    newFile.url = src;
-    console.log("new file:", newFile)
-    fileList[0] = newFile;
-    setFileList(fileList)
-    console.log('fileList:', fileList)
+  // const beforeUpload = async (file, fileList) => {
+  //   // console.log("dropped file:", file.dataTransfer.files
+  //   console.log('upload change param info:', file)
+  //   console.log('uploading status:', file.status)
+  //   setImageUrl(file.url || file.thumbUrl || "")
+  //   setFileList(fileList)
+  //   console.log('file list:', fileList)
+  //   if(fileList.length < 1) return;
+  //   let newFile = fileList[0]
+  //   let src = newFile.url;
+  //   console.log('new file:', newFile)
+  //   if (!src) {
+  //     src = await new Promise(resolve => {
+  //       const reader = new FileReader();
+  //       reader.readAsDataURL(newFile);
+  //       reader.onload = () => resolve(reader.result);
+  //     });
+  //   }
+  //   newFile.url = src;
+  //   console.log("new file:", newFile)
+  //   fileList[0] = newFile;
+  //   setFileList(fileList)
+  //   console.log('fileList:', fileList)
 
-    // return false; // so antd doesn't upload the file right away
-    // return Upload.LIST_IGNORE
-  }
+  //   // return false; // so antd doesn't upload the file right away
+  //   // return Upload.LIST_IGNORE
+  // }
 
-  const handlePreview = async file => {
-    if (!file.url && !file.preview) {
-      file.preview = await getBase64(file.originFileObj);
-    }
-    console.log('file in handlePreview:', file)
+  // const handlePreview = async file => {
+  //   if (!file.url && !file.preview) {
+  //     file.preview = await getBase64(file.originFileObj);
+  //   }
+  //   console.log('file in handlePreview:', file)
 
-    setImageUrl(file.url || file.preview)
-    setImageTitle(file.name || file.url.substring(file.url.lastIndexOf('/') + 1))
-  }
+  //   setImageUrl(file.url || file.preview)
+  //   setImageTitle(file.name || file.url.substring(file.url.lastIndexOf('/') + 1))
+  // }
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
 
-    // submit data
+  //   // submit data
 
-    // ALSO send file as Buffer... ask Eric
+  //   // ALSO send file as Buffer... ask Eric
 
 
-  }
+  // }
 
   const resetForm = () => {
     // ...reset form
@@ -150,7 +156,7 @@ export const AddNFTForm: React.FC<AddNFTFormProps> = () => {
         name="title"
         rules={[{ required: true }]}
       >
-        <Input />
+        <Input id="tour-2-title" />
       </Form.Item>
 
       {/* File Upload */}
@@ -161,6 +167,7 @@ export const AddNFTForm: React.FC<AddNFTFormProps> = () => {
       >
         {/* Upload.Dragger for drag and drop support */}
         <Upload
+          id="tour-2-upload-image"
           name="file"
           multiple={false} // one file at a time
           fileList={fileList}

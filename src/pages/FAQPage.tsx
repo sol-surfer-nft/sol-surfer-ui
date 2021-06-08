@@ -12,6 +12,18 @@ const FAQPage = () => {
       <PageHeader title="Questions and Answers" />
 
       <div className="faq-container">
+        <div className="faq-item">
+          <Typography.Paragraph className="question-answer">
+            For a more comprehensive FAQ, try visiting Solana's &nbsp;
+            <a
+              href="https://forums.solana.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              official forum
+            </a>
+          </Typography.Paragraph>
+        </div>
         {faqItems.map(faqItem => (
           <div className="faq-item" key={faqItem.questionId}>
             <Typography.Title level={2} className="question-title">{faqItem.questionTitle}</Typography.Title>

@@ -23,7 +23,8 @@ import learnItems from '../data/learn.data';
 import { colors } from '../styles/colors';
 
 const Wrapper = styled.div`
-  background-color: #0d1017;
+  // background-color: #0d1017;
+  background-color: ${props => props.theme.colors.bg2};
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
@@ -160,6 +161,7 @@ export default function TopBar() {
         >
           {(!searchFocussed || location.pathname === '/add-nft') && (
             <Menu.Item
+              id="tour-2-add-nft"
               key="/add-nft"
               style={{ margin: '0 10px 0 20px', textTransform: 'uppercase' }}
             >
@@ -185,13 +187,14 @@ export default function TopBar() {
           {!searchFocussed && (
             <Menu.SubMenu
               key="/learn"
-              title={'Learn'}
+              title={<span id="tour-1-learn">Learn</span>}
               onTitleClick={() => history.push('/learn')}
-              style={{ margin: '0 0px 0 10px', textTransform: 'uppercase' }}
+              style={{ margin: '0 0px 0 10px', textTransform: 'uppercase', background: '#212121 !important' }}
             >
               {learnItems.map((learnItem) => (
                 <Menu.Item
                   key={`_learn-${learnItem.id}-${learnItem.lessonTitle}`}
+                  style={{background: "#212121 !important"}}
                   onClick={handleLearnItemClick}
                 >
                   {learnItem.lessonTitle}
@@ -268,6 +271,7 @@ export default function TopBar() {
             </Col>
             <Col>
               <Select
+                id="tour-1-mainnet"
                 onSelect={setEndpoint}
                 value={endpoint}
                 style={{ marginRight: 8, width: '150px' }}
