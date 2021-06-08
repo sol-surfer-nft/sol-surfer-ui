@@ -44,7 +44,7 @@ const NFTDetailPage = () => {
 
   const getIsNFTForSale = (id: string) => {
     console.log('checking if the nft item is for sale by its id:', id)
-    return Math.random() > 0.5
+    return Math.random() > 0.2
   }
 
   return (
