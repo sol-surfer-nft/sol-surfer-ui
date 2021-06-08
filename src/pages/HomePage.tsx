@@ -13,17 +13,22 @@ const HomePage = () => {
 
   useEffect(() => {
     // TODO: interface with local storage to detect if onboarding needed
-
+    let hasSeenOnboarding = localStorage.getItem("sol-surfer-has-seen-onboarding")
     setOnboardingQuestions(questions)
+    if(hasSeenOnboarding && hasSeenOnboarding === "true") {
+      setShowOnboarding(false)
+    }
   }, [])
 
   const exitOnboarding = () => {
     setShowOnboarding(false)
+    localStorage.setItem("sol-surfer-has-seen-onboarding", "true")
   }
 
   const startOnboarding = () => {
     window.scrollTo(0, 0)
     setShowOnboarding(true)
+    localStorage.setItem("sol-surfer-has-seen-onboarding", "false")
   }
 
   const handleQuestionClick = () => {

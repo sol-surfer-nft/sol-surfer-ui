@@ -6,6 +6,7 @@ export interface NFTItem {
   usdcPrice?: number
   description?: string
   url?: string
+  currency?: 'sol' | "SOL" | 'usdc' | 'USDC'
 }
 
 // Use to define the nft data in the smart contract

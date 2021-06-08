@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
-import { Form, Input, Upload, Typography, Button } from 'antd'
+import { Form, Input, Upload, Typography, Button, Row, Col, Select } from 'antd'
 import { PictureOutlined } from '@ant-design/icons'
 import { AddNFTFormData } from '../../pages/AddNFTPage'
 // import { UploadChangeParam } from 'antd/lib/upload';
@@ -20,10 +20,11 @@ const layout = {
 // };
 
 const initialValues = {
-  supply: 1
+  supply: 1,
+  currency: "usdc"
 }
 
-const supportedFiles = ["png", "jpg", "jpeg"]
+const supportedFiles = ["png", "jpg", "jpeg", "svg"]
 
 export const AddNFTForm: React.FC<AddNFTFormProps> = ({
   addNft
@@ -37,6 +38,7 @@ export const AddNFTForm: React.FC<AddNFTFormProps> = ({
   useEffect(() => {
     return () => {
       form.resetFields()
+      setFileList([])
     }
   }, [form])
 
@@ -45,11 +47,26 @@ export const AddNFTForm: React.FC<AddNFTFormProps> = ({
 
     // TODO: set the image url, set preview
     const values = form.getFieldsValue(true) // gets all field values
-    if(!values.title || !values.file) {
-      alert('error: missing form fields. cannot submit nft')
+    if(!values["add-nft-title"] || fileList.length !== 1 || !values["add-nft-currency"] || !values["add-nft-price"]) {
+      alert('There are invalid form fields. cannot submit nft')
     }
     else {
-      addNft({ title: values.title, file: values.file })
+      console.log('adding nft with values:', values)
+      let currencySelected = values["add-nft-currency"]
+      let nftSolPrice =  currencySelected && currencySelected === "sol" ? values["add-nft-price"] : undefined
+      let nftUsdcPrice = currencySelected && currencySelected === "usdc" ? values["add-nft-price"] : undefined
+
+      if(!nftSolPrice && !nftUsdcPrice) {
+        alert("currency has not been selected! please select one")
+      }
+      else {
+        addNft({
+          title: values.title, file: values.file, owner: "temp-user",
+          currency: currencySelected,
+          price: nftSolPrice,
+          usdcPrice: nftUsdcPrice
+        })
+      }
     }
   };
 
@@ -67,31 +84,146 @@ export const AddNFTForm: React.FC<AddNFTFormProps> = ({
   };
 
   const handleUploadFileChange = async ({ file, fileList }) => { // info: UploadChangeParam<UploadFile<any>>
-    console.log('upload change param info:', file)
-    console.log('uploading status:', file.status)
-    // if(file.status === "done") {
-      // setImageUrl(file.url || file.thumbUrl || "")
-      console.log('finished uploading:', file)
-      setFileList(fileList)
-      console.log('file list:', fileList)
-      if(fileList.length < 1) return;
-      let newFile = fileList[0]
-      let src = newFile.url;
-      if (!src) {
-        src = await new Promise(resolve => {
-          const reader = new FileReader();
-          reader.readAsDataURL(newFile.originFileObj);
-          reader.onload = () => resolve(reader.result);
-        });
-      }
-      newFile.url = src;
-      fileList[0] = newFile;
-      setFileList(fileList)
-    // }
-    // else {
-    //   setImageUrl("")
-    // }
+    setFileList(fileList)
+    console.log('file list:', fileList)
+    if(fileList.length < 1) return;
+    let newFile = fileList[0]
+    let src = newFile.url;
+    if (!src) {
+      src = await new Promise(resolve => {
+        const reader = new FileReader();
+        reader.readAsDataURL(newFile.originFileObj);
+        reader.onload = () => resolve(reader.result);
+      });
+    }
+    newFile.url = src;
+    fileList[0] = newFile;
+    setFileList(fileList)
   }
+
+  const resetForm = () => {
+    clearFileList()
+    form.resetFields();
+  }
+
+  const clearFileList = () => {
+    setFileList([])
+  }
+
+  return (
+    <FormStyled
+      {...layout}
+      name="add-nft-form"
+      layout="vertical"
+      initialValues={initialValues}
+      onFinish={onFinish}
+      onFinishFailed={onFinishFailed}
+      form={form}
+    >
+      <Form.Item
+        label="Title"
+        name="add-nft-title"
+        rules={[{ required: true }]}
+      >
+        <Input id="tour-2-title" />
+      </Form.Item>
+
+      {/* Price */}
+      <Form.Item label="Price">
+        <Row>
+          <Col>
+            <Form.Item name="add-nft-price" noStyle rules={[{ required: true }]}>
+              <Input id="add-nft-price" type="number" min={0} max={10000000} />
+            </Form.Item>
+          </Col>
+          <Col>
+            <Form.Item
+              initialValue={"usdc"}
+              name="add-nft-currency"
+              label="Currency"
+              noStyle
+              rules={[{ required: true, message: 'Please select currency' }]}
+            >
+              <Select placeholder="Currency">
+                <Select.Option value="sol">SOL</Select.Option>
+                <Select.Option value="usdc">USDC</Select.Option>
+              </Select>
+            </Form.Item>
+          </Col>
+        </Row>
+      </Form.Item>
+
+      {/* File Upload */}
+      <Form.Item
+        label="Upload Image"
+        name="file-upload"
+        // rules={[{ required: true }]}
+      >
+        {/* Upload.Dragger for drag and drop support */}
+        <Upload
+          id="tour-2-upload-image"
+          name="file"
+          multiple={false} // one file at a time
+          fileList={fileList}
+          showUploadList={false}
+          disabled={fileList.length > 0}
+          // customRequest={() => true}
+          // @ts-ignore
+          // beforeUpload={beforeUpload}
+          onChange={handleUploadFileChange}
+          // itemRender={() => []}
+          accept=".png,.jpg,.jpeg,image/png,image/jpg,image/jpeg,.svg"
+          // onPreview={handlePreview}
+          // onDrop={handleUploadFileDrop}
+        >
+          {fileList.length > 0 ? (
+            // @ts-ignore
+            <img src={fileList[0].url} alt={fileList[0].name} style={{ width: '100%' }} className="uploaded-image" />
+           ) : (
+             <div className="image-upload-container">
+              <PictureOutlined className="image-upload-icon" />
+              <Typography className="image-upload-text">Click or drag file to upload</Typography>
+              <Typography className="image-upload-helper-text">( {supportedFiles.map((fileName, index) => index < supportedFiles.length - 1 ? "." + fileName + ", " : "." + fileName)} )</Typography>
+            </div>
+           )}
+        </Upload>
+        {fileList.length > 0 && fileList[0].name && (
+          <div className="file-item-container">
+            <Typography>{fileList[0].name}</Typography>
+            <Button onClick={clearFileList}>Remove</Button>
+          </div>
+        )}
+      </Form.Item>
+
+      
+      <Button id="add-nft-submit-button" htmlType="submit">Submit</Button>
+      <Button htmlType="reset" onClick={resetForm}>Clear</Button>
+    </FormStyled>
+  )
+}
+
+const FormStyled = styled(Form)`
+  .image-upload-container {
+    cursor: pointer;
+    background: ${props => props.theme.colors.bg2};
+    border-radius: 5px;
+    border: 1px solid ${props => props.theme.colors.primary};
+    padding: 2rem;
+    text-align: center;
+
+    .image-upload-icon {
+      font-size: 34px;
+      opacity: 0.9;
+    }
+    .image-upload-text {
+      margin-top: 10px;
+    }
+  }
+  .uploaded-image {
+    border: 1px solid ${props => props.theme.colors.primary};
+    border-radius: 5px;
+  }
+`
 
   // const beforeUpload = async (file, fileList) => {
   //   // console.log("dropped file:", file.dataTransfer.files
@@ -140,103 +272,3 @@ export const AddNFTForm: React.FC<AddNFTFormProps> = ({
 
 
   // }
-
-  const resetForm = () => {
-    // ...reset form
-    clearFileList()
-    form.resetFields();
-  }
-
-  const clearFileList = () => {
-    setFileList([])
-  }
-
-  return (
-    <FormStyled
-      {...layout}
-      name="add-nft-form"
-      layout="vertical"
-      initialValues={initialValues}
-      onFinish={onFinish}
-      onFinishFailed={onFinishFailed}
-      form={form}
-    >
-      <Form.Item
-        label="Title"
-        name="title"
-        rules={[{ required: true }]}
-      >
-        <Input id="tour-2-title" />
-      </Form.Item>
-
-      {/* File Upload */}
-      <Form.Item
-        label="Upload Image"
-        name="file-upload"
-        rules={[{ required: true }]}
-      >
-        {/* Upload.Dragger for drag and drop support */}
-        <Upload
-          id="tour-2-upload-image"
-          name="file"
-          multiple={false} // one file at a time
-          fileList={fileList}
-          showUploadList={false}
-          disabled={fileList.length > 0}
-          // customRequest={() => true}
-          // @ts-ignore
-          // beforeUpload={beforeUpload}
-          onChange={handleUploadFileChange}
-          // itemRender={() => []}
-          // accept="..."
-          // onPreview={handlePreview}
-          // onDrop={handleUploadFileDrop}
-        >
-          {fileList.length > 0 ? (
-            // @ts-ignore
-            <img src={fileList[0].url} alt={fileList[0].name} style={{ width: '100%' }} className="uploaded-image" />
-           ) : (
-             <div className="image-upload-container">
-              <PictureOutlined className="image-upload-icon" />
-              <Typography className="image-upload-text">Click or drag file to upload</Typography>
-              <Typography className="image-upload-helper-text">( {supportedFiles.map((fileName, index) => index < supportedFiles.length - 1 ? "." + fileName + ", " : "." + fileName)} )</Typography>
-            </div>
-           )}
-        </Upload>
-        {fileList.length > 0 && fileList[0].name && (
-          <div className="file-item-container">
-            <Typography>{fileList[0].name}</Typography>
-            <Button onClick={clearFileList}>Remove</Button>
-          </div>
-        )}
-      </Form.Item>
-
-      
-      <Button htmlType="submit">Submit</Button>
-      <Button htmlType="reset" onClick={resetForm}>Clear</Button>
-    </FormStyled>
-  )
-}
-
-const FormStyled = styled(Form)`
-  .image-upload-container {
-    cursor: pointer;
-    background: ${props => props.theme.colors.bg2};
-    border-radius: 5px;
-    border: 1px solid ${props => props.theme.colors.primary};
-    padding: 2rem;
-    text-align: center;
-
-    .image-upload-icon {
-      font-size: 34px;
-      opacity: 0.9;
-    }
-    .image-upload-text {
-      margin-top: 10px;
-    }
-  }
-  .uploaded-image {
-    border: 1px solid ${props => props.theme.colors.primary};
-    border-radius: 5px;
-  }
-`

@@ -21,7 +21,7 @@ export const darkTheme: Theme = {
     bg1: darkColors.dark1,
     bg2: darkColors.dark2,
     bg3: darkColors.dark3,
-    font: colors.white,
+    font: "inherit", // colors.white,
     ...colors
   },
   breakpoints: breakpoints
