@@ -1,26 +1,21 @@
 import React, { useState, useEffect } from 'react'
+import { useRecoilValue } from 'recoil'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { Typography, Image, Button } from 'antd'
 import { PageHeader } from '../components/PageHeader/PageHeader'
-import { nftItems } from '../data/marketplace.data'
-import { NFTItem } from '../types/NFTItem'
+import { nftGalleryItemsState } from '../atoms'
 
 const GalleryPage = () => {
-  const [nfts, setNfts] = useState<NFTItem[]>([])
   const [profileName, setProfileName] = useState("")
+  const nfts = useRecoilValue(nftGalleryItemsState)
 
   useEffect(() => {
     // query for user's name
     setProfileName("temp user")
-
-    // query for user's nft / connection
-    setNfts([nftItems[0], nftItems[2], nftItems[4]])
   }, [])
 
   const getIsNftForSale = (id: string) => {
-    console.log('searching if nft is for sale by id:', id)
-
     return Math.random() > 0.5
   }
 

@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
+import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import { Typography } from 'antd'
 import { CheckOutlined, PlayCircleOutlined } from '@ant-design/icons'
 import { PageHeader } from '../components/PageHeader/PageHeader'
 import lessonItems from '../data/learn.data'
-import allSteps from '../data/steps.data'
+import { steps as allSteps } from '../data/steps.data'
+import { joyrideState } from '../atoms'
 // import { Step } from 'react-joyride'
 
 interface LessonProgress {
@@ -13,25 +15,11 @@ interface LessonProgress {
   progress: number
 }
 
-const initialProgress: LessonProgress[] = [
-  {
-    lessonId: "0",
-    progress: 4
-  }
-]
-
 const LearnPage = () => {
-  const [lessonProgress, setLessonProgress] = useState<LessonProgress[]>(initialProgress)
-  const [isTourActive, setIsTourActive] = useState(false)
-  // const [activeSteps, setActiveSteps] = useState<Step[]>([])
+  const { progress } = useRecoilValue(joyrideState)
+  const setJoyrideState = useSetRecoilState(joyrideState)
 
   const history = useHistory()
-
-  useEffect(() => {
-    // query local storage for lesson item progress
-    console.log('lessons mounted. query local storage for user progress')
-    setLessonProgress(initialProgress)
-  }, [])
 
   const handleItemClick = (lessonId: string) => {
     console.log('clicked lesson with id:', lessonId)
@@ -42,45 +30,36 @@ const LearnPage = () => {
       return;
     }
 
-    // setActiveSteps(steps);
-    if(!isTourActive) setIsTourActive(true)
+    setJoyrideState(oldJoyride => ({
+      ...oldJoyride,
+      isJoyrideActive: true,
+      activeLessonId: lessonId
+    }))
 
     if(lessonId === "0") {
       history.push("/")
     }
+    else if(lessonId === "1") {
+      history.push('/add-nft')
+    }
   }
 
   const isLessonComplete = (lessonId: string, numberOfLessons: number) => {
-    let lesson = lessonProgress.find(progressItem => progressItem.lessonId === lessonId);
-    if(lesson && lesson.progress >= numberOfLessons)
-      return true;
+    if(progress[lessonId] && progress[lessonId].progress > 0) return progress[lessonId].progress > progress[lessonId].maxSteps
     return false;
   }
 
   const getLessonProgress = (lessonId: string) => {
-    let lesson = lessonProgress.find(progressItem => progressItem.lessonId === lessonId);
-    if(lesson) return lesson.progress;
-    return "0";
+    if(progress[lessonId] && progress[lessonId].progress > 0) return progress[lessonId].progress.toString()
+    return "0"
   }
-
-  // const handleCloseTour = () => {
-  //   setIsTourActive(false)
-  //   setActiveSteps([])
-  // }
 
   return (
     <StyledLearnPage>
-      {/* <Tour
-        steps={activeSteps}
-        isOpen={isTourActive}
-        accentColor={"#5D5FEF"}
-        onRequestClose={handleCloseTour}
-        style={{color: "#333"}}
-      /> */}
-      <div id="tour-1-question">
-        <PageHeader title="Learn Page!" />
-      </div>
       <div className="lessons-container">
+        <div id="tour-1-question">
+          <PageHeader title="Learn Page!" />
+        </div>
         {lessonItems.map((lessonItem, index) => (
           <div className="lesson-item" onClick={() => handleItemClick(lessonItem.id)}>
             {/* Icon Left */}
@@ -110,7 +89,7 @@ const LearnPage = () => {
 
 const StyledLearnPage = styled.div`
   .lessons-container {
-    width: 50%;
+    width: 100%;
     margin: auto;
   }
   .lesson-item {
@@ -141,6 +120,11 @@ const StyledLearnPage = styled.div`
     .lesson-progress-container {
       font-size: 20px;
       margin-right: 10px;
+    }
+  }
+  @media(min-width: ${props => props.theme.breakpoints.md}px) {
+    .lessons-container {
+      width: 50%;
     }
   }
 `

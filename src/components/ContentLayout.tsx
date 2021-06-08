@@ -18,6 +18,8 @@ export const ContentLayout: React.FC<ContentLayoutProps> = ({
 }
 
 const StyledContentLayout = styled.div`
+  color: ${props => props.theme.colors.font} !important;
+
   &.container {
     padding-left: 15px;
     padding-right: 15px;

@@ -9,9 +9,8 @@ const FAQPage = () => {
 
   return (
     <StyledFAQPage>
-      <PageHeader title="Questions and Answers" />
-
       <div className="faq-container">
+        <PageHeader title="Questions and Answers" />
         <div className="faq-item">
           <Typography.Paragraph className="question-answer">
             For a more comprehensive FAQ, try visiting Solana's &nbsp;
@@ -37,7 +36,7 @@ const FAQPage = () => {
 
 const StyledFAQPage = styled.div`
   .faq-container {
-    width: 50%;
+    width: 100%;
     margin: auto;
     margin-bottom: 4rem;
   }
@@ -47,6 +46,12 @@ const StyledFAQPage = styled.div`
 
     .question-answer {
       font-size: 22px;
+    }
+  }
+
+  @media(min-width: ${props => props.theme.breakpoints.md}px) {
+    .faq-container {
+      width: 50%;
     }
   }
 `
