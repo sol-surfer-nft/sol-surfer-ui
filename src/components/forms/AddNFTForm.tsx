@@ -61,7 +61,7 @@ export const AddNFTForm: React.FC<AddNFTFormProps> = ({
       }
       else {
         addNft({
-          title: values.title, file: values.file, owner: "temp-user",
+          title: values["add-nft-title"], file: values.file, owner: "temp-user",
           currency: currencySelected,
           price: nftSolPrice,
           usdcPrice: nftUsdcPrice
