@@ -1,4 +1,5 @@
 import React from 'react';
+import styled from 'styled-components'
 import { Layout, Row, Col, Grid } from 'antd';
 import Link from './Link';
 const { Footer } = Layout;
@@ -27,7 +28,7 @@ export const CustomFooter = () => {
   const smallScreen = !useBreakpoint().lg;
 
   return (
-    <Footer
+    <FooterStyled
       style={{
         height: '45px',
         paddingBottom: 10,
@@ -41,9 +42,9 @@ export const CustomFooter = () => {
             {footerElements.map((elem, index) => {
               return (
                 <Col key={index + ''}>
-                  <Link external to={elem.link}>
-                    {elem.description}
-                  </Link>
+                  <LinkStyled external to={elem.link}>
+                    <span>{elem.description}</span>
+                  </LinkStyled>
                 </Col>
               );
             })}
@@ -51,6 +52,14 @@ export const CustomFooter = () => {
         )}
         <Col flex="auto">{/*  <DexProgramSelector />*/}</Col>
       </Row>
-    </Footer>
+    </FooterStyled>
   );
 };
+
+const FooterStyled = styled(Footer)`
+  background-color: ${props => props.theme.colors.bg1};
+  border-top: 1px solid #333;
+`
+const LinkStyled = styled(Link) `
+  color: ${props => props.theme.colors.font};
+`

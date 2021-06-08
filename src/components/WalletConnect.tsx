@@ -17,8 +17,10 @@ export default function WalletConnect() {
   );
 
   return (
-    <Dropdown.Button onClick={connected ? disconnect : connect} overlay={menu}>
-      {connected ? 'Disconnect' : 'Connect'}
-    </Dropdown.Button>
+    <div id="tour-1-wallet">
+      <Dropdown.Button onClick={connected ? disconnect : connect} overlay={menu}>
+        {connected ? 'Disconnect' : 'Connect'}
+      </Dropdown.Button>
+    </div>
   );
 }

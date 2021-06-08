@@ -42,27 +42,27 @@ input[type=number]:focus::-webkit-inner-spin-button {
 .ant-slider:hover .ant-slider-handle:not(.ant-tooltip-open)  {
   border: 2px solid #2abdd2; 
 }
-.ant-table-tbody > tr.ant-table-row:hover > td {
-  background: #273043;
-}
-.ant-table-tbody > tr > td {
-  border-bottom: 8px solid #1A2029;
-}
+// .ant-table-tbody > tr.ant-table-row:hover > td {
+//   background: #273043;
+// }
+// .ant-table-tbody > tr > td {
+//   border-bottom: 8px solid #1A2029;
+// }
 .ant-table-container table > thead > tr:first-child th {
   border-bottom: none;
 }
-.ant-divider-horizontal.ant-divider-with-text::before, .ant-divider-horizontal.ant-divider-with-text::after {
-  border-top: 1px solid #434a59 !important;
-}
-.ant-layout {
-    background: #11161D
-  }
-  .ant-table {
-    background: #212734;
-  }
-  .ant-table-thead > tr > th {
-    background: #1A2029;
-  }
+// .ant-divider-horizontal.ant-divider-with-text::before, .ant-divider-horizontal.ant-divider-with-text::after {
+//   border-top: 1px solid #434a59 !important;
+// }
+// .ant-layout {
+//     background: #11161D
+//   }
+  // .ant-table {
+  //   background: #212734;
+  // }
+  // .ant-table-thead > tr > th {
+  //   background: #1A2029;
+  // }
 .ant-select-item-option-content {
   img {
     margin-right: 4px;
