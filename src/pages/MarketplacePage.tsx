@@ -35,12 +35,11 @@ const MarketplacePage = () => {
   const handleItemHeartClick = (e: any, nftId: string) => {
     e.preventDefault()
     e.stopPropagation()
-    console.log('user tried to favorite nft with id:', nftId);
 
     if(nftId) {
       if(favorites.includes(nftId)) {
         // remove first occurence of nft id
-        setFavorites(oldFavorites => oldFavorites.splice(oldFavorites.indexOf(nftId), 1));
+        setFavorites(oldFavorites => oldFavorites.filter(oldId => oldId !== nftId));
       } else {
         // add to favorites
         setFavorites(oldFavorites => [...oldFavorites, nftId])
