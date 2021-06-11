@@ -1,44 +1,95 @@
-import React from 'react'
-import { useRecoilValue } from 'recoil'
+import React, { useState, useEffect } from 'react'
+import { useRecoilState } from 'recoil'
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
-import { Typography, Image } from 'antd'
-// import { HeartOutlined } from '@ant-design/icons'
+import { Typography, Image, Button } from 'antd'
+import { HeartOutlined, HeartFilled } from '@ant-design/icons'
 import { PageHeader } from '../components/PageHeader/PageHeader'
 import usdcLogo from '../assets/usdc-coin-logo.png'
 import solLogo from '../assets/sol-logo.png'
 import { nftItemsState } from '../atoms'
 
 const MarketplacePage = () => {
-  const nftItems = useRecoilValue(nftItemsState)
+  const [nftItems, setNftItems] = useRecoilState(nftItemsState)
+  const [hoverIndex, setHoverIndex] = useState(-1)
+  const [favorites, setFavorites] = useState<string[]>([])
 
-  // const handleItemHeartClick = (e: any, nftId: string) => {
-  //   e.preventDefault()
-  //   e.stopPropagation()
-  //   console.log('user tried to favorite nft with id:', nftId);
-  // }
+  useEffect(() => {
+    // Get favorites from local storage
+    const favoriteNftIds = localStorage.getItem("solsurfer.nfts.favorites")
+    if(favoriteNftIds) {
+      const parsedIds = JSON.parse(favoriteNftIds)
+      if(parsedIds.length) {
+        setFavorites(parsedIds)
+      }
+    }
+  }, [])
+
+  useEffect(() => {
+    // each time the favorites change, update the local storage
+    if(favorites) {
+      localStorage.setItem("solsurfer.nfts.favorites", JSON.stringify(favorites))
+    }
+  }, [favorites])
+
+  const handleItemHeartClick = (e: any, nftId: string) => {
+    e.preventDefault()
+    e.stopPropagation()
+    console.log('user tried to favorite nft with id:', nftId);
+
+    if(nftId) {
+      if(favorites.includes(nftId)) {
+        // remove first occurence of nft id
+        setFavorites(oldFavorites => oldFavorites.splice(oldFavorites.indexOf(nftId), 1));
+      } else {
+        // add to favorites
+        setFavorites(oldFavorites => [...oldFavorites, nftId])
+      }
+    }
+  }
+
+  const handleMouseEnter = (nftIndex: number) => {
+    setHoverIndex(nftIndex)
+  }
+  const handleMouseExit = () => {
+    setHoverIndex(-1)
+  }
 
   return (
     <StyledMarketplace>
       <PageHeader title="NFT Marketplace" />
        
-       {/* Toolbar / Searchbar / Category Selector here?? Or only in top bar? Idk */}
+       {/* Toolbar / Searchbar / Category Selector here?? Or only in top bar? Could set # per page, filtering, categorization, etc... */}
+       <div className="nft-marketplace-toolbar">
+         {/* Coming Soon... */}
+
+       </div>
 
        {/* NFT Grid here */}
       <div className="nft-marketplace-grid">
-        {nftItems.map(nftItem => (
+        {nftItems.map((nftItem, nftItemIndex) => (
           <article className="nft-item" key={nftItem.id}>
             <Link to={`/marketplace/${nftItem.id}`}>
-              <div className="nft-item-image-container">
+              <div
+                className={`nft-item-image-container ${nftItemIndex === hoverIndex && "nft-item-image-hover"}`}
+                onMouseEnter={() => handleMouseEnter(nftItemIndex)}
+                onMouseLeave={handleMouseExit}
+              >
                 <Image
                   width="auto"
                   height={400}
                   preview={false}
+                  placeholder={true}
                   src={nftItem.url || ""}
                   alt={`nft item: ${nftItem.title}`}
                   className="nft-item-image"
-                  
-                  placeholder={true}
+                />
+                <Button
+                  className="nft-item-image-button"
+                  shape="circle"
+                  size="large"
+                  icon={favorites.includes(nftItem.id) ? <HeartFilled /> : <HeartOutlined />}
+                  onClick={(e) => handleItemHeartClick(e, nftItem.id)}
                 />
               </div>
               <div className="nft-item-bottom-bar">
@@ -78,7 +129,6 @@ const StyledMarketplace = styled.div`
   }
 
   .nft-item {
-    position: relative;
     flex-grow: 1;
     flex-basis: 400px;
     width: 400px;
@@ -94,6 +144,9 @@ const StyledMarketplace = styled.div`
     &:hover {
       transform: translateY(-0.5rem) scale(1.0125);
       box-shadow: 0 0.5em 3rem -1rem rgba(0,0,0,0.5);
+    }
+    .nft-item-image-hover {
+      position: relative;
     }
 
     .nft-item-bottom-bar {
@@ -154,6 +207,26 @@ const StyledMarketplace = styled.div`
   .nft-item-image-container{
     text-align: center;
     margin: auto;
+    position: relative;
+
+    .nft-item-image-button {
+      display: none;
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      border: none;
+      outline: none;
+      transition: .1s ease-in-out display;
+    }
+
+    &.nft-item-image-hover {
+      .nft-item-image-button {
+        display: inline-block;
+        text-align: center;
+        background-color: #333;
+        transition: .12s ease-in-out display background-color;
+      }
+    }
 
     .nft-item-image {
       background-color: ${props => props.theme.colors.bg2};
