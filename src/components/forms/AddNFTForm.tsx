@@ -43,15 +43,12 @@ export const AddNFTForm: React.FC<AddNFTFormProps> = ({
   }, [form])
 
   const onFinish = (e: any) => {
-    console.log('Success:', e);
-
     // TODO: set the image url, set preview
     const values = form.getFieldsValue(true) // gets all field values
     if(!values["add-nft-title"] || fileList.length !== 1 || !values["add-nft-currency"] || !values["add-nft-price"]) {
       alert('There are invalid form fields. cannot submit nft')
     }
     else {
-      console.log('adding nft with values:', values)
       let currencySelected = values["add-nft-currency"]
       let nftSolPrice =  currencySelected && currencySelected === "sol" ? values["add-nft-price"] : undefined
       let nftUsdcPrice = currencySelected && currencySelected === "usdc" ? values["add-nft-price"] : undefined
@@ -85,7 +82,7 @@ export const AddNFTForm: React.FC<AddNFTFormProps> = ({
 
   const handleUploadFileChange = async ({ file, fileList }) => { // info: UploadChangeParam<UploadFile<any>>
     setFileList(fileList)
-    console.log('file list:', fileList)
+    // console.log('file list:', fileList)
     if(fileList.length < 1) return;
     let newFile = fileList[0]
     let src = newFile.url;

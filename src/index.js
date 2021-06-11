@@ -4,12 +4,20 @@ import './index.css';
 import App from './App';
 import { RecoilRoot } from 'recoil';
 import * as serviceWorker from './serviceWorker';
+import { ThemeSwitcherProvider } from 'react-css-theme-switcher';
+
+const themes = {
+  dark: `${process.env.PUBLIC_URL}/dark-theme.css`,
+  light: `${process.env.PUBLIC_URL}/light-theme.css`,
+};
 
 ReactDOM.render(
   <React.StrictMode>
-    <RecoilRoot>
-      <App />
-    </RecoilRoot>
+    <ThemeSwitcherProvider themeMap={themes} defaultTheme="dark">
+      <RecoilRoot>
+        <App />
+      </RecoilRoot>
+    </ThemeSwitcherProvider>
   </React.StrictMode>,
   document.getElementById('root'),
 );

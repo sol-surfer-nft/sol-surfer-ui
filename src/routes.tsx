@@ -38,7 +38,17 @@ export function Routes() {
   const [isDarkMode, setIsDarkMode] = useRecoilState(darkModeState)
   const [{ steps, isJoyrideActive, activeLessonId }, setJoyrideState] = useRecoilState(joyrideState)
   const [nftItems, setNftItems] = useRecoilState(nftItemsState)
-  const { currentTheme, status } = useThemeSwitcher()
+  const { currentTheme, status, switcher } = useThemeSwitcher()
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('solsurfer.theme');
+    if(savedTheme) {
+      if(savedTheme === "light") {
+        switcher({ theme: "light" })
+        setIsDarkMode(false)
+      }
+    }
+  }, [setIsDarkMode, switcher])
 
   useEffect(() => {
     // Initialize the number if nft items
@@ -56,20 +66,12 @@ export function Routes() {
     if(status === "loading")
       return;
 
-    if(currentTheme) {
-      if(currentTheme === "dark") {
-        if(!isDarkMode)
-          setIsDarkMode(true)
-      }
-      else {
-        if(isDarkMode)
-          setIsDarkMode(false)
-      }
-    }
-  }, [currentTheme, isDarkMode, setIsDarkMode, status])
+    if(currentTheme)
+      setIsDarkMode(currentTheme === "dark")
+  }, [currentTheme, setIsDarkMode, status])
 
   const handleJoyrideCallback = (event: CallBackProps) => {
-    console.log('react joyride callback event:', event)
+    // console.log('react joyride callback event:', event)
     if(event.lifecycle === "complete" && event.status === "finished") {
       setJoyrideState(oldJoyrideState => ({...oldJoyrideState, isJoyrideActive: false }))
     }
@@ -98,8 +100,6 @@ export function Routes() {
         />
         <BasicLayout>
           <ContentLayout isContainer={true}>
-            {/* <Button onClick={() => toggleJoyride("0")}>{(isJoyrideActive && activeLessonId==="0") ? "end tutorial 1" : "start tutorial 1"}</Button>
-            <Button onClick={() => toggleJoyride("1")}>{(isJoyrideActive && activeLessonId==="1") ? "end tutorial 2" : "start tutorial 2"}</Button> */}
             <Switch>
               <Route exact path="/" component={HomePage} />
               <Route exact path="/add-nft" component={AddNFTPage} />

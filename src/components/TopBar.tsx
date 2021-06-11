@@ -156,6 +156,7 @@ export default function TopBar() {
   }, [endpointInfoCustom, setEndpoint]);
 
   const toggleDarkMode = () => {
+    localStorage.setItem("solsurfer.theme", isDarkMode ? "light" : "dark")
     switcher({ theme: isDarkMode ? themes.light : themes.dark })
     setIsDarkMode((prevTheme) => !prevTheme);
   };
