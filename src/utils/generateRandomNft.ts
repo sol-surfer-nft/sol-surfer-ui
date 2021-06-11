@@ -4,8 +4,8 @@ export const generateRandomNft = (nftItemLength: number) => {
   let isUsdc = Math.random() >= 0.5;
   return {
     id: (nftItemLength + 1).toString(),
-    title: getRandomTitle(),
-    owner: getRandomOwner(),
+    title: getRandomTitle(nftItemLength),
+    owner: getRandomOwner(nftItemLength),
     url: "https://source.unsplash.com/random?sig=" + (nftItemLength + 1).toString(),
     currency: isUsdc ? "usdc" : "sol",
     price: isUsdc ? undefined : generateRandomSolPrice(),
@@ -13,12 +13,12 @@ export const generateRandomNft = (nftItemLength: number) => {
   } as NFTItem
 }
 
-const getRandomTitle = () => {
-  return "todo-title"
+const getRandomTitle = (length: number) => {
+  return `Crypto Kittie #${length}`
 }
 
-const getRandomOwner = () => {
-  return "todo-owner"
+const getRandomOwner = (length: number) => {
+  return `CyberPunk #${length}${length + 1}${length + 2}${length + 3}`
 }
 
 // generates random price between 1 - 100

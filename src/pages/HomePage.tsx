@@ -44,7 +44,7 @@ const HomePage = () => {
     <HomePageStyled>
       {showOnboarding ? (
         onboardingQuestions.map((question, index) => index===activeIndex && (
-          <div className="user-onboarding-container">
+          <div className="user-onboarding-container" key={`question-${index}-${question.id}`}>
               <>
                 <Typography.Title level={3} id="tour-1-question" className="user-onboarding-question-text">{question.question}</Typography.Title>
                 <div className="user-onboarding-button-bar">

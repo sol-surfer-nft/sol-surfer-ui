@@ -31,7 +31,7 @@ import { darkModeState, joyrideState, nftItemsState } from './atoms'
 import { generateRandomNft } from './utils/generateRandomNft'
 import { colors } from './styles/colors';
 
-const MIN_NFT_LENGTH = 12
+const MIN_NFT_LENGTH = 5
 
 export function Routes() {
   const isDarkMode = useRecoilValue(darkModeState)
