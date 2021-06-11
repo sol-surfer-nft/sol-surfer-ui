@@ -10,7 +10,6 @@ ReactDOM.render(
     <RecoilRoot>
       <App />
     </RecoilRoot>
-    ,
   </React.StrictMode>,
   document.getElementById('root'),
 );

@@ -7,18 +7,16 @@ const { Header, Content } = Layout;
 
 export default function BasicLayout({ children }) {
   return (
-    <React.Fragment>
-      <StyledLayout>
-        <Header
-          className="basic-layout-header"
-          style={{ padding: 0, minHeight: 64, height: 'unset' }}
-        >
-          <TopBar />
-        </Header>
-        <Content style={{ flex: 1 }}>{children}</Content>
-        <Footer />
-      </StyledLayout>
-    </React.Fragment>
+    <StyledLayout style={{ minHeight: '100vh' }}>
+      <Header
+        className="basic-layout-header"
+        style={{ padding: 0, minHeight: 64, height: 'unset' }}
+      >
+        <TopBar />
+      </Header>
+      <Content style={{ flex: 1 }}>{children}</Content>
+      <Footer />
+    </StyledLayout>
   );
 }
 

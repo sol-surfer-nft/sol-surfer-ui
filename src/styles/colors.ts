@@ -1,6 +1,6 @@
 // color1 is darkest of set, progresses lighter and lighter
 
-export const colors = {
+export const colors: Colors = {
   purple1: "#5D5FEF",
   purple2: "#7879F1",
   purple3: "#A5A6F6",
@@ -8,6 +8,7 @@ export const colors = {
   orange: "#F9C78D",
   lime: "#EFFFCE",
   gray: "#333",
+  lightGray: "#EEE",
   white: "#fff",
   black: "#000"
 }
@@ -19,9 +20,7 @@ export const darkColors = {
   white: "#fff",
 }
 
-export interface ThemeColors {
-  primary: string
-  // secondary: string
+export interface Colors {
   purple1: string
   purple2: string
   purple3: string
@@ -29,9 +28,17 @@ export interface ThemeColors {
   orange: string
   lime: string
   gray: string
+  lightGray: string
   white: string
+  black: string
+}
+
+export interface ThemeColors extends Colors {
+  primary: string
+  // secondary: string
   bg1: string
   bg2: string
   bg3: string
   font: string
+  iconBg: string
 }

@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react';
-import { useRecoilValue, useSetRecoilState } from 'recoil'
+import { useRecoilState } from 'recoil'
 import { ThemeProvider as StyledThemeProvider } from 'styled-components'
 import { HashRouter, Route, Switch } from 'react-router-dom';
 import { theme, darkTheme } from './styles/themes'
 import Joyride, { CallBackProps, } from 'react-joyride' //  ACTIONS, EVENTS, LIFECYCLE, STATUS
+import { useThemeSwitcher } from 'react-css-theme-switcher'
 
 import BasicLayout from './components/BasicLayout';
 
@@ -34,11 +35,10 @@ import { colors } from './styles/colors';
 const MIN_NFT_LENGTH = 5
 
 export function Routes() {
-  const isDarkMode = useRecoilValue(darkModeState)
-  const { steps, isJoyrideActive, activeLessonId } = useRecoilValue(joyrideState)
-  const setJoyrideState = useSetRecoilState(joyrideState)
-  const nftItems = useRecoilValue(nftItemsState)
-  const setNftItems = useSetRecoilState(nftItemsState)
+  const [isDarkMode, setIsDarkMode] = useRecoilState(darkModeState)
+  const [{ steps, isJoyrideActive, activeLessonId }, setJoyrideState] = useRecoilState(joyrideState)
+  const [nftItems, setNftItems] = useRecoilState(nftItemsState)
+  const { currentTheme, status } = useThemeSwitcher()
 
   useEffect(() => {
     // Initialize the number if nft items
@@ -51,6 +51,22 @@ export function Routes() {
       }
     }
   }, [nftItems.length, setNftItems])
+
+  useEffect(() => {
+    if(status === "loading")
+      return;
+
+    if(currentTheme) {
+      if(currentTheme === "dark") {
+        if(!isDarkMode)
+          setIsDarkMode(true)
+      }
+      else {
+        if(isDarkMode)
+          setIsDarkMode(false)
+      }
+    }
+  }, [currentTheme, isDarkMode, setIsDarkMode, status])
 
   const handleJoyrideCallback = (event: CallBackProps) => {
     console.log('react joyride callback event:', event)
