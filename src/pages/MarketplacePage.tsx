@@ -19,16 +19,21 @@ import { generateRandomNft } from '../utils/generateRandomNft'
 // import InfiniteScroll from 'react-infinite-scroller'
 
 
-const NFT_ROWS_PER_LOAD = 2
+const PAGE_PADDING = 30
+const NFT_MARGINS = 16
+
 const NFT_ITEM_WIDTH = 400
-const NFT_TOTAL_ITEM_WIDTH = 400 + 16
+const NFT_TOTAL_ITEM_WIDTH = 400 + NFT_MARGINS
+const MIN_PAGE_WIDTH = NFT_TOTAL_ITEM_WIDTH + PAGE_PADDING
 // const MAX_NFT_ITEMS = 100 // TODO: Pagination or Virtualization
 
+const SM_BREAKPOINT = 576
+const MD_BREAKPOINT = 768
 const LG_BREAKPOINT = 992
 const XL_BREAKPOINT = 1200
 
+const NFT_ROWS_PER_LOAD = 2
 const DEBOUNCE_TIME = 100
-// const SCROLL_THRESHOLD = 100
 
 function debounce(fn, ms) {
   let timer
@@ -54,8 +59,10 @@ const MarketplacePage = () => {
     width: window.innerWidth
   })
 
+  const [nftItemWidth, setNftItemWidth] = useState(NFT_ITEM_WIDTH)
   const [numberNftsPerRow, setNumberNftsPerRow] = useState(1)
   const [gridLeftPadding, setGridLeftPadding] = useState(0)
+  const [hasPadding, setHasPadding] = useState(true)
 
   useEffect(() => {
     // Get favorites from local storage
@@ -95,19 +102,38 @@ const MarketplacePage = () => {
   useEffect(() => {
     // Now, calculate how many rows there need to be according to the dimensions and page padding
     let pagePadding = 15 * 2;
-    if(dimensions.width >= XL_BREAKPOINT)
-      pagePadding = Math.floor(dimensions.width * .165)
-    else if(dimensions.width >= LG_BREAKPOINT)
-      pagePadding = Math.floor(dimensions.width * .0825)
+    if(dimensions.width < SM_BREAKPOINT) {
+      setHasPadding(false)
+      setNumberNftsPerRow(1)
+      setGridLeftPadding(0)
+      if(dimensions.width < (nftItemWidth + NFT_MARGINS + PAGE_PADDING)) {
+        // need to reduce size of NFT
+        setNftItemWidth(dimensions.width - NFT_MARGINS - PAGE_PADDING)
+      }
+    }
+    else if(dimensions.width < MD_BREAKPOINT) {
+      // It is smaller screen, so disable
+      setHasPadding(false)
+      const availableSpace = dimensions.width - pagePadding
+      const numberOfNftItems = Math.floor(availableSpace / NFT_TOTAL_ITEM_WIDTH)
+      setNumberNftsPerRow(numberOfNftItems)
+      setGridLeftPadding(0)
+    }
+    else {
+      if(dimensions.width >= XL_BREAKPOINT)
+        pagePadding = Math.floor(dimensions.width * .165)
+      else if(dimensions.width >= LG_BREAKPOINT)
+        pagePadding = Math.floor(dimensions.width * .0825)
 
-    const availableSpace = dimensions.width - pagePadding
-    const wastedSpace = availableSpace % NFT_TOTAL_ITEM_WIDTH
-    const numberOfNftItems = Math.floor(availableSpace / NFT_TOTAL_ITEM_WIDTH)
-    const paddingLeft = Math.floor(wastedSpace / 2)
+      const availableSpace = dimensions.width - pagePadding
+      const wastedSpace = availableSpace % NFT_TOTAL_ITEM_WIDTH
+      const numberOfNftItems = Math.floor(availableSpace / NFT_TOTAL_ITEM_WIDTH)
+      const paddingLeft = Math.floor(wastedSpace / 2)
 
-    setNumberNftsPerRow(numberOfNftItems)
-    setGridLeftPadding(paddingLeft)
-  }, [dimensions.width])
+      setNumberNftsPerRow(numberOfNftItems)
+      setGridLeftPadding(paddingLeft)
+    }
+  }, [dimensions.width, nftItemWidth, setHasPadding, setNftItemWidth])
 
 
 // Eric's Idea:
@@ -163,7 +189,7 @@ const MarketplacePage = () => {
   }
 
   return (
-    <StyledMarketplace>
+    <StyledMarketplace nftItemWidth={nftItemWidth}>
       <PageHeader title="NFT Marketplace" />
 
         {/* Toolbar / Searchbar / Category Selector here?? Or only in top bar? Could set # per page, filtering, categorization, etc... */}
@@ -173,7 +199,7 @@ const MarketplacePage = () => {
         </div>
 
        {/* NFT Grid here */}
-      <div className="nft-marketplace-grid" style={{paddingLeft: gridLeftPadding }}>
+      <div className="nft-marketplace-grid" style={{paddingLeft: hasPadding ? gridLeftPadding : "initial" }}>
         {/* <InfiniteScroll
           className="nft-marketplace-grid"
           pageStart={0}
@@ -192,7 +218,7 @@ const MarketplacePage = () => {
                   onMouseLeave={handleMouseExit}
                 >
                   <Image
-                    width="auto"
+                    width={dimensions.width > MIN_PAGE_WIDTH ? "auto" : (dimensions.width - 46)}
                     height={NFT_ITEM_WIDTH}
                     preview={false}
                     placeholder={true}
@@ -259,9 +285,9 @@ const StyledMarketplace = styled.div`
 
   .nft-item {
     flex-grow: 1;
-    flex-basis: ${NFT_ITEM_WIDTH}px;
-    width: ${NFT_ITEM_WIDTH}px;
-    max-width: ${NFT_ITEM_WIDTH}px;
+    flex-basis: ${props => props.nftItemWidth}px;
+    width: ${props => props.nftItemWidth}px;
+    max-width: ${props => props.nftItemWidth}px;
     margin: 8px;
     background: ${props => props.theme.colors.bg2};
     // border-radius: 5px;
