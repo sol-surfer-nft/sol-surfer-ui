@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react'
+import { useRecoilValue } from 'recoil'
 import styled from 'styled-components'
 import { useParams } from 'react-router-dom'
 import { Typography, Image, Button, Table } from 'antd'
-import { nftItems, nftBids } from '../data/marketplace.data'
+// TODO: move the bids to recoil as well. only load per item loaded as well
+import { nftBids } from '../data/marketplace.data'
 import { NFTItem } from '../types/NFTItem'
+import { nftItemsState } from '../atoms'
 
 const bidTableColumns = [
   {
@@ -25,21 +28,17 @@ const bidTableColumns = [
 
 const NFTDetailPage = () => {
   const params = useParams();
-
+  const nfts = useRecoilValue(nftItemsState)
   const [nftItem, setNftItem] = useState<NFTItem | undefined>(undefined)
 
   useEffect(() => {
-    console.log('mounted nft detail page. params:', params.nftId)
-    getNftItemById(params.nftId)
-  }, [params.nftId])
-
-  const getNftItemById = (id: string) => {
-    let newItem = nftItems.find(item => item.id === id)
+    let newItem = nfts.find(item => item.id === params.nftId)
     setNftItem(newItem)
-  }
+  }, [params.nftId, nfts])
 
   const handleBuyNft = (id: string) => {
     console.log('wanted to buy nft with id:', id)
+    // TODO: Add solana hooks functionality here
   }
 
   const getIsNFTForSale = (id: string) => {

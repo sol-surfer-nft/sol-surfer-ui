@@ -28,14 +28,14 @@ const StyledContentLayout = styled.div`
     margin-left: auto;
     margin-bottom: 4rem;
   }
-  @media (min-width: 992px) {
+  @media (min-width: ${props => props.theme.breakpoints.lg}px) {
     &.container {
       width: 91.75%;
       padding-left: 0;
       padding-right: 0;
     }
   }
-  @media (min-width: 1200px) {
+  @media (min-width: ${props => props.theme.breakpoints.xl}px) {
     &.container {
       width: 83.5%;
       padding-left: 0;

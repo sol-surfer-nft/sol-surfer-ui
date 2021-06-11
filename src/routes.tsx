@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { ThemeProvider as StyledThemeProvider } from 'styled-components'
 import { HashRouter, Route, Switch } from 'react-router-dom';
@@ -26,16 +26,32 @@ import NotFoundPage from './pages/NotFoundPage';
 // import ConvertPage from './pages/ConvertPage';
 // import TradePage from './pages/TradePage';
 // import OpenOrdersPage from './pages/OpenOrdersPage';
-
 import { ContentLayout } from './components/ContentLayout'
-import { darkModeState, joyrideState } from './atoms'
+import { darkModeState, joyrideState, nftItemsState } from './atoms'
+import { generateRandomNft } from './utils/generateRandomNft'
 import { colors } from './styles/colors';
+
+const MIN_NFT_LENGTH = 5
 
 export function Routes() {
   const isDarkMode = useRecoilValue(darkModeState)
   const { steps, isJoyrideActive, activeLessonId } = useRecoilValue(joyrideState)
   const setJoyrideState = useSetRecoilState(joyrideState)
-  
+  const nftItems = useRecoilValue(nftItemsState)
+  const setNftItems = useSetRecoilState(nftItemsState)
+
+  useEffect(() => {
+    // Initialize the number if nft items
+    if(nftItems.length < MIN_NFT_LENGTH) {
+      let remainingNFTLength = MIN_NFT_LENGTH - nftItems.length;
+      for(let i=remainingNFTLength; i > 0; i--) {
+        let nextLength = nftItems.length + i - 1
+        let newItem = generateRandomNft(nextLength);
+        setNftItems(oldItems => [...oldItems, newItem])
+      }
+    }
+  }, [nftItems.length, setNftItems])
+
   const handleJoyrideCallback = (event: CallBackProps) => {
     console.log('react joyride callback event:', event)
     if(event.lifecycle === "complete" && event.status === "finished") {
@@ -45,10 +61,6 @@ export function Routes() {
       setJoyrideState(oldJoyride => ({...oldJoyride, isJoyrideActive: false }))
     }
   }
-
-  // const toggleJoyride = (lessonId: string) => {
-  //   setJoyrideState(oldJoyride => ({...oldJoyride, activeLessonId: lessonId, isJoyrideActive: !oldJoyride.isJoyrideActive }))
-  // }
 
   return (
     <StyledThemeProvider theme={isDarkMode ? darkTheme : theme}>
