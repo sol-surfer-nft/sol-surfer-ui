@@ -71,7 +71,7 @@ const MarketplacePage = () => {
           <article className="nft-item" key={nftItem.id}>
             <Link to={`/marketplace/${nftItem.id}`}>
               <div
-                className={`nft-item-image-container ${nftItemIndex === hoverIndex && "nft-item-image-hover"}`}
+                className={`nft-item-image-container ${(nftItemIndex === hoverIndex || favorites.includes(nftItem.id)) && "nft-item-image-hover"}`}
                 onMouseEnter={() => handleMouseEnter(nftItemIndex)}
                 onMouseLeave={handleMouseExit}
               >
@@ -209,6 +209,13 @@ const StyledMarketplace = styled.div`
     margin: auto;
     position: relative;
 
+    &:hover {
+      .nft-item-image-button {
+        background-color: #333;
+        transition: .12s ease-in-out background-color;
+      }
+    }
+
     .nft-item-image-button {
       display: none;
       position: absolute;
@@ -223,8 +230,7 @@ const StyledMarketplace = styled.div`
       .nft-item-image-button {
         display: inline-block;
         text-align: center;
-        background-color: #333;
-        transition: .12s ease-in-out display background-color;
+        transition: .12s ease-in-out display;
       }
     }
 
