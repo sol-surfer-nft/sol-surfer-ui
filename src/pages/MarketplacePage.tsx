@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useRecoilState } from 'recoil'
+import { useRecoilValue } from 'recoil'
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
 import { Typography, Image, Button } from 'antd'
@@ -10,7 +10,7 @@ import solLogo from '../assets/sol-logo.png'
 import { nftItemsState } from '../atoms'
 
 const MarketplacePage = () => {
-  const [nftItems, setNftItems] = useRecoilState(nftItemsState)
+  const nftItems = useRecoilValue(nftItemsState)
   const [hoverIndex, setHoverIndex] = useState(-1)
   const [favorites, setFavorites] = useState<string[]>([])
 
