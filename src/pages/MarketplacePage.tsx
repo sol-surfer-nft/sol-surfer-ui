@@ -117,10 +117,6 @@ const MarketplacePage = () => {
 // - can calculate an offset variable, keep track of last offset.
 
 
-  useEffect(() => {
-    console.log('nfts per row changed:', numberNftsPerRow)
-  }, [numberNftsPerRow])
-
   const handleItemHeartClick = (e: any, nftId: string) => {
     e.preventDefault()
     e.stopPropagation()
@@ -154,19 +150,13 @@ const MarketplacePage = () => {
     setLoadingNfts(true)
     // if current # nfts does not fit evenly into # rendered per row, there's gaps that need to be filled
     // fill by adding the remainder which represents # of gaps
-    console.log('handleLoadMore: number nfts per row:', numberNftsPerRow)
     if(nftItems.length % numberNftsPerRow !== 0) {
       let remainder = numberNftsPerRow - (nftItems.length % numberNftsPerRow)
-      console.log('remainder:', remainder)
-      let numberNfts = (NFT_ROWS_PER_LOAD * numberNftsPerRow) + remainder
-      console.log('number nfts in loadMore:', numberNfts)
-      addMoreNFTs(numberNfts)
+      addMoreNFTs((NFT_ROWS_PER_LOAD * numberNftsPerRow) + remainder)
     }
     // else load 2 full new rows, should not be gaps left
     else {
-      let numberNfts = NFT_ROWS_PER_LOAD * numberNftsPerRow
-      console.log('number nfts in loadMore:', numberNfts)
-      addMoreNFTs(numberNfts)
+      addMoreNFTs(NFT_ROWS_PER_LOAD * numberNftsPerRow)
     }
 
     setLoadingNfts(false)

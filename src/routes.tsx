@@ -52,10 +52,6 @@ export function Routes() {
     }
   }, [nftItems.length, setNftItems])
 
-  useEffect(() => {
-    console.log('nft items:', nftItems)
-  }, [nftItems])
-  
   const handleJoyrideCallback = (event: CallBackProps) => {
     console.log('react joyride callback event:', event)
     if(event.lifecycle === "complete" && event.status === "finished") {

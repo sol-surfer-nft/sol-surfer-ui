@@ -21,8 +21,6 @@ const SellNFTPage = () => {
   }, [params, params.nftId])
 
   const sellNft = (data: SellNftFormData) => {
-    console.log('selling nft with data:', data)
-
     setNftItems((oldNftItems) => [
       ...oldNftItems,
       {
