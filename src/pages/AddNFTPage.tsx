@@ -36,8 +36,6 @@ const AddNFTPage = () => {
 
 
   const addNft = (addNftFormData: AddNFTFormData) => {
-    console.log('valid nft form data submitted:', addNftFormData)
-
     setNftItems((oldNftItems) => [
       ...oldNftItems,
       {

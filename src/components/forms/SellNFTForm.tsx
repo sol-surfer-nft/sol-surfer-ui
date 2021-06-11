@@ -28,10 +28,8 @@ export const SellNFTForm: React.FC<SellNFTFormProps> = ({
 
   useEffect(() => {
     if(nftId) {
-      console.log('selling nft with id:', nftId);
       // Find the nft by id
       let nftItem = nftItems.find(nft => nft.id === nftId)
-      console.log('nft item:', nftItem)
       setNftData(nftItem || null)
       form.setFieldsValue({ "sell-nft-title": nftItem?.title })
     }
@@ -45,8 +43,6 @@ export const SellNFTForm: React.FC<SellNFTFormProps> = ({
   const handleFinishedForm = (e: any) => {
     
     const formValues = form.getFieldsValue(true)
-    
-    console.log('submitting form with values:', formValues)
     
     if(!formValues["sell-nft-title"] || !formValues["sell-nft-price"] || !formValues["sell-nft-currency"]) {
       alert("There are invalid form fields")

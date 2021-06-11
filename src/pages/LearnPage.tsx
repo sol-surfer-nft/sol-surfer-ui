@@ -22,7 +22,6 @@ const LearnPage = () => {
   const history = useHistory()
 
   const handleItemClick = (lessonId: string) => {
-    console.log('clicked lesson with id:', lessonId)
     // Begin intro with the given id
     let steps = allSteps[lessonId]
     if(!steps) {
