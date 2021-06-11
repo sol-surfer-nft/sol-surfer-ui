@@ -186,22 +186,6 @@ const StyledMarketplace = styled.div`
         }
       }
     }
-
-    .nft-item-like-button {
-      background: transparent;
-      border-width: 1px;
-      border-style: solid;
-      border-color: transparent;
-      vertical-align: center;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-
-      &:hover {
-        border-color: ${props => props.theme.colors.primary};
-        transition: .1s ease-in-out ${props => props.theme.colors.primary};
-      }
-    }
   }
   .nft-item-image-container{
     text-align: center;
