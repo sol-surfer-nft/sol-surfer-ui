@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useRecoilValue } from 'recoil'
+import { useRecoilState } from 'recoil'
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
 import { Typography, Image, Button, Spin, /*List*/  } from 'antd'
@@ -43,7 +43,7 @@ function debounce(fn, ms) {
 }
 
 const MarketplacePage = () => {
-  const nftItems = useRecoilValue(nftItemsState)
+  const [nftItems, setNftItems] = useRecoilState(nftItemsState)
   const [hoverIndex, setHoverIndex] = useState(-1)
   const [favorites, setFavorites] = useState<string[]>([])
 
