@@ -231,6 +231,10 @@ const StyledForm = styled(Form)`
     flex: 1;
     text-align: center;
     padding-left: 1rem;
+
+    .ant-form-item-label {
+      text-align: center !important;
+    }
   }
 
   @media(max-width: ${props => props.theme.breakpoints.md}px) {
