@@ -9,6 +9,7 @@ export const theme: Theme = {
     bg2: colors.white,
     bg3: colors.white,
     font: colors.black,
+    iconBg: colors.lightGray,
     ...colors
   },
   breakpoints: breakpoints
@@ -22,6 +23,7 @@ export const darkTheme: Theme = {
     bg2: darkColors.dark2,
     bg3: darkColors.dark3,
     font: colors.white,
+    iconBg: colors.gray,
     ...colors
   },
   breakpoints: breakpoints

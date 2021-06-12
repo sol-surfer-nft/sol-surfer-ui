@@ -1,3 +1,10 @@
+import React, { useCallback, useEffect, useState } from 'react';
+import { useRecoilValue, useSetRecoilState } from 'recoil'
+import { useHistory, useLocation } from 'react-router-dom';
+import { useThemeSwitcher } from 'react-css-theme-switcher'
+import styled from 'styled-components';
+import { Connection } from '@solana/web3.js';
+import { Button, Col, Menu, Popover, Row, Select, Tooltip } from 'antd';
 import {
   InfoCircleOutlined,
   PlusCircleOutlined,
@@ -5,23 +12,17 @@ import {
   BulbOutlined,
   BulbFilled,
 } from '@ant-design/icons';
-import { Button, Col, Menu, Popover, Row, Select, Tooltip } from 'antd';
-import React, { useCallback, useEffect, useState } from 'react';
-import { useRecoilValue, useSetRecoilState } from 'recoil'
-import { useHistory, useLocation } from 'react-router-dom';
-import logo from '../assets/logo.svg';
-import styled from 'styled-components';
-import { useWallet } from '../utils/wallet';
-import { ENDPOINTS, useConnectionConfig } from '../utils/connection';
 import Settings from './Settings';
 import CustomClusterEndpointDialog from './CustomClusterEndpointDialog';
-import { EndpointInfo } from '../utils/types';
-import { notify } from '../utils/notifications';
-import { Connection } from '@solana/web3.js';
 import WalletConnect from './WalletConnect';
 import AppSearch from './AppSearch';
+import { ENDPOINTS, useConnectionConfig } from '../utils/connection';
+import { EndpointInfo } from '../utils/types';
+import { notify } from '../utils/notifications';
+import { useWallet } from '../utils/wallet';
 import learnItems from '../data/learn.data';
 import { colors } from '../styles/colors';
+import logo from '../assets/logo.svg';
 import { darkModeState, joyrideState } from '../atoms';
 
 const Wrapper = styled.div`
@@ -68,9 +69,10 @@ export default function TopBar() {
   const [searchFocussed, setSearchFocussed] = useState(false);
   const location = useLocation();
   const history = useHistory();
+  const { switcher, themes } = useThemeSwitcher()
 
   const isDarkMode = useRecoilValue(darkModeState)
-  const setIsDarkMode = useSetRecoilState(darkModeState);
+  const setIsDarkMode = useSetRecoilState(darkModeState)
   const { steps/*, progress, activeLessonId, isJoyrideActive*/ } = useRecoilValue(joyrideState)
   const setJoyrideState = useSetRecoilState(joyrideState)
 
@@ -126,8 +128,6 @@ export default function TopBar() {
   };
 
   const handleLearnItemClick = (lessonId: string) => {
-    console.log('learn item clicked with id:', lessonId);
-
     if(steps[lessonId]) {
       if(lessonId === "0")
         history.push("/")
@@ -156,6 +156,8 @@ export default function TopBar() {
   }, [endpointInfoCustom, setEndpoint]);
 
   const toggleDarkMode = () => {
+    localStorage.setItem("solsurfer.theme", isDarkMode ? "light" : "dark")
+    switcher({ theme: isDarkMode ? themes.light : themes.dark })
     setIsDarkMode((prevTheme) => !prevTheme);
   };
 
@@ -193,9 +195,9 @@ export default function TopBar() {
               Add Nft
             </Menu.Item>
           )}
-          {(!searchFocussed || location.pathname === '/nft-gallery') && (
+          {(!searchFocussed || location.pathname === '/gallery') && (
             <Menu.Item
-              key="/nft-gallery"
+              key="/gallery"
               style={{ margin: '0 10px', textTransform: 'uppercase' }}
             >
               Gallery

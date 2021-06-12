@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
-import { useSetRecoilState } from 'recoil'
+import { useRecoilState } from 'recoil'
 import styled from 'styled-components'
-import { Typography, Button } from 'antd'
 import { PageHeader } from '../components/PageHeader/PageHeader'
 import { AddNFTForm } from '../components/forms/AddNFTForm'
+import { SuccessSurface } from '../components/surfaces/SuccessSurface'
 import { nftItemsState } from '../atoms'
 // import { useUserBalance } from '../hooks/useUserBalance'
 export interface AddNFTFormData {
@@ -18,7 +18,7 @@ export interface AddNFTFormData {
 
 const AddNFTPage = () => {
   const [isSuccess, setIsSuccess] = useState(false)
-  const setNftItems = useSetRecoilState(nftItemsState)
+  const [nftItems, setNftItems] = useRecoilState(nftItemsState)
   const history = useHistory()
 
   // "mint" param is optional, is the account number of program desired
@@ -36,16 +36,19 @@ const AddNFTPage = () => {
 
 
   const addNft = (addNftFormData: AddNFTFormData) => {
+    // Query the owner here
+    const mockOwner = "temp-owner"
+
     setNftItems((oldNftItems) => [
       ...oldNftItems,
       {
         id: (oldNftItems.length + 1).toString(),
         title: addNftFormData.title,
-        owner:  addNftFormData.owner,
+        owner:  mockOwner, // update
         price: addNftFormData.price,
         usdcPrice: addNftFormData.usdcPrice,
         currency: addNftFormData.currency,
-        url: "https://source.unsplash.com/random"
+        url: "https://source.unsplash.com/random?sig=" + nftItems.length + 1
       }
     ])
 
@@ -56,55 +59,40 @@ const AddNFTPage = () => {
 
   const onAddAgain = () => {
     setIsSuccess(false);
-
+    // Reset other variables
   }
 
   const navigateToMarketplace = () => history.push("/")
 
   return (
     <AddNFTPageContainer>
-      {!isSuccess && <PageHeader title="Add NFT" />}
-
       {!isSuccess ? (
-        <AddNFTForm addNft={addNft} />
+        <>
+          <PageHeader title="Add NFT" />
+          <AddNFTForm addNft={addNft} />
+        </>
       ) : (
-        <div className="submitted-container">
-          <Typography.Title level={1} className="submitted-success-text">NFT Added Successfully!</Typography.Title>
-          <div className="submitted-button-bar">
-            <Button className="submitted-success-button ssb-1" onClick={onAddAgain}>Add Again</Button>
-            <Button className="submitted-success-button" onClick={navigateToMarketplace}>Go to Marketplace</Button>
-          </div>
-        </div>
+        <SuccessSurface
+          title="NFT Added Successfully!"
+          success={true}
+          buttons={[
+            {
+              title: "Add Another",
+              action: onAddAgain
+            },
+            {
+              title: "Back to Marketplace",
+              action: navigateToMarketplace
+            }
+          ]}
+        />
       )}
     </AddNFTPageContainer>
   )
 }
 
 const AddNFTPageContainer = styled.div`
-  .submitted-container {
-    margin-top: 2rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 2rem;
-
-    background: ${props => props.theme.colors.bg2};
-
-    .submitted-button-bar {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    .submitted-success-text {
-      font-size: 2rem;
-      margin-bottom: 2rem;
-      text-align: center;
-    }
-    .ssb-1 {
-      margin-right: 1.5rem;
-    }
-  }
+  
 `
 
 export default AddNFTPage

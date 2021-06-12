@@ -7,7 +7,6 @@ import ErrorBoundary from './components/ErrorBoundary';
 import { Routes } from './routes';
 import { PreferencesProvider } from './utils/preferences';
 import './App.less';
-// import AppProvider from './context/AppProvider'
 
 export default function App() {
   return (

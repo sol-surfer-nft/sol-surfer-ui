@@ -350,7 +350,7 @@ const StyledMarketplace = styled.div`
 
     &:hover {
       .nft-item-image-button {
-        background-color: #333;
+        background-color: ${props => props.theme.colors.iconBg};
         transition: .12s ease-in-out background-color;
       }
     }

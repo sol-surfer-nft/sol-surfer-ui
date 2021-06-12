@@ -2,7 +2,17 @@
   "name": "sol-surfer-ui",
   "version": "0.1.1",
   "private": true,
-  "homepage": "https://solsurfer.io",
+  "homepage": "https://solsurfer.xyz",
+  "scripts": {
+    "predeploy": "git pull --ff-only && yarn && yarn gulp && yarn build",
+    "deploy": "gh-pages -d build",
+    "start": "craco start",
+    "build": "gulp less && craco build",
+    "test": "craco test",
+    "eject": "react-scripts eject",
+    "prettier": "prettier --write src",
+    "gulp": "gulp less"
+  },
   "dependencies": {
     "@ant-design/icons": "^4.2.1",
     "@craco/craco": "^5.6.4",
@@ -33,6 +43,7 @@
     "react": "^16.13.1",
     "react-app-polyfill": "^1.0.5",
     "react-copy-to-clipboard": "^5.0.2",
+    "react-css-theme-switcher": "^0.3.0",
     "react-dom": "^16.13.1",
     "react-is": "^17.0.1",
     "react-joyride": "^2.3.0",
@@ -43,14 +54,22 @@
     "styled-components": "^5.1.1",
     "typescript": "^3.9.7"
   },
-  "scripts": {
-    "predeploy": "git pull --ff-only && yarn && yarn build",
-    "deploy": "gh-pages -d build",
-    "start": "craco start",
-    "build": "craco build",
-    "test": "craco test",
-    "eject": "react-scripts eject",
-    "prettier": "prettier --write src"
+  "devDependencies": {
+    "@types/ledgerhq__hw-transport": "^4.21.3",
+    "@types/ledgerhq__hw-transport-webusb": "^4.70.1",
+    "autoprefixer": "^10.2.6",
+    "gh-pages": "^3.1.0",
+    "git-format-staged": "^2.1.0",
+    "gulp": "^4.0.2",
+    "gulp-csso": "^4.0.1",
+    "gulp-debug": "^4.0.0",
+    "gulp-less": "^4.0.1",
+    "gulp-postcss": "^9.0.0",
+    "husky": "^4.2.5",
+    "less-plugin-npm-import": "^2.1.0",
+    "lint-staged": ">=10",
+    "postcss": "^8.3.2",
+    "prettier": "^2.0.5"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -81,22 +100,6 @@
     "hooks": {
       "pre-commit": "lint-staged"
     }
-  },
-  "devDependencies": {
-    "@types/ledgerhq__hw-transport": "^4.21.3",
-    "@types/ledgerhq__hw-transport-webusb": "^4.70.1",
-    "autoprefixer": "^10.2.6",
-    "gh-pages": "^3.1.0",
-    "git-format-staged": "^2.1.0",
-    "gulp": "^4.0.2",
-    "gulp-csso": "^4.0.1",
-    "gulp-debug": "^4.0.0",
-    "gulp-less": "^4.0.1",
-    "gulp-postcss": "^9.0.0",
-    "husky": "^4.2.5",
-    "less-plugin-npm-import": "^2.1.0",
-    "lint-staged": ">=10",
-    "prettier": "^2.0.5"
   },
   "lint-staged": {
     "*.{js,jsx,css,md}": "prettier --write"
