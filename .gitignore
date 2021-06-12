@@ -25,3 +25,6 @@ yarn-error.log*
 .idea
 
 .env
+
+public/light-theme.css
+public/dark-theme.css
