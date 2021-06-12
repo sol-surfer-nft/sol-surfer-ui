@@ -195,9 +195,9 @@ export default function TopBar() {
               Add Nft
             </Menu.Item>
           )}
-          {(!searchFocussed || location.pathname === '/nft-gallery') && (
+          {(!searchFocussed || location.pathname === '/gallery') && (
             <Menu.Item
-              key="/nft-gallery"
+              key="/gallery"
               style={{ margin: '0 10px', textTransform: 'uppercase' }}
             >
               Gallery

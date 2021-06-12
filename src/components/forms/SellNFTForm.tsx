@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
-import { Form, Button, Input, Select, Row, Col } from 'antd'
+import { Form, Button, Input, Select, Row, Col, Image } from 'antd'
 import { NFTItem } from '../../types/NFTItem'
 import { nftItems } from '../../data/marketplace.data'
 
@@ -18,6 +18,13 @@ export interface SellNftFormData {
   owner: string
 }
 
+const layout = {
+  labelCol: { span: 24 },
+  wrapperCol: { span: 24 },
+};
+
+const mockOwner = "temp-owner"
+
 export const SellNFTForm: React.FC<SellNFTFormProps> = ({
   nftId,
   sellNft,
@@ -31,7 +38,7 @@ export const SellNFTForm: React.FC<SellNFTFormProps> = ({
       // Find the nft by id
       let nftItem = nftItems.find(nft => nft.id === nftId)
       setNftData(nftItem || null)
-      form.setFieldsValue({ "sell-nft-title": nftItem?.title })
+      form.setFieldsValue({ "sell-nft-title": nftItem?.title, "sell-nft-owner": mockOwner })
     }
 
     return () => {
@@ -61,7 +68,7 @@ export const SellNFTForm: React.FC<SellNFTFormProps> = ({
           price: nftSolPrice,
           usdcPrice: nftUsdcPrice,
           currency: currencySelected,
-          owner: "temp-user"
+          owner: mockOwner
         })
       }
     }
@@ -70,50 +77,97 @@ export const SellNFTForm: React.FC<SellNFTFormProps> = ({
   const handleFinishFailed = (e: any) => {
     console.log('finish failed. event:', e)
   }
+
+  const resetForm = () => {
+    form.resetFields();
+    form.setFieldsValue({
+      "sell-nft-owner": mockOwner,
+      "sell-nft-title": nftData?.title,
+    })
+  }
   
   return (
     <StyledForm
+      {...layout}
       name="sell-nft-form"
       layout="vertical"
       form={form}
       onFinish={handleFinishedForm}
       onFinishFailed={handleFinishFailed}
     >
-      {/* Choose between usdc / sol... Needs converter function? */}
-      <Form.Item name="sell-nft-title" label="Title">
-        <Input value={nftData?.title} disabled />
-      </Form.Item>
+      <div className="left-form-container">
+        <Form.Item name="sell-nft-owner" label="Creator" >
+          <Input value={mockOwner} disabled />
+        </Form.Item>
 
-      <Form.Item initialValue={nftData?.usdcPrice || nftData?.price} label="Price">
-        <Row>
-          <Col>
-            <Form.Item name="sell-nft-price" noStyle rules={[{ required: true }]}>
-              <Input id="sell-nft-price" type="number" min={0} max={10000000} />
-            </Form.Item>
-          </Col>
-          <Col>
-            <Form.Item
-              initialValue={nftData?.price ? "sol" : nftData?.usdcPrice ? "usdc" : "sol"}
-              name="sell-nft-currency"
-              label="Currency"
-              noStyle
-              rules={[{ required: true, message: 'Please select currency' }]}
-            >
-              <Select placeholder="Currency">
-                <Select.Option value="sol">SOL</Select.Option>
-                <Select.Option value="usdc">USDC</Select.Option>
-              </Select>
-            </Form.Item>
-          </Col>
-        </Row>
-      </Form.Item>
+        <Form.Item name="sell-nft-title" label="Title">
+          <Input value={nftData?.title} disabled />
+        </Form.Item>
 
-      <Button htmlType="submit">Submit</Button>
-      <Button htmlType="reset">Clear</Button>
+        <Form.Item initialValue={nftData?.usdcPrice || nftData?.price} label="Price">
+          <Row>
+            <Col>
+              <Form.Item name="sell-nft-price" noStyle rules={[{ required: true }]}>
+                <Input id="sell-nft-price" type="number" min={0} max={10000000} />
+              </Form.Item>
+            </Col>
+            <Col>
+              <Form.Item
+                initialValue={nftData?.price ? "sol" : nftData?.usdcPrice ? "usdc" : "sol"}
+                name="sell-nft-currency"
+                label="Currency"
+                noStyle
+                rules={[{ required: true, message: 'Please select currency' }]}
+              >
+                <Select placeholder="Currency">
+                  <Select.Option value="sol">SOL</Select.Option>
+                  <Select.Option value="usdc">USDC</Select.Option>
+                </Select>
+              </Form.Item>
+            </Col>
+          </Row>
+        </Form.Item>
+
+        <Button htmlType="submit">Submit</Button>
+        <Button htmlType="reset" onClick={resetForm}>Clear</Button>
+      </div>
+
+      <div className="right-form-container">
+        {/* Add Preview for Image */}
+        <Image
+          src={nftData?.url}
+          placeholder={true}
+          style={{ width: '100%', maxHeight: 400 }}
+          alt={`listing nft for sale: ${nftData?.title}`}
+        />
+      </div>
     </StyledForm>
   )
 }
 
 const StyledForm = styled(Form)`
-  // background: black;
+  display: flex;
+  flex-direction: row;
+
+  .left-form-container {
+    flex: 1;
+    padding-right: 1rem;
+  }
+  .right-form-container {
+    flex: 1;
+    text-align: center;
+    padding-left: 1rem;
+  }
+
+  @media(max-width: ${props => props.theme.breakpoints.md}px) {
+    flex-direction: column-reverse;
+
+    .right-form-container {
+      margin-bottom: 2rem;
+      padding-left: 0;
+    }
+    .left-form-container {
+      padding-right: 0;
+    }
+  }
 `;

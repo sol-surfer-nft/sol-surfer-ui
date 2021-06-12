@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
-import { useSetRecoilState } from 'recoil'
+import { useRecoilState } from 'recoil'
 import styled from 'styled-components'
 import { PageHeader } from '../components/PageHeader/PageHeader'
 import { AddNFTForm } from '../components/forms/AddNFTForm'
@@ -18,7 +18,7 @@ export interface AddNFTFormData {
 
 const AddNFTPage = () => {
   const [isSuccess, setIsSuccess] = useState(false)
-  const setNftItems = useSetRecoilState(nftItemsState)
+  const [nftItems, setNftItems] = useRecoilState(nftItemsState)
   const history = useHistory()
 
   // "mint" param is optional, is the account number of program desired
@@ -36,16 +36,19 @@ const AddNFTPage = () => {
 
 
   const addNft = (addNftFormData: AddNFTFormData) => {
+    // Query the owner here
+    const mockOwner = "temp-owner"
+
     setNftItems((oldNftItems) => [
       ...oldNftItems,
       {
         id: (oldNftItems.length + 1).toString(),
         title: addNftFormData.title,
-        owner:  addNftFormData.owner,
+        owner:  mockOwner, // update
         price: addNftFormData.price,
         usdcPrice: addNftFormData.usdcPrice,
         currency: addNftFormData.currency,
-        url: "https://source.unsplash.com/random"
+        url: "https://source.unsplash.com/random?sig=" + nftItems.length + 1
       }
     ])
 
