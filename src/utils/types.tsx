@@ -4,15 +4,6 @@ import { Event } from '@project-serum/serum/lib/queue';
 import { Order } from '@project-serum/serum/lib/market';
 import { WalletAdapter } from '../wallet-adapters';
 
-export interface ConnectionContextValues {
-  endpoint: string;
-  setEndpoint: (newEndpoint: string) => void;
-  connection: Connection;
-  sendConnection: Connection;
-  availableEndpoints: EndpointInfo[];
-  setCustomEndpoints: (newCustomEndpoints: EndpointInfo[]) => void;
-}
-
 export interface WalletContextValues {
   wallet: WalletAdapter | undefined;
   connected: boolean;

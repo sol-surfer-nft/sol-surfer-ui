@@ -12,12 +12,12 @@ import {
   BulbOutlined,
   BulbFilled,
 } from '@ant-design/icons';
-import Settings from './Settings';
-import CustomClusterEndpointDialog from './CustomClusterEndpointDialog';
-import WalletConnect from './WalletConnect';
+import Settings from './TopBar/Settings';
+import CustomClusterEndpointDialog from './TopBar/CustomClusterEndpointDialog';
+import WalletConnect from './TopBar/ConnectWallet/WalletConnect';
 import AppSearch from './AppSearch';
-import { ENDPOINTS, useConnectionConfig } from '../utils/connection';
 import { EndpointInfo } from '../utils/types';
+import { ENDPOINTS, useConnectionConfig } from '../utils/connection';
 import { notify } from '../utils/notifications';
 import { useWallet } from '../utils/wallet';
 import learnItems from '../data/learn.data';

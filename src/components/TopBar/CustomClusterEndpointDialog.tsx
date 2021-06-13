@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Col, Input, Modal, Row } from 'antd';
-import { EndpointInfo } from '../utils/types';
+import { EndpointInfo } from '../../utils/types';
 
 export default function CustomClusterEndpointDialog({
   visible,

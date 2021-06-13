@@ -1,10 +1,10 @@
 import React, { Suspense } from 'react';
-import { ConnectionProvider } from './utils/connection';
-import { WalletProvider } from './utils/wallet';
 import { GlobalStyle } from './global_style';
 import { Spin } from 'antd';
-import ErrorBoundary from './components/ErrorBoundary';
+import { ErrorSurface } from './components/surfaces/ErrorSurface';
 import { Routes } from './routes';
+import { ConnectionProvider } from './utils/connection';
+import { WalletProvider } from './utils/wallet';
 import { PreferencesProvider } from './utils/preferences';
 import './App.less';
 
@@ -12,7 +12,13 @@ export default function App() {
   return (
     <Suspense fallback={() => <Spin size="large" />}>
       <GlobalStyle />
-      <ErrorBoundary>
+      <ErrorSurface>
+        {/* TODO:
+          Rip out Serum Providers:
+          [x] ConnectionProvider
+          [x] WallerProvider
+          [x] PreferencesProvider
+        */}
         <ConnectionProvider>
           <WalletProvider>
             <PreferencesProvider>
@@ -22,7 +28,7 @@ export default function App() {
             </PreferencesProvider>
           </WalletProvider>
         </ConnectionProvider>
-      </ErrorBoundary>
+      </ErrorSurface>
     </Suspense>
   );
 }

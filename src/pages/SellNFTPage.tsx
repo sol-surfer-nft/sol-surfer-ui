@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import { PageHeader } from '../components/PageHeader/PageHeader'
 import { SellNFTForm, SellNftFormData } from '../components/forms/SellNFTForm'
 import { nftItemsState } from '../atoms'
-import { SuccessSurface } from '../components/surfaces/SuccessSurface'
+import { StatusSurface } from '../components/surfaces/StatusSurface'
 
 const SellNFTPage = () => {
   const params = useParams()
@@ -53,7 +53,7 @@ const SellNFTPage = () => {
           <SellNFTForm nftId={nftId} sellNft={sellNft} />
         </>
       ) : (
-        <SuccessSurface
+        <StatusSurface
           title="NFT Listed Successfully!"
           success={true}
           buttons={[

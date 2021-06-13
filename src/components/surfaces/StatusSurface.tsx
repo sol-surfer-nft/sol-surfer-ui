@@ -11,45 +11,52 @@ interface Props {
   title: string
   buttons?: IButton[]
   success?: boolean
+  error?: boolean
 }
 
-export const SuccessSurface: React.FC<Props> = ({
+export const StatusSurface: React.FC<Props> = ({
   title,
   buttons,
   success,
+  error,
 }) => {
   return (
-    <StyledSuccessSurface>
+    <StyledStatusSurface>
       {success && (
-        <div className="success-image-container">
-          <CheckCircleOutlined color="success" style={{fontSize: 48, color: "#52c41a"}} />
+        <div className="status-image-container">
+          <CheckCircleOutlined style={{fontSize: 48, color: "#52c41a"}} />
         </div>
       )}
-      <div className="success-surface-container">
-        <Typography.Title level={1} className="submitted-success-text">{title}</Typography.Title>
+      {error && (
+        <div className="status-image-container">
+          <CheckCircleOutlined style={{fontSize: 48, color: "#FF0000"}} />
+        </div>
+      )}
+      <div className="status-surface-container">
+        <Typography.Title level={1} className="submitted-status-text">{title}</Typography.Title>
         {buttons && (
           <div className="submitted-button-bar">
           {buttons.map((button, index) => (
-            <Button size="large" className={`submitted-success-button ${index !== buttons.length - 1 && "ssb-1"}`} onClick={button.action}>{button.title}</Button>
-            ))}
+            <Button size="large" className={`submitted-status-button ${index !== buttons.length - 1 && "ssb-1"}`} onClick={button.action}>{button.title}</Button>
+          ))}
           </div>
         )}
       </div>
-    </StyledSuccessSurface>
+    </StyledStatusSurface>
   )
 }
 
-const StyledSuccessSurface = styled.div`
+const StyledStatusSurface = styled.div`
   margin-top: 2rem;
 
-  .success-surface-container {
+  .status-surface-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     padding: 2rem;
   }
-  .success-image-container {
+  .status-image-container {
     padding-top: 2rem;
     text-align: center;
   }
@@ -61,7 +68,7 @@ const StyledSuccessSurface = styled.div`
     justify-content: center;
     align-items: center;
   }
-  .submitted-success-text {
+  .submitted-status-text {
     font-size: 2rem;
     margin-bottom: 2rem;
     text-align: center;

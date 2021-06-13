@@ -10,7 +10,8 @@ export const colors: Colors = {
   gray: "#333",
   lightGray: "#EEE",
   white: "#fff",
-  black: "#000"
+  black: "#000",
+  red: "#FF0000",
 }
 
 export const darkColors = {
@@ -31,6 +32,7 @@ export interface Colors {
   lightGray: string
   white: string
   black: string
+  red: string
 }
 
 export interface ThemeColors extends Colors {
