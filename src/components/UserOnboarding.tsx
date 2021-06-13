@@ -153,7 +153,7 @@ const StyledUserOnboarding = styled.div`
       color: ${props => props.theme.colors.font};
 
       &:hover {
-        background-color: ${props => props.theme.colors.lightGray};
+        background-color: ${props => props.theme.colors.iconBg};
       }
     }
   }

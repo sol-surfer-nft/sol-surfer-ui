@@ -1,41 +1,143 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { useWallet } from '../../contexts/wallet';
-import { formatNumber, shortenAddress } from '../../utils/utils';
-import { Identicon } from './Identicon';
-import { useNativeAccount } from '../../contexts/accounts';
+import { Typography, Button, Popover } from 'antd'
+import { DownOutlined, ExportOutlined } from '@ant-design/icons';
 import { LAMPORTS_PER_SOL } from '@solana/web3.js';
+import { Identicon } from './Identicon';
+import { useWallet } from '../../contexts/wallet';
+import { useNativeAccount } from '../../contexts/accounts';
+import { formatNumber, shortenAddress } from '../../utils/utils';
 
 export const CurrentUserBadge = (props: {}) => {
-  const { wallet } = useWallet();
+  const { wallet, disconnect } = useWallet();
   const { account } = useNativeAccount();
+  const [isOpen, setIsOpen] = useState(false)
+
+  useEffect(() => {
+    return () => {
+      setIsOpen(false)
+    }
+  }, [])
+
+  const getExplorerLink = () => {
+    // Gets the link to the account on solana's explorer
+
+    // 1. Need to determine if on Mainnet Beta, Testnet, or Devnet (or custom?)
+
+    return "https://explorer.solana.com/address/" + wallet?.publicKey
+  }
 
   if (!wallet?.publicKey) {
     return null;
   }
 
-  // should use SOL ?
+  const renderAccountPopoverContent = () => {
+    return (
+      <StyledAccountOverlay className="account-overlay-container">
+        <Typography.Title level={5} style={{textAlign: 'center'}}>Account Info</Typography.Title>
+        <div className="account-overlay-price-container">
+          <Typography.Title level={3} style={{textAlign: 'center'}}>{formatNumber.format((account?.lamports || 0) / LAMPORTS_PER_SOL)}&nbsp;<span style={{fontSize: 18}}>SOL</span></Typography.Title>
+        </div>
+        <div className="account-overlay-button-group">
+          <Button onClick={disconnect} className="account-overlay-button">Disconnect</Button>
+          <Button href={getExplorerLink()} target="_blank" rel="noopener noreferrer" icon={<ExportOutlined />} className="account-overlay-button">
+            View Account
+          </Button>
+        </div>
+        <div className="account-overlay-tokens-list">
+          {/* TODO: Show user tokens here */}
+          <Typography.Title level={5} style={{textAlign: 'center'}}>Your Tokens List</Typography.Title>
+          <Typography.Paragraph style={{textAlign: 'center'}}>coming soon!</Typography.Paragraph>
+        </div>
+      </StyledAccountOverlay>
+    )
+  }
 
   return (
     <StyledUserBadge>
-      <span>
-        {formatNumber.format((account?.lamports || 0) / LAMPORTS_PER_SOL)} SOL
-      </span>
-      <div className="wallet-key">
-        <span style={{height: "100%", display: "inline-block", paddingRight: 4}}>{shortenAddress(`${wallet.publicKey}`)}</span>
-        <Identicon address={wallet.publicKey.toBase58()} />
-      </div>
+      <Popover
+        placement="bottomRight"
+        trigger="click"
+        content={renderAccountPopoverContent}
+        visible={isOpen}
+        onVisibleChange={(visible) => setIsOpen(visible)}
+        // style={{marginTop: 0}}
+      >
+        <div className="account-display-container">
+          <div className="wallet-key">
+            <span className="account-address-text">{shortenAddress(`${wallet.publicKey}`)}</span>
+            <Identicon address={wallet.publicKey.toBase58()} />
+          </div>
+          <DownOutlined />
+        </div>
+      </Popover>
     </StyledUserBadge>
   );
 };
 
+const StyledAccountOverlay = styled.div`
+  background: ${props => props.theme.colors.bg2};
+  min-width: 200px;
+
+  .account-overlay-price-container {
+    padding: .5rem;
+    margin-bottom: 1rem;
+  }
+
+  .account-overlay-button-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .account-overlay-button {
+      margin-bottom: .5rem;
+    }
+  }
+
+  .account-overlay-tokens-list {
+    margin-top: .75rem;
+    padding-top: .75rem;
+    border-top: 1px solid ${props => props.theme.colors.iconBg};
+  }
+
+  @media(min-width: ${props => props.theme.breakpoints.md}px) {
+    .account-overlay-container {
+      min-width: 500px;
+
+      .account-overlay-price-container {
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+      }
+    }
+  }
+`
+
 const StyledUserBadge = styled.div`
-  // for wallet wrapper
+  // wallet wrapper
   padding-left: 0.7rem;
   border-radius: 0.5rem;
   display: flex;
   align-items: center;
   white-space: nowrap;
+
+  
+
+  .account-display-container {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding-right: 0.5rem;
+
+    &:hover {
+      background-color: ${props => props.theme.colors.iconBg};
+      
+    }
+  }
+  .account-address-text {
+    height: 100%;
+    display: inline-block;
+    padding-right: 5px;
+  }
 
   .wallet-key {
     padding: 0.1rem 0.5rem 0.1rem 0.7rem;
