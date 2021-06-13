@@ -3,7 +3,6 @@ import { useRecoilState } from 'recoil'
 import { ThemeProvider as StyledThemeProvider } from 'styled-components'
 import { HashRouter, Route, Switch } from 'react-router-dom';
 import { theme, darkTheme } from './styles/themes'
-// import Joyride, { CallBackProps, } from 'react-joyride' //  ACTIONS, EVENTS, LIFECYCLE, STATUS
 import { useThemeSwitcher } from 'react-css-theme-switcher'
 
 import BasicLayout from './components/BasicLayout';
@@ -19,14 +18,14 @@ import FAQPage from './pages/FAQPage';
 import NotFoundPage from './pages/NotFoundPage';
 
 // TODO: Remove old Serum Pages
-// import ListNewMarketPage from './pages/ListNewMarketPage';
-// import NewPoolPage from './pages/pools/NewPoolPage';
-// import PoolPage from './pages/pools/PoolPage';
-// import PoolListPage from './pages/pools/PoolListPage';
-// import BalancesPage from './pages/BalancesPage';
-// import ConvertPage from './pages/ConvertPage';
-// import TradePage from './pages/TradePage';
-// import OpenOrdersPage from './pages/OpenOrdersPage';
+// [x] import ListNewMarketPage from './pages/ListNewMarketPage';
+// [x] import NewPoolPage from './pages/pools/NewPoolPage';
+// [x] import PoolPage from './pages/pools/PoolPage';
+// [x] import PoolListPage from './pages/pools/PoolListPage';
+// [x] import BalancesPage from './pages/BalancesPage';
+// [x] import ConvertPage from './pages/ConvertPage';
+// [x] import TradePage from './pages/TradePage';
+// [x] import OpenOrdersPage from './pages/OpenOrdersPage';
 import { JoyrideContainer } from './components/JoyrideContainer'
 import { ContentLayout } from './components/ContentLayout'
 import { darkModeState, nftItemsState } from './atoms'

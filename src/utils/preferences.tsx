@@ -5,9 +5,7 @@ import {useConnection} from './connection';
 import {useWallet} from './wallet';
 import {
   useMarketInfos,
-  useTokenAccounts,
 } from './markets';
-import {settleAllFunds} from './send';
 import {PreferencesContextValues} from './types';
 import {Market} from "@project-serum/serum";
 
@@ -23,7 +21,6 @@ export function PreferencesProvider({ children }) {
     true,
   );
 
-  const [tokenAccounts] = useTokenAccounts();
   const { connected, wallet } = useWallet();
   const marketInfoList = useMarketInfos();
   const [currentlyFetchingMarkets, setCurrentlyFetchingMarkets] = useState<boolean>(false);
@@ -32,36 +29,6 @@ export function PreferencesProvider({ children }) {
     setMarkets(prev => new Map(prev).set(marketId, market));
   }
   const connection = useConnection();
-
-  useInterval(() => {
-    const autoSettle = async () => {
-			if (AUTO_SETTLE_DISABLED_OVERRIDE) {
-				return;
-			}
-      if (!wallet) {
-        return;
-      }
-      try {
-        console.log('Settling funds...');
-        await settleAllFunds({
-          connection,
-          wallet,
-          tokenAccounts: tokenAccounts || [],
-          markets: [...markets.values()],
-        });
-      } catch (e) {
-        console.log('Error auto settling funds: ' + e.message);
-        return;
-      }
-      console.log('Finished settling funds.');
-    };
-    (
-      connected &&
-      wallet?.autoApprove &&
-      autoSettleEnabled &&
-      autoSettle()
-    );
-  }, 20000);
 
   // warms up the market and open orders cache for auto-settlement
   useInterval(() => {
