@@ -1,29 +1,32 @@
 import React from 'react'
-import { useRecoilValue } from 'recoil'
 import styled from 'styled-components'
-import { Typography, Button } from 'antd'
+import { Typography, Button, Collapse } from 'antd'
 import { ExclamationCircleFilled, RedoOutlined } from '@ant-design/icons' // FrownFilled
-import { errorState } from '../../atoms'
 
-export const ErrorSurface = ({
-  children
+interface Props {
+  errorMessage?: string
+}
+export const ErrorSurface: React.FC<Props> = ({
+  errorMessage,
 }) => {
-  const { hasError } = useRecoilValue(errorState)
-
-  if(hasError) {
-    return (
-      <StyledErrorSurface>
-        <Typography.Title className="error-title">
-          <ExclamationCircleFilled style={{fontSize: 36}} />
-          <span style={{marginLeft: 20}}>Something went wrong</span>
-        </Typography.Title>
-        <Typography.Title level={2} className="error-title">Please Try Again Later</Typography.Title>
-        <Button href="https://solsurfer.xyz" className="error-action-button" size="large" icon={<RedoOutlined style={{fontSize: 24}} />}>Refresh Page</Button>
-      </StyledErrorSurface>
-    )
-  }
-
-  return children;
+  return (
+    <StyledErrorSurface>
+      <Typography.Title className="error-title">
+        <ExclamationCircleFilled style={{fontSize: 36}} />
+        <span style={{marginLeft: 20}}>Something went wrong</span>
+      </Typography.Title>
+      {/* If error message, allow user to see details */}
+      {errorMessage && (
+        <Collapse bordered={false} defaultActiveKey={['1']} className="error-collapse-container">
+          <Collapse.Panel header="See more info" key="1">
+            {errorMessage}
+          </Collapse.Panel>
+        </Collapse>
+      )}
+      <Typography.Title level={2} className="error-title">Please Try Again Later</Typography.Title>
+      <Button href="https://solsurfer.xyz" className="error-action-button" size="large" icon={<RedoOutlined style={{fontSize: 24}} />}>Refresh Page</Button>
+    </StyledErrorSurface>
+  )
 }
 
 const StyledErrorSurface = styled.div`
@@ -38,5 +41,8 @@ const StyledErrorSurface = styled.div`
   }
   .error-action-button {
     margin-bottom: 1rem;
+  }
+  .error-collapse-container {
+    margin-bottom: 2rem;
   }
 `

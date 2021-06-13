@@ -1,6 +1,7 @@
 import React from 'react';
 import { Dropdown, Menu } from 'antd';
-import { useWallet } from '../utils/wallet';
+// import { useWallet } from '../utils/wallet';
+import { useWallet } from '../../../contexts/wallet'
 import LinkAddress from './LinkAddress';
 
 export default function WalletConnect() {

@@ -1,9 +1,9 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { useHistory, useLocation } from 'react-router-dom';
 import { useThemeSwitcher } from 'react-css-theme-switcher'
 import styled from 'styled-components';
-import { Connection } from '@solana/web3.js';
+// import { Connection } from '@solana/web3.js';
 import { Button, Col, Menu, Popover, Row, Select, Tooltip } from 'antd';
 import {
   InfoCircleOutlined,
@@ -12,18 +12,21 @@ import {
   BulbOutlined,
   BulbFilled,
 } from '@ant-design/icons';
-import Settings from './TopBar/Settings';
-import CustomClusterEndpointDialog from './TopBar/CustomClusterEndpointDialog';
-import WalletConnect from './TopBar/ConnectWallet/WalletConnect';
+import Settings from './Settings';
+import CustomClusterEndpointDialog from './CustomClusterEndpointDialog';
+// import WalletConnect from './ConnectWallet/WalletConnect';
+import { ConnectButton } from './ConnectButton'
+import { CurrentUserBadge } from './CurrentUserBadge'
 import AppSearch from './AppSearch';
-import { EndpointInfo } from '../utils/types';
-import { ENDPOINTS, useConnectionConfig } from '../utils/connection';
-import { notify } from '../utils/notifications';
-import { useWallet } from '../utils/wallet';
-import learnItems from '../data/learn.data';
-import { colors } from '../styles/colors';
-import logo from '../assets/logo.svg';
-import { darkModeState, joyrideState } from '../atoms';
+// import { EndpointInfo } from '../utils/types';
+// import { notify } from '../utils/notifications';
+import learnItems from '../../data/learn.data';
+import { colors } from '../../styles/colors';
+import logo from '../../assets/logo.svg';
+import { darkModeState, joyrideState } from '../../atoms';
+
+import { ENDPOINTS, useConnectionConfig } from '../../contexts/connection';
+import { useWallet } from '../../contexts/wallet';
 
 const Wrapper = styled.div`
   // background-color: #0d1017;
@@ -56,16 +59,16 @@ const EXTERNAL_LINKS = {
 };
 
 export default function TopBar() {
-  const { connected, wallet } = useWallet();
+  const { connected } = useWallet();
   const {
     endpoint,
-    endpointInfo,
     setEndpoint,
-    availableEndpoints,
-    setCustomEndpoints,
+    // endpointInfo,
+    // availableEndpoints,
+    // setCustomEndpoints,
   } = useConnectionConfig();
   const [addEndpointVisible, setAddEndpointVisible] = useState(false);
-  const [testingConnection, setTestingConnection] = useState(false);
+  // const [testingConnection, setTestingConnection] = useState(false);
   const [searchFocussed, setSearchFocussed] = useState(false);
   const location = useLocation();
   const history = useHistory();
@@ -85,47 +88,47 @@ export default function TopBar() {
     [history],
   );
 
-  const onAddCustomEndpoint = (info: EndpointInfo) => {
-    const existingEndpoint = availableEndpoints.some(
-      (e) => e.endpoint === info.endpoint,
-    );
-    if (existingEndpoint) {
-      notify({
-        message: `An endpoint with the given url already exists`,
-        type: 'error',
-      });
-      return;
-    }
+  // const onAddCustomEndpoint = (info: EndpointInfo) => {
+  //   const existingEndpoint = availableEndpoints.some(
+  //     (e) => e.endpoint === info.endpoint,
+  //   );
+  //   if (existingEndpoint) {
+  //     notify({
+  //       message: `An endpoint with the given url already exists`,
+  //       type: 'error',
+  //     });
+  //     return;
+  //   }
 
-    const handleError = (e) => {
-      console.log(`Connection to ${info.endpoint} failed: ${e}`);
-      notify({
-        message: `Failed to connect to ${info.endpoint}`,
-        type: 'error',
-      });
-    };
+  //   const handleError = (e) => {
+  //     console.log(`Connection to ${info.endpoint} failed: ${e}`);
+  //     notify({
+  //       message: `Failed to connect to ${info.endpoint}`,
+  //       type: 'error',
+  //     });
+  //   };
 
-    try {
-      const connection = new Connection(info.endpoint, 'recent');
-      connection
-        .getEpochInfo()
-        .then((result) => {
-          setTestingConnection(true);
-          console.log(`testing connection to ${info.endpoint}`);
-          const newCustomEndpoints = [
-            ...availableEndpoints.filter((e) => e.custom),
-            info,
-          ];
-          setEndpoint(info.endpoint);
-          setCustomEndpoints(newCustomEndpoints);
-        })
-        .catch(handleError);
-    } catch (e) {
-      handleError(e);
-    } finally {
-      setTestingConnection(false);
-    }
-  };
+  //   try {
+  //     const connection = new Connection(info.endpoint, 'recent');
+  //     connection
+  //       .getEpochInfo()
+  //       .then((result) => {
+  //         setTestingConnection(true);
+  //         console.log(`testing connection to ${info.endpoint}`);
+  //         const newCustomEndpoints = [
+  //           ...availableEndpoints.filter((e) => e.custom),
+  //           info,
+  //         ];
+  //         setEndpoint(info.endpoint);
+  //         setCustomEndpoints(newCustomEndpoints);
+  //       })
+  //       .catch(handleError);
+  //   } catch (e) {
+  //     handleError(e);
+  //   } finally {
+  //     setTestingConnection(false);
+  //   }
+  // };
 
   const handleLearnItemClick = (lessonId: string) => {
     if(steps[lessonId]) {
@@ -144,16 +147,16 @@ export default function TopBar() {
     }
   };
 
-  const endpointInfoCustom = endpointInfo && endpointInfo.custom;
-  useEffect(() => {
-    const handler = () => {
-      if (endpointInfoCustom) {
-        setEndpoint(ENDPOINTS[0].endpoint);
-      }
-    };
-    window.addEventListener('beforeunload', handler);
-    return () => window.removeEventListener('beforeunload', handler);
-  }, [endpointInfoCustom, setEndpoint]);
+  // const endpointInfoCustom = endpointInfo && endpointInfo.custom;
+  // useEffect(() => {
+  //   const handler = () => {
+  //     if (endpointInfoCustom) {
+  //       setEndpoint(ENDPOINTS[0].endpoint);
+  //     }
+  //   };
+  //   window.addEventListener('beforeunload', handler);
+  //   return () => window.removeEventListener('beforeunload', handler);
+  // }, [endpointInfoCustom, setEndpoint]);
 
   const toggleDarkMode = () => {
     localStorage.setItem("solsurfer.theme", isDarkMode ? "light" : "dark")
@@ -165,8 +168,8 @@ export default function TopBar() {
     <>
       <CustomClusterEndpointDialog
         visible={addEndpointVisible}
-        testingConnection={testingConnection}
-        onAddCustomEndpoint={onAddCustomEndpoint}
+        // testingConnection={testingConnection}
+        // onAddCustomEndpoint={onAddCustomEndpoint}
         onClose={() => setAddEndpointVisible(false)}
       />
       <Wrapper>
@@ -305,7 +308,7 @@ export default function TopBar() {
                 value={endpoint}
                 style={{ marginRight: 8, width: '150px' }}
               >
-                {availableEndpoints.map(({ name, endpoint }) => (
+                {ENDPOINTS.map(({ name, endpoint }) => (
                   <Select.Option value={endpoint} key={endpoint}>
                     {name}
                   </Select.Option>
@@ -317,7 +320,7 @@ export default function TopBar() {
         {connected && (
           <div>
             <Popover
-              content={<Settings autoApprove={wallet?.autoApprove} />}
+              content={<Settings />}
               placement="bottomRight"
               title="Settings"
               trigger="click"
@@ -330,7 +333,17 @@ export default function TopBar() {
           </div>
         )}
         <div>
-          <WalletConnect />
+          {connected ? (
+            <CurrentUserBadge />
+          ) : (
+            <ConnectButton
+              type="text"
+              size="large"
+              allowWalletChange={true}
+              style={{ color: "#2abdd2" }}
+            />
+          )}
+          {/* <WalletConnect /> */}
         </div>
       </Wrapper>
     </>

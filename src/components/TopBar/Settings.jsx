@@ -1,24 +1,24 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Switch, Typography } from 'antd';
-import { usePreferences } from '../utils/preferences';
+// import { usePreferences } from '../utils/preferences';
 
 const { Paragraph } = Typography;
 
-export default function Settings({ autoApprove }) {
-  const { autoSettleEnabled, setAutoSettleEnabled } = usePreferences();
+export default function Settings(/*{ autoApprove }*/) {
+  // const { autoSettleEnabled, setAutoSettleEnabled } = usePreferences();
+  const [mockSetting, setMockSetting] = useState(false);
 
   return (
     <div>
       <Switch
         style={{ marginRight: 10 }}
-        disabled={!autoApprove}
-        checked={autoApprove && autoSettleEnabled}
-        onChange={setAutoSettleEnabled}
+        checked={mockSetting}
+        onChange={() => setMockSetting((prev) => !prev)}
       />{' '}
-      Auto settle
-      {!autoApprove && (
+      Settings Not Implemented Yet
+      {mockSetting && (
         <Paragraph style={{ color: 'rgba(255,255,255,0.5)', marginTop: 10 }}>
-          To use auto settle, first enable auto approval in your wallet
+          You found an easter egg from the developer!
         </Paragraph>
       )}
     </div>

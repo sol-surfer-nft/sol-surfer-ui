@@ -1,34 +1,33 @@
 import React, { Suspense } from 'react';
 import { GlobalStyle } from './global_style';
 import { Spin } from 'antd';
-import { ErrorSurface } from './components/surfaces/ErrorSurface';
+import { ErrorBoundary } from './components/ErrorBoundary';
 import { Routes } from './routes';
-import { ConnectionProvider } from './utils/connection';
-import { WalletProvider } from './utils/wallet';
-import { PreferencesProvider } from './utils/preferences';
+
+import { ConnectionProvider } from './contexts/connection'
+import { WalletProvider } from './contexts/wallet'
+import { AccountsProvider } from './contexts/accounts'
+import { MarketProvider } from './contexts/market'
+
 import './App.less';
 
 export default function App() {
   return (
     <Suspense fallback={() => <Spin size="large" />}>
       <GlobalStyle />
-      <ErrorSurface>
-        {/* TODO:
-          Rip out Serum Providers:
-          [x] ConnectionProvider
-          [x] WallerProvider
-          [x] PreferencesProvider
-        */}
+      <ErrorBoundary>
         <ConnectionProvider>
           <WalletProvider>
-            <PreferencesProvider>
-              <Suspense fallback={() => <Spin size="large" />}>
-                <Routes />
-              </Suspense>
-            </PreferencesProvider>
+            <AccountsProvider>
+              <MarketProvider>
+                <Suspense fallback={() => <Spin size="large" />}>
+                  <Routes />
+                </Suspense>
+              </MarketProvider>
+            </AccountsProvider>
           </WalletProvider>
         </ConnectionProvider>
-      </ErrorSurface>
+      </ErrorBoundary>
     </Suspense>
   );
 }
