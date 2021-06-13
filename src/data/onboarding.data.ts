@@ -112,7 +112,7 @@ export const onboardingQuestions: OnboardingQuestion[] = [
       {
         text: "How do I know if I own an NFT already?",
         // start tutorial: Viewing your NFTs in Gallery (or importing, when available)
-        tutorialId: "6"
+        tutorialId: "2"
       }
     ],
     helperQuestion: {
@@ -132,7 +132,7 @@ export const onboardingQuestions: OnboardingQuestion[] = [
       },
       {
         text: "Next question",
-        // nextQuestionId: "8"
+        nextQuestionId: "7"
       }
     ],
     helperQuestion: {

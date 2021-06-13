@@ -15,7 +15,7 @@ interface Props {
 export const UserOnboarding: React.FC<Props> = ({
   exitOnboarding
 }) => {
-  const history = useHistory()
+  // const history = useHistory()
 
   const [joyrideData, setJoyrideData] = useRecoilState(joyrideState)
   const [activeIndex, setActiveIndex] = useRecoilState(activeIndexState)
@@ -38,7 +38,7 @@ export const UserOnboarding: React.FC<Props> = ({
           isJoyrideActive: true,
           activeLessonId: answer.tutorialId || "0"
         }))
-        history.push("/")
+        // history.push("/")
       }
     }
     else if(answer.nextQuestionId) {
@@ -69,8 +69,8 @@ export const UserOnboarding: React.FC<Props> = ({
               }
               else if(answer.externalLink) {
                 return (
-                  <a href={answer.internalLink} key={`${index}-${answer.text}`} target="_blank" rel="noopener noreferrer">
-                    <Button key={`${index}-${answer.text}`} size="large" shape="round" className="user-onboarding-answer-button" onClick={() => handleQuestionClick(question, answer)}>
+                  <a href={answer.externalLink} key={`${index}-${answer.text}`} target="_blank" rel="noopener noreferrer">
+                    <Button key={`${index}-${answer.text}`} size="large" shape="round" className="user-onboarding-answer-button">
                       {answer.text}
                     </Button>
                   </a>

@@ -116,12 +116,13 @@ export const steps: TourSteps = {
       content: "click the 'Gallery' tab to go to your gallery",
       spotlightClicks: true,
       disableBeacon: true,
-      internalLink: "/gallery"
+      internalLink: "/gallery",
     },
     {
       target: "#tour-3-nft-gallery-list",
       content: "these are all of your nft's. you can sell the ones that aren't already listed, and view the status of nft's you own that are already on sale in the marketplace!",
-      disableBeacon: true
+      disableBeacon: true,
+      placementBeacon: "top"
     },
   ],
   "3": [ // selling-your-nfts
@@ -134,7 +135,7 @@ export const steps: TourSteps = {
     {
       target: ".tour-4-nft-sell-button",
       content: "click the 'sell' button below the nft to get started selling it",
-      spotlightClicks: true,
+      // spotlightClicks: true,
       disableBeacon: true,
       internalLink: "/sell-nft"
     },
@@ -142,7 +143,7 @@ export const steps: TourSteps = {
       target: "#sell-nft-price",
       content: "set the price you would like to sell your nft for. you can choose 'SOL' or 'USDC'",
       spotlightClicks: true,
-      disableBeacon: true
+      // disableBeacon: true
     },
     {
       target: "#submit-sell-nft-form-button",
@@ -169,16 +170,15 @@ export const steps: TourSteps = {
     {
       target: "#buy-nfts-here",
       content: "here are all of the nfts we have listed. click one to continue",
-      spotlightClicks: true,
+      // spotlightClicks: true,
       placementBeacon: "top",
-      disableBeacon: true,
+      // disableBeacon: true,
       showSkipButton: false,
       internalLink: "/marketplace/1"
     },
     {
       target: "#buy-nft-button",
       content: "if for sale, you will be able to click this button to buy the nft",
-      disableBeacon: true
     },
   ]
 }
