@@ -29,6 +29,9 @@ const StyledLayout = styled(Layout)`
   .ant-typography {
     color: ${(props) => props.theme.colors.font};
   }
+  .ant-layout-footer {
+    background-color: ${(props) => props.theme.colors.bg1};
+  }
   .ant-menu-item {
     color: ${(props) => props.theme.colors.font};
   }

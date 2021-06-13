@@ -23,7 +23,7 @@ const GalleryPage = () => {
     <StyledGallery>
       <PageHeader title={`${profileName}'s NFTs`} />
 
-      <div className="nft-item-gallery">
+      <div className="nft-item-gallery" id="tour-3-nft-gallery-list">
         {nfts?.length > 0 ? (
           nfts.map(nft => (
             <div className="gallery-nft-item" key={nft.id}>

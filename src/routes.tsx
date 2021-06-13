@@ -3,7 +3,7 @@ import { useRecoilState } from 'recoil'
 import { ThemeProvider as StyledThemeProvider } from 'styled-components'
 import { HashRouter, Route, Switch } from 'react-router-dom';
 import { theme, darkTheme } from './styles/themes'
-import Joyride, { CallBackProps, } from 'react-joyride' //  ACTIONS, EVENTS, LIFECYCLE, STATUS
+// import Joyride, { CallBackProps, } from 'react-joyride' //  ACTIONS, EVENTS, LIFECYCLE, STATUS
 import { useThemeSwitcher } from 'react-css-theme-switcher'
 
 import BasicLayout from './components/BasicLayout';
@@ -27,16 +27,15 @@ import NotFoundPage from './pages/NotFoundPage';
 // import ConvertPage from './pages/ConvertPage';
 // import TradePage from './pages/TradePage';
 // import OpenOrdersPage from './pages/OpenOrdersPage';
+import { JoyrideContainer } from './components/JoyrideContainer'
 import { ContentLayout } from './components/ContentLayout'
-import { darkModeState, joyrideState, nftItemsState } from './atoms'
+import { darkModeState, nftItemsState } from './atoms'
 import { generateRandomNft } from './utils/generateRandomNft'
-import { colors } from './styles/colors';
 
 const MIN_NFT_LENGTH = 5
 
 export function Routes() {
   const [isDarkMode, setIsDarkMode] = useRecoilState(darkModeState)
-  const [{ steps, isJoyrideActive, activeLessonId }, setJoyrideState] = useRecoilState(joyrideState)
   const [nftItems, setNftItems] = useRecoilState(nftItemsState)
   const { currentTheme, status, switcher } = useThemeSwitcher()
 
@@ -70,34 +69,10 @@ export function Routes() {
       setIsDarkMode(currentTheme === "dark")
   }, [currentTheme, setIsDarkMode, status])
 
-  const handleJoyrideCallback = (event: CallBackProps) => {
-    // console.log('react joyride callback event:', event)
-    if(event.lifecycle === "complete" && event.status === "finished") {
-      setJoyrideState(oldJoyrideState => ({...oldJoyrideState, isJoyrideActive: false }))
-    }
-    else if(event.action === "stop") {
-      setJoyrideState(oldJoyride => ({...oldJoyride, isJoyrideActive: false }))
-    }
-  }
-
   return (
     <StyledThemeProvider theme={isDarkMode ? darkTheme : theme}>
       <HashRouter basename={'/'}>
-        {/* ToDo: Move to its own component */}
-        <Joyride
-          continuous
-          showProgress
-          showSkipButton
-          // stepIndex={progress[activeLessonId]}
-          styles={{
-            options: {
-              primaryColor: colors.purple1
-            }
-          }}
-          run={isJoyrideActive}
-          steps={steps && activeLessonId && steps[activeLessonId] ? steps[activeLessonId] : []}
-          callback={handleJoyrideCallback}
-        />
+        <JoyrideContainer />        
         <BasicLayout>
           <ContentLayout isContainer={true}>
             <Switch>

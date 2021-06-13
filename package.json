@@ -6,6 +6,7 @@
   "scripts": {
     "predeploy": "git pull --ff-only && yarn && yarn gulp && yarn build",
     "deploy": "gh-pages -d build",
+    "dev": "gulp less && craco start",
     "start": "craco start",
     "build": "gulp less && craco build",
     "test": "craco test",

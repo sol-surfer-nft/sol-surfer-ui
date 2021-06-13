@@ -180,9 +180,12 @@ const MarketplacePage = () => {
       let remainder = numberNftsPerRow - (nftItems.length % numberNftsPerRow)
       addMoreNFTs((NFT_ROWS_PER_LOAD * numberNftsPerRow) + remainder)
     }
-    // else load 2 full new rows, should not be gaps left
+    // else load 2 full new rows, should not be gaps left. if on mobile, do x2
     else {
-      addMoreNFTs(NFT_ROWS_PER_LOAD * numberNftsPerRow)
+      if(dimensions.width < SM_BREAKPOINT)
+        addMoreNFTs(NFT_ROWS_PER_LOAD * numberNftsPerRow * 2)
+      else
+        addMoreNFTs(NFT_ROWS_PER_LOAD * numberNftsPerRow)
     }
 
     setLoadingNfts(false)
@@ -196,10 +199,11 @@ const MarketplacePage = () => {
         <div className="nft-marketplace-toolbar">
           {/* Coming Soon... */}
           
+          {/* Feature: Icon Dropdown to adjust size of marketplace items */}
         </div>
 
        {/* NFT Grid here */}
-      <div className="nft-marketplace-grid" style={{paddingLeft: hasPadding ? gridLeftPadding : "initial" }}>
+      <div className="nft-marketplace-grid" style={{paddingLeft: hasPadding ? gridLeftPadding : "initial" }} id="buy-nfts-here">
         {/* <InfiniteScroll
           className="nft-marketplace-grid"
           pageStart={0}
@@ -378,6 +382,13 @@ const StyledMarketplace = styled.div`
       object-fit: contain;
       max-width: 100%;
       width: 100%;
+    }
+  }
+
+  @media(max-width: ${props => props.theme.breakpoints.sm}px) {
+    .nft-marketplace-grid {
+      align-items: center;
+      flex-direction: column;
     }
   }
 `

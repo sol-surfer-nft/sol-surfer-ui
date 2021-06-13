@@ -55,7 +55,7 @@ const NFTDetailPage = () => {
             <Image src={nftItem.url} alt={`nft item: ${nftItem.title}`} className="nft-detail-image" />
 
             {/* Buy Button */}
-            <div className="nft-buy-button-container">
+            <div className="nft-buy-button-container" id="buy-nft-button">
               {nftItem.usdcPrice ? (
                 <Button className="nft-item-price-button" shape="round" type="primary" onClick={() => handleBuyNft(nftItem.id)}>Buy for {nftItem.usdcPrice} USDC</Button>
                 ) : nftItem.price && (
