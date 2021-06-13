@@ -1,10 +1,10 @@
-import React from "react";
-import styled from 'styled-components'
-import { useWallet } from "../../contexts/wallet";
-import { formatNumber, shortenAddress } from "../../utils/utils";
-import { Identicon } from "./Identicon";
-import { useNativeAccount } from "../../contexts/accounts";
-import { LAMPORTS_PER_SOL } from "@solana/web3.js";
+import React from 'react';
+import styled from 'styled-components';
+import { useWallet } from '../../contexts/wallet';
+import { formatNumber, shortenAddress } from '../../utils/utils';
+import { Identicon } from './Identicon';
+import { useNativeAccount } from '../../contexts/accounts';
+import { LAMPORTS_PER_SOL } from '@solana/web3.js';
 
 export const CurrentUserBadge = (props: {}) => {
   const { wallet } = useWallet();
@@ -22,11 +22,8 @@ export const CurrentUserBadge = (props: {}) => {
         {formatNumber.format((account?.lamports || 0) / LAMPORTS_PER_SOL)} SOL
       </span>
       <div className="wallet-key">
-        {shortenAddress(`${wallet.publicKey}`)}
-        <Identicon
-          address={wallet.publicKey.toBase58()}
-          style={{ marginLeft: "0.5rem", display: "flex" }}
-        />
+        <span style={{height: "100%", display: "inline-block", paddingRight: 4}}>{shortenAddress(`${wallet.publicKey}`)}</span>
+        <Identicon address={wallet.publicKey.toBase58()} />
       </div>
     </StyledUserBadge>
   );
@@ -47,4 +44,4 @@ const StyledUserBadge = styled.div`
     display: flex;
     align-items: center;
   }
-`
+`;

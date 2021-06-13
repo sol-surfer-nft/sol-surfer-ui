@@ -4,13 +4,14 @@ import { useHistory, useLocation } from 'react-router-dom';
 import { useThemeSwitcher } from 'react-css-theme-switcher'
 import styled from 'styled-components';
 // import { Connection } from '@solana/web3.js';
-import { Button, Col, Menu, Popover, Row, Select, Tooltip } from 'antd';
+import { Button, Col, Menu, Popover, Row, Select, Tooltip, Typography, Dropdown } from 'antd';
 import {
   InfoCircleOutlined,
   PlusCircleOutlined,
   SettingOutlined,
   BulbOutlined,
   BulbFilled,
+  DownOutlined
 } from '@ant-design/icons';
 import Settings from './Settings';
 import CustomClusterEndpointDialog from './CustomClusterEndpointDialog';
@@ -317,6 +318,7 @@ export default function TopBar() {
             </Col>
           </Row>
         </div>
+
         {connected && (
           <div>
             <Popover
@@ -332,10 +334,9 @@ export default function TopBar() {
             </Popover>
           </div>
         )}
-        <div>
-          {connected ? (
-            <CurrentUserBadge />
-          ) : (
+
+        <div style={{display: 'flex', alignItems: 'center'}}>
+          {!connected && (
             <ConnectButton
               type="text"
               size="large"
@@ -343,6 +344,25 @@ export default function TopBar() {
               style={{ color: "#2abdd2" }}
             />
           )}
+
+          {/* Make user badge a dropdown */}
+          {connected ? (
+            <CurrentUserBadge />
+          ) : (
+            <Dropdown
+              placement="bottomRight"
+              trigger={['click']}
+              overlay={(
+                <Menu>
+                  <Menu.Item>You are not connected yet...</Menu.Item>
+                  <Menu.Item>Click 'Connect' to begin</Menu.Item>
+                </Menu>
+              )}
+            >
+              <Typography.Paragraph style={{marginBottom: 0, cursor: 'pointer', marginLeft: 15}}>Not Connected <DownOutlined /></Typography.Paragraph>
+            </Dropdown>
+          )}
+
           {/* <WalletConnect /> */}
         </div>
       </Wrapper>

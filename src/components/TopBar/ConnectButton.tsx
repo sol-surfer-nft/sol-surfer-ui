@@ -1,7 +1,6 @@
+import React from "react";
 import { Button, Dropdown, Menu } from "antd";
 import { ButtonProps } from "antd/lib/button";
-import React from "react";
-import { LABELS } from "../../constants";
 import { useWallet } from "../../contexts/wallet";
 
 export interface ConnectButtonProps
@@ -11,7 +10,7 @@ export interface ConnectButtonProps
 }
 
 export const ConnectButton = (props: ConnectButtonProps) => {
-  const { connected, connect, disconnect, select, provider } = useWallet();
+  const { connected, connect, select, provider } = useWallet();
   const { onClick, children, disabled, allowWalletChange, ...rest } = props;
 
   // only show if wallet selected or user connected
@@ -28,7 +27,8 @@ export const ConnectButton = (props: ConnectButtonProps) => {
     return (
       <Button
         {...rest}
-        onClick={connected ? disconnect : connect}
+        onClick={connected ? onClick : connect}
+        disabled={connected && disabled}
       >
         {connected ? props.children : "Connect"}
       </Button>
@@ -41,7 +41,7 @@ export const ConnectButton = (props: ConnectButtonProps) => {
       disabled={connected && disabled}
       overlay={menu}
     >
-      {connected ? "Disconnect" : "Connect"}
+      Connect
     </Dropdown.Button>
   );
 };
