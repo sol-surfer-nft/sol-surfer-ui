@@ -30,5 +30,16 @@ export const joyrideState = atom({
 
 export const onboardingState = atom({
   key: 'onboarding',
-  default: [] // TODO
+  default: []
+})
+
+// TODO: Can Combine to the one state above when ready
+export const activeIndexState = atom({
+  key: 'activeIndex',
+  default: 0
+})
+
+export const showOnboardingState = atom({
+  key: 'showOnboarding',
+  default: true
 })

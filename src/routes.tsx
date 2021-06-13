@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useRecoilState } from 'recoil'
 import { ThemeProvider as StyledThemeProvider } from 'styled-components'
-import { HashRouter, Route, Switch } from 'react-router-dom';
+import { HashRouter, Route, Switch, useHistory } from 'react-router-dom';
 import { theme, darkTheme } from './styles/themes'
 import Joyride, { CallBackProps, } from 'react-joyride' //  ACTIONS, EVENTS, LIFECYCLE, STATUS
 import { useThemeSwitcher } from 'react-css-theme-switcher'
@@ -35,6 +35,7 @@ import { colors } from './styles/colors';
 const MIN_NFT_LENGTH = 5
 
 export function Routes() {
+  const history = useHistory()
   const [isDarkMode, setIsDarkMode] = useRecoilState(darkModeState)
   const [{ steps, isJoyrideActive, activeLessonId }, setJoyrideState] = useRecoilState(joyrideState)
   const [nftItems, setNftItems] = useRecoilState(nftItemsState)
@@ -71,7 +72,26 @@ export function Routes() {
   }, [currentTheme, setIsDarkMode, status])
 
   const handleJoyrideCallback = (event: CallBackProps) => {
-    // console.log('react joyride callback event:', event)
+    if(event.action === "next" && event.lifecycle === "complete") {
+      // user clicked next option
+      console.log('question index:', event.index)
+
+      // get question data from the index
+      if(steps[activeLessonId][event.index]) {
+        // get action info from the step
+        const question = steps[activeLessonId][event.index]
+        if(question.internalLink) {
+          // console.log('location pathname:', location.pathname)
+          // if(location.pathname.includes(question.internalLink) && location.pathname !== "/")
+          console.log('window hash:', window.location.hash)
+          // if(window.location.hash)
+            history.push(question.internalLink)
+        }
+      }
+    }
+
+
+    console.log('react joyride callback event:', event)
     if(event.lifecycle === "complete" && event.status === "finished") {
       setJoyrideState(oldJoyrideState => ({...oldJoyrideState, isJoyrideActive: false }))
     }
@@ -88,6 +108,7 @@ export function Routes() {
           continuous
           showProgress
           showSkipButton
+          debug
           // stepIndex={progress[activeLessonId]}
           styles={{
             options: {
@@ -95,7 +116,7 @@ export function Routes() {
             }
           }}
           run={isJoyrideActive}
-          steps={steps && activeLessonId && steps[activeLessonId] ? steps[activeLessonId] : []}
+          steps={steps && activeLessonId && steps[Number(activeLessonId)] ? steps[Number(activeLessonId)] : []}
           callback={handleJoyrideCallback}
         />
         <BasicLayout>

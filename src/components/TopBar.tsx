@@ -52,7 +52,7 @@ const LogoWrapper = styled.div`
 `;
 
 const EXTERNAL_LINKS = {
-  '/docs': 'https://gitbook.com',
+  '/docs': 'https://sol-surfer.gitbook.io/solsurfer/',
 };
 
 export default function TopBar() {
@@ -197,6 +197,7 @@ export default function TopBar() {
           )}
           {(!searchFocussed || location.pathname === '/gallery') && (
             <Menu.Item
+              id="tour-3-gallery"
               key="/gallery"
               style={{ margin: '0 10px', textTransform: 'uppercase' }}
             >

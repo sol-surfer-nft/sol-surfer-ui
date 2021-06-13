@@ -128,7 +128,7 @@ export const SellNFTForm: React.FC<SellNFTFormProps> = ({
           </Row>
         </Form.Item>
 
-        <Button htmlType="submit">Submit</Button>
+        <Button htmlType="submit" id="#submit-sell-nft-form-button">Submit</Button>
         <Button htmlType="reset" onClick={resetForm}>Clear</Button>
       </div>
 
