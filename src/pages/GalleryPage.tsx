@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useRecoilValue } from 'recoil'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
@@ -7,8 +7,13 @@ import { ExportOutlined } from '@ant-design/icons'
 import { useWallet } from '../contexts/wallet'
 import { nftGalleryItemsState } from '../atoms'
 import { StatusSurface } from '../components/surfaces/StatusSurface'
+import { mockGalleryNfts } from '../data/marketplace.data'
+
+const MOCK_NAME = "demo owner"
+const MOCK_ADDRESS = "abcdefghijklmnopqrstuvwxyz"
 
 const GalleryPage = () => {
+  const [isDemo, setIsDemo] = useState(false)
   const nfts = useRecoilValue(nftGalleryItemsState)
 
   const { connected, wallet } = useWallet()
@@ -21,13 +26,56 @@ const GalleryPage = () => {
     return "https://explorer.solana.com/address/" + wallet?.publicKey
   }
 
-  if(!connected) {
+  if(!connected && !isDemo) {
     return (
       <StatusSurface
         title="Connect your Wallet before accessing the Gallery"
         error={true}
-        // buttons={[{ title: "", action: () => null } ]}
+        buttons={[
+          { title: "View Demo Gallery", action: () => setIsDemo(true) }
+          // TODO: offer user to start 'Connect Wallet' tutorial
+        ]}
       />
+    )
+  }
+  else if(isDemo) {
+    return (
+      <StyledGallery>
+        <div className="exit-demo-button" style={{textAlign: 'center', paddingTop: "2rem", paddingBottom: "1rem", display: "flex", justifyContent: "center", alignItems: "center"}}>
+          <Button onClick={() => setIsDemo(false)} size="large" icon={<ExportOutlined />}>Close Demo</Button>
+        </div>
+        <div className="gallery-page-header">
+          <Typography.Title className="page-header-title">Your NFTs</Typography.Title>
+          <Typography.Title level={5} className="page-header-description">
+            <Tooltip title="Your Wallet Address">
+              <a href={"https://explorer.solana.com"} target="_blank" rel="noopener noreferrer">
+                {MOCK_ADDRESS}(fake)
+                <ExportOutlined style={{marginLeft: 5}} />
+              </a>
+            </Tooltip>
+          </Typography.Title>
+        </div>
+
+        <div className="nft-item-gallery" id="tour-3-nft-gallery-list">
+          {mockGalleryNfts.map(nft => (
+            <div className="gallery-nft-item" key={nft.id}>
+              <div className="gallery-nft-image-container">
+                <Image src={nft.url} alt={`nft gallery item: ${nft.title}`} className="gallery-nft-imgae" />
+              </div>
+              <Typography.Title level={2} className="gallery-nft-title-text">{nft.title}</Typography.Title>
+              {getIsNftForSale(nft.id) ? (
+                <Link to={`/marketplace/${nft.id}`} className="gallery-nft-action-link">
+                  <Button size="large" shape="round" className="gallery-nft-action-button">View Bids</Button>
+                </Link>
+              ) : (
+                <Link to={`/sell-nft/${nft.id}`} className="gallery-nft-action-link">
+                  <Button size="large" shape="round" className="gallery-nft-action-button">Sell NFT</Button>
+                </Link>
+              )}
+            </div>
+          ))}
+        </div>
+      </StyledGallery>
     )
   }
 

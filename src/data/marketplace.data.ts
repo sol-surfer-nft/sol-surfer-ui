@@ -46,6 +46,8 @@ export const nftItems: NFTItem[] = [
   },
 ]
 
+export const mockGalleryNfts: NFTItem[] = [nftItems[0], nftItems[2], nftItems[4]]
+
 export const nftBids: NFTBid[] = [
   {
     id: "1",
