@@ -1,27 +1,49 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { useRecoilValue } from 'recoil'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
-import { Typography, Image, Button } from 'antd'
-import { PageHeader } from '../components/PageHeader/PageHeader'
+import { Typography, Image, Button, Tooltip } from 'antd'
+import { ExportOutlined } from '@ant-design/icons'
+import { useWallet } from '../contexts/wallet'
 import { nftGalleryItemsState } from '../atoms'
+import { StatusSurface } from '../components/surfaces/StatusSurface'
 
 const GalleryPage = () => {
-  const [profileName, setProfileName] = useState("")
   const nfts = useRecoilValue(nftGalleryItemsState)
 
-  useEffect(() => {
-    // query for user's name
-    setProfileName("temp user")
-  }, [])
+  const { connected, wallet } = useWallet()
 
   const getIsNftForSale = (id: string) => {
-    return Math.random() > 0.5
+    return Math.random() > 0.4
+  }
+
+  const getAccountExplorerLink = () => {
+    return "https://explorer.solana.com/address/" + wallet?.publicKey
+  }
+
+  if(!connected) {
+    return (
+      <StatusSurface
+        title="Connect your Wallet before accessing the Gallery"
+        error={true}
+        // buttons={[{ title: "", action: () => null } ]}
+      />
+    )
   }
 
   return (
     <StyledGallery>
-      <PageHeader title={`${profileName}'s NFTs`} />
+      <div className="gallery-page-header">
+        <Typography.Title className="page-header-title">Your NFTs</Typography.Title>
+        <Typography.Title level={5} className="page-header-description">
+          <Tooltip title="Your Wallet Address">
+            <a href={getAccountExplorerLink()} target="_blank" rel="noopener noreferrer">
+              {`${wallet?.publicKey}`}
+              <ExportOutlined style={{marginLeft: 5}} />
+            </a>
+          </Tooltip>
+        </Typography.Title>
+      </div>
 
       <div className="nft-item-gallery" id="tour-3-nft-gallery-list">
         {nfts?.length > 0 ? (
@@ -56,6 +78,37 @@ const StyledGallery = styled.div`
   .nft-item-gallery {
     display: flex;
     flex-wrap: wrap;
+  }
+
+  .gallery-page-header {
+    margin-bottom: 3rem;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+
+    .page-header-title {
+      padding: 0;
+      padding-top: 2rem;
+      margin-bottom: 0;
+    }
+    .page-header-description {
+      margin-top: 0;
+      margin-bottom: 0;
+      margin-left: 1rem;
+      padding
+      font-weight: normal;
+      opacity: 0.85;
+      cursor: pointer;
+
+      &:hover {
+        text-decoration: underline;
+      }
+
+      a {
+        color: ${props => props.theme.colors.font};
+        text-decoration: inherit;
+      }
+    }
   }
 
   .gallery-nft-item {

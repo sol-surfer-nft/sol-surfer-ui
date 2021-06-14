@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { Typography, Button } from 'antd'
-import { CheckCircleOutlined } from '@ant-design/icons'
+import { CheckCircleOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
 
 interface IButton {
   title: string
@@ -29,7 +29,7 @@ export const StatusSurface: React.FC<Props> = ({
       )}
       {error && (
         <div className="status-image-container">
-          <CheckCircleOutlined style={{fontSize: 48, color: "#FF0000"}} />
+          <ExclamationCircleOutlined style={{fontSize: 48, color: "#ff7875"}} />
         </div>
       )}
       <div className="status-surface-container">
