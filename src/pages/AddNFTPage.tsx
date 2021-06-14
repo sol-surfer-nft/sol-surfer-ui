@@ -4,7 +4,7 @@ import { useRecoilState } from 'recoil'
 import styled from 'styled-components'
 import { PageHeader } from '../components/PageHeader/PageHeader'
 import { AddNFTForm } from '../components/forms/AddNFTForm'
-import { SuccessSurface } from '../components/surfaces/SuccessSurface'
+import { StatusSurface } from '../components/surfaces/StatusSurface'
 import { nftItemsState } from '../atoms'
 // import { useUserBalance } from '../hooks/useUserBalance'
 export interface AddNFTFormData {
@@ -72,7 +72,7 @@ const AddNFTPage = () => {
           <AddNFTForm addNft={addNft} />
         </>
       ) : (
-        <SuccessSurface
+        <StatusSurface
           title="NFT Added Successfully!"
           success={true}
           buttons={[

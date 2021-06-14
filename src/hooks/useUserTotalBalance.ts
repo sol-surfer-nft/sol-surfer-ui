@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { cache } from "../context/accounts";
-import { useMarkets } from "../context/market";
-import { fromLamports } from "../utils/dapp-scaffold-utils/utils";
+import { cache } from "../contexts/accounts";
+import { useMarkets } from "../contexts/market";
+import { fromLamports } from "../utils/utils";
 import { useUserAccounts } from "./useUserAccounts";
 
 export function useUserTotalBalance() {

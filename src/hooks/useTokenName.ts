@@ -1,6 +1,6 @@
 import { PublicKey } from "@solana/web3.js";
-import { useConnectionConfig } from "../context/connection";
-import { getTokenName } from "../utils/dapp-scaffold-utils/utils";
+import { useConnectionConfig } from "../contexts/connection";
+import { getTokenName } from "../utils/utils";
 
 export function useTokenName(mintAddress?: string | PublicKey) {
   const { tokenMap } = useConnectionConfig();

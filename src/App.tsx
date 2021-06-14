@@ -1,11 +1,14 @@
 import React, { Suspense } from 'react';
-import { ConnectionProvider } from './utils/connection';
-import { WalletProvider } from './utils/wallet';
 import { GlobalStyle } from './global_style';
 import { Spin } from 'antd';
-import ErrorBoundary from './components/ErrorBoundary';
+import { ErrorBoundary } from './components/ErrorBoundary';
 import { Routes } from './routes';
-import { PreferencesProvider } from './utils/preferences';
+
+import { ConnectionProvider } from './contexts/connection'
+import { WalletProvider } from './contexts/wallet'
+import { AccountsProvider } from './contexts/accounts'
+import { MarketProvider } from './contexts/market'
+
 import './App.less';
 
 export default function App() {
@@ -15,11 +18,13 @@ export default function App() {
       <ErrorBoundary>
         <ConnectionProvider>
           <WalletProvider>
-            <PreferencesProvider>
-              <Suspense fallback={() => <Spin size="large" />}>
-                <Routes />
-              </Suspense>
-            </PreferencesProvider>
+            <AccountsProvider>
+              <MarketProvider>
+                <Suspense fallback={() => <Spin size="large" />}>
+                  <Routes />
+                </Suspense>
+              </MarketProvider>
+            </AccountsProvider>
           </WalletProvider>
         </ConnectionProvider>
       </ErrorBoundary>

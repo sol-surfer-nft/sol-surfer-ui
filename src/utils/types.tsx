@@ -2,16 +2,7 @@ import { AccountInfo, Connection, PublicKey } from '@solana/web3.js';
 import { Market, OpenOrders } from '@project-serum/serum';
 import { Event } from '@project-serum/serum/lib/queue';
 import { Order } from '@project-serum/serum/lib/market';
-import { WalletAdapter } from '../wallet-adapters';
-
-export interface ConnectionContextValues {
-  endpoint: string;
-  setEndpoint: (newEndpoint: string) => void;
-  connection: Connection;
-  sendConnection: Connection;
-  availableEndpoints: EndpointInfo[];
-  setCustomEndpoints: (newCustomEndpoints: EndpointInfo[]) => void;
-}
+import { WalletAdapter } from '../wallet-adapters-untested';
 
 export interface WalletContextValues {
   wallet: WalletAdapter | undefined;

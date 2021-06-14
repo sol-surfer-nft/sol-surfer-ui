@@ -1,7 +1,7 @@
 import { Layout } from 'antd';
 import styled from 'styled-components';
 import React from 'react';
-import TopBar from './TopBar';
+import TopBar from './TopBar/TopBar';
 import { CustomFooter as Footer } from './Footer';
 const { Header, Content } = Layout;
 

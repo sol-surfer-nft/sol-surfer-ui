@@ -43,3 +43,11 @@ export const showOnboardingState = atom({
   key: 'showOnboarding',
   default: true
 })
+
+// Global App Error State
+export const errorState = atom({
+  key: "errorState",
+  default: {
+    hasError: false
+  }
+})

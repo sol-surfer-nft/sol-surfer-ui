@@ -1,8 +1,8 @@
 import { PublicKey } from "@solana/web3.js";
 import { useEffect, useMemo, useState } from "react";
-import { useMint } from "../context/accounts";
-import { useMarkets } from "../context/market";
-import { fromLamports } from "../utils/dapp-scaffold-utils/utils";
+import { useMint } from "../contexts/accounts";
+import { useMarkets } from "../contexts/market";
+import { fromLamports } from "../utils/utils";
 import { useUserAccounts } from "./useUserAccounts";
 
 export function useUserBalance(

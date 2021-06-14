@@ -6,7 +6,7 @@ import {
 } from "@solana/web3.js";
 
 import { AccountInfo as TokenAccountInfo, Token } from "@solana/spl-token";
-import { TOKEN_PROGRAM_ID } from "../utils/dapp-scaffold-utils/ids";
+import { TOKEN_PROGRAM_ID } from "../utils/ids";
 
 export interface TokenAccount {
   pubkey: PublicKey;
