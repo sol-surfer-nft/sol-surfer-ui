@@ -6,6 +6,7 @@ import { PageHeader } from '../components/PageHeader/PageHeader'
 import { AddNFTForm } from '../components/forms/AddNFTForm'
 import { StatusSurface } from '../components/surfaces/StatusSurface'
 import { nftItemsState } from '../atoms'
+import { useWallet } from '../contexts/wallet'
 // import { useUserBalance } from '../hooks/useUserBalance'
 export interface AddNFTFormData {
   title: string
@@ -17,9 +18,12 @@ export interface AddNFTFormData {
 }
 
 const AddNFTPage = () => {
-  const [isSuccess, setIsSuccess] = useState(false)
-  const [nftItems, setNftItems] = useRecoilState(nftItemsState)
+  const { connected, wallet } = useWallet()
   const history = useHistory()
+
+  const [isSuccess, setIsSuccess] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [nftItems, setNftItems] = useRecoilState(nftItemsState)
 
   // "mint" param is optional, is the account number of program desired
   // const userBalance = useUserBalance()
@@ -31,34 +35,37 @@ const AddNFTPage = () => {
 
     return () => {
       setIsSuccess(false)
+      setError(null)
     }
   }, [])
 
 
   const addNft = (addNftFormData: AddNFTFormData) => {
-    // Query the owner here
-    const mockOwner = "temp-owner"
-
+    if(!connected || !wallet?.publicKey) {
+      setError("User is not properly connected to wallet. Cannot Add NFT")
+      return;
+    }
     setNftItems((oldNftItems) => [
       ...oldNftItems,
       {
         id: (oldNftItems.length + 1).toString(),
         title: addNftFormData.title,
-        owner:  mockOwner, // update
+        owner:  `${wallet.publicKey}`, // should differentiate between address and owner's name
         price: addNftFormData.price,
         usdcPrice: addNftFormData.usdcPrice,
         currency: addNftFormData.currency,
-        url: "https://source.unsplash.com/random?sig=" + nftItems.length + 1
+        url: "https://source.unsplash.com/random?sig=" + nftItems.length + 1,
       }
     ])
 
     setIsSuccess(true)
-
+    if(error) setError(null)
     // TODO: Mint NFT on Solana Blockchain using the JavaScript bindings
   }
 
   const onAddAgain = () => {
     setIsSuccess(false);
+    setError(null)
     // Reset other variables
   }
 

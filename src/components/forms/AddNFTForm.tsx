@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
-import { Form, Input, Upload, Typography, Button, Row, Col, Select, Image } from 'antd'
+import { Form, Input, Upload, Typography, Button, Row, Col, Select, Image, Modal, Tooltip } from 'antd'
 import { PictureOutlined } from '@ant-design/icons'
 import { AddNFTFormData } from '../../pages/AddNFTPage'
+import { useWallet } from '../../contexts/wallet'
 // import { UploadChangeParam } from 'antd/lib/upload';
 // import { RcFile, UploadFile } from 'antd/lib/upload/interface';
 
@@ -20,30 +21,50 @@ const initialValues = {
   currency: "usdc"
 }
 
+const FORM_LABELS = {
+  TITLE: "The Title of your NFT",
+  CREATOR: "The wallet address of the person creating the NFT",
+  PRICE_CURRENCY: "Set the price of the nft and the currency that the price is in",
+  UPLOAD: "Upload the image you would like to use for your NFT"
+}
+
 const supportedFiles = ["png", "jpg", "jpeg", "svg"]
 
 const acceptedFileFormatsHtml = ".png,.jpg,.jpeg,image/png,image/jpg,image/jpeg,.svg"
 
-// TODO: query user account with useUserAccount() hook
-const mockOwner = "temp-owner"
-
 export const AddNFTForm: React.FC<AddNFTFormProps> = ({
   addNft
 }) => {
+  const { connected, wallet } = useWallet()
   // const [imageUrl, setImageUrl] = useState("")
   // const [imageTitle, setImageTitle] = useState("")
   const [fileList, setFileList] = useState<any[]>([])
-
   const [form] = Form.useForm();
 
   useEffect(() => {
-    form.setFieldsValue({ "add-nft-owner": mockOwner })
+    form.setFieldsValue({ "add-nft-owner": connected ? wallet && wallet.publicKey ? `${wallet?.publicKey}` : "unknown" : "not connected" })
 
     return () => {
       form.resetFields()
       setFileList([])
     }
-  }, [form])
+  }, [connected, form, wallet])
+
+  useEffect(() => {
+    if(!connected) {
+      // show the warning modal
+      Modal.info({
+        title: "Not Connected to Wallet",
+        content: (
+          <div>
+            <Typography.Paragraph>You won't be able to add an NFT until you are connected to your solana wallet</Typography.Paragraph>
+            <Typography.Paragraph>Click <strong>'Connect'</strong> in the top right of the screen to get started</Typography.Paragraph>
+          </div>
+        // View Tutorial Link Here: (Wrap into custom hook?)
+        )
+      })
+    }
+  }, [connected])
 
   const onFinish = (e: any) => {
     // TODO: set the image url, set preview
@@ -106,7 +127,7 @@ export const AddNFTForm: React.FC<AddNFTFormProps> = ({
   const resetForm = () => {
     clearFileList()
     form.resetFields();
-    form.setFieldsValue({ "add-nft-owner": mockOwner })
+    form.setFieldsValue({ "add-nft-owner": connected ? wallet && wallet.publicKey ? `${wallet?.publicKey}` : "unknown" : "not connected" })
   }
 
   const clearFileList = () => {
@@ -124,12 +145,13 @@ export const AddNFTForm: React.FC<AddNFTFormProps> = ({
       form={form}
     >
       <div className="left-form-container">
-        <Form.Item name="add-nft-owner" label="Creator">
-          <Input value={mockOwner} disabled />
+        <Form.Item name="add-nft-owner" label="Creator" tooltip={<Tooltip title="Creator Tooltip">{FORM_LABELS.CREATOR}</Tooltip>}>
+          <Input value={`${wallet?.publicKey}` || "unknown"} disabled />
         </Form.Item>
 
         <Form.Item
-          label="Title"
+          tooltip={FORM_LABELS.TITLE}
+          label={"Title"}
           name="add-nft-title"
           rules={[{ required: true }]}
         >
@@ -137,7 +159,7 @@ export const AddNFTForm: React.FC<AddNFTFormProps> = ({
         </Form.Item>
 
         {/* Price */}
-        <Form.Item label="Price" required>
+        <Form.Item label="Price" required tooltip={FORM_LABELS.PRICE_CURRENCY}>
           <Row>
             <Col>
               <Form.Item name="add-nft-price" noStyle rules={[{ required: true }]}>
@@ -156,12 +178,13 @@ export const AddNFTForm: React.FC<AddNFTFormProps> = ({
                   <Select.Option value="sol">SOL</Select.Option>
                   <Select.Option value="usdc">USDC</Select.Option>
                 </Select>
+                {/* TODO: Calculate below price a dollar valuation from real-time price of the token */}
               </Form.Item>
             </Col>
           </Row>
         </Form.Item>
         
-        <Button id="add-nft-submit-button" htmlType="submit">Submit</Button>
+        <Button id="add-nft-submit-button" htmlType="submit" disabled={!connected}>Submit</Button>
         <Button htmlType="reset" onClick={resetForm}>Clear</Button>
       </div>
 
@@ -170,6 +193,7 @@ export const AddNFTForm: React.FC<AddNFTFormProps> = ({
         <Form.Item
           label="Upload Image"
           name="file-upload"
+          tooltip={FORM_LABELS.UPLOAD}
           // rules={[{ required: true }]}
         >
           {/* Upload.Dragger for drag and drop support */}

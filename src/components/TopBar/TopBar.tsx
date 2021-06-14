@@ -132,14 +132,11 @@ export default function TopBar() {
   // };
 
   const handleLearnItemClick = (lessonId: string) => {
-    if(steps[lessonId]) {
-      if(lessonId === "0")
-        history.push("/")
-      else if(lessonId === "1")
-        history.push("/add-nft")
-      else
-        history.push("/") // TODO: update for rest of tutorials as they become available
-
+    let lesson = learnItems[lessonId]
+    if(lesson && steps[lessonId]) {
+      if(lesson.internalLink)
+        history.push(lesson.internalLink)
+        
       setJoyrideState(oldJoyrideState => ({
         ...oldJoyrideState,
         activeLessonId: lessonId,
@@ -336,14 +333,16 @@ export default function TopBar() {
         )}
 
         <div style={{display: 'flex', alignItems: 'center'}}>
-          {!connected && (
-            <ConnectButton
-              type="text"
-              size="large"
-              allowWalletChange={true}
-              style={{ color: "#2abdd2" }}
-            />
-          )}
+          <div id="tour-1-wallet">
+            {!connected && (
+              <ConnectButton
+                type="text"
+                size="large"
+                allowWalletChange={true}
+                style={{ color: "#2abdd2" }}
+              />
+            )}
+          </div>
 
           {/* Make user badge a dropdown */}
           {connected ? (

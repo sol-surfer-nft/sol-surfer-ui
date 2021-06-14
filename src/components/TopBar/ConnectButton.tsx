@@ -29,6 +29,7 @@ export const ConnectButton = (props: ConnectButtonProps) => {
         {...rest}
         onClick={connected ? onClick : connect}
         disabled={connected && disabled}
+        id="tour-1-wallet"
       >
         {connected ? props.children : "Connect"}
       </Button>
@@ -41,7 +42,7 @@ export const ConnectButton = (props: ConnectButtonProps) => {
       disabled={connected && disabled}
       overlay={menu}
     >
-      Connect
+      <span id="tour-1-wallet">Connect</span>
     </Dropdown.Button>
   );
 };

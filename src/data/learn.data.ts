@@ -1,61 +1,56 @@
 import { LearnItem } from '../types/LearnItem'
-import { steps, /*stepsIdMap*/ } from './steps.data'
+import { steps, stepsIdMap } from './steps.data'
 
-export const lessonIdMap = {
-  "0": "getting-started",
-  "1": "adding-an-nft",
-  "2": "buying-nfts", // viewing-your-nfts in stepsMap
-  "3": "importing-nfts-from-ethereum", // selling-nfts in stepsMap
-  "4": "selling-nfts",
-  "5": "connecting-wallet",
-  "6": "viewing-your-nfts" // or 'viewing-your-gallery'
-}
 
 const learnItems: LearnItem[] = [
   {
     id: "0",
     lessonTitle: "Getting Started",
     numberOfLessons: steps["0"].length,
-    stepId: lessonIdMap["0"],
+    stepId: stepsIdMap["0"],
+    internalLink: "/"
   },
   {
     id: "1",
     lessonTitle: "Adding an NFT",
     numberOfLessons: steps["1"].length,
-    stepId: lessonIdMap["1"],
+    stepId: stepsIdMap["1"],
+    internalLink: "/add-nft"
   },
   {
     id: "2",
-    lessonTitle: "Buying NFTs - coming soon",
+    lessonTitle: "Buying NFTs",
     numberOfLessons: steps["2"].length,
-    stepId: lessonIdMap["2"],
-
+    stepId: stepsIdMap["2"],
+    internalLink: "/"
   },
   {
     id: "3",
-    lessonTitle: "Importing an NFT from Ethereum - coming soon",
+    lessonTitle: "Viewing your NFT Gallery",
     numberOfLessons: steps["3"].length,
-    stepId: lessonIdMap["3"],
-
+    stepId: stepsIdMap["3"],
+    internalLink: "/gallery"
   },
   {
     id: "4",
     lessonTitle: "Selling an NFT",
     numberOfLessons: steps["4"].length,
-    stepId: lessonIdMap["4"],
+    stepId: stepsIdMap["4"],
+    internalLink: "/gallery"
   },
   {
     id: "5",
-    lessonTitle: "Connecting your Wallet",
+    lessonTitle: "Connecting your Wallet (coming soon)",
     numberOfLessons: steps["5"].length,
-    stepId: lessonIdMap["5"],
+    stepId: stepsIdMap["5"],
   },
+  
   {
     id: "6",
-    lessonTitle: "Viewing your NFT Gallery",
+    lessonTitle: "Importing an NFT from Ethereum - coming soon",
     numberOfLessons: steps["6"].length,
-    stepId: lessonIdMap["6"],
-  }
+    stepId: stepsIdMap["6"],
+  },
 ]
 
 export default learnItems

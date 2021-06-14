@@ -21,17 +21,18 @@ export const initialTourProgress = {
   "2": 0,
   "3": 0,
   "4": 0,
-  "5": 0
+  "5": 0,
+  "6": 0
 }
 
 export const stepsIdMap = {
   "0": "getting-started",
   "1": "adding-an-nft",
-  "2": "viewing-your-nfts",
-  "3": "importing-nfts-from-ethereum",
+  "2": "buying-nfts",
+  "3": "viewing-your-nfts",
   "4": "selling-nfts",
   "5": "connecting-wallet",
-  "6": "buying-nfts",
+  "6": "importing-nfts-from-ethereum",
 }
 
 // will all be '/' or '/marketplace for now
@@ -104,13 +105,22 @@ export const steps: TourSteps = {
       disableBeacon: true
     },
   ],
-  "2": [ // viewing-your-nfts
+  "2": [ // buying nfts
     {
-      target: "#tour-1-wallet",
-      content: "make sure your wallet is connected before viewing your NFTs",
+      target: "#buy-nfts-here",
+      content: "here are all of the nfts listed on sol-surfer (beta). click one to continue",
       spotlightClicks: true,
-      disableBeacon: true
+      placementBeacon: "top",
+      disableBeacon: true,
+      showSkipButton: false,
+      // internalLink: "/marketplace/1"
     },
+    {
+      target: "#buy-nft-button",
+      content: "if for sale, you will be able to click this button to buy the nft",
+    },
+  ],
+  "3": [ // viewing-your-nfts
     {
       target: "#tour-3-gallery",
       content: "click the 'Gallery' tab to go to your gallery",
@@ -119,13 +129,32 @@ export const steps: TourSteps = {
       internalLink: "/gallery",
     },
     {
+      target: "#tour-1-wallet",
+      content: "make sure your wallet is connected or you won't be able to view your NFTs",
+      spotlightClicks: true,
+      disableBeacon: true
+    },
+    {
       target: "#tour-3-nft-gallery-list",
       content: "these are all of your nft's. you can sell the ones that aren't already listed, and view the status of nft's you own that are already on sale in the marketplace!",
       disableBeacon: true,
       placementBeacon: "top"
     },
   ],
-  "3": [ // selling-your-nfts
+  "4": [ // selling-your-nfts
+    {
+      target: "#tour-3-gallery",
+      content: "click the 'Gallery' tab to go to your gallery",
+      spotlightClicks: true,
+      disableBeacon: true,
+      internalLink: "/gallery",
+    },
+    {
+      target: "#tour-1-wallet",
+      content: "make sure your wallet is connected or you won't be able to view your NFTs",
+      spotlightClicks: true,
+      disableBeacon: true
+    },
     {
       target: "#tour-4-nft-gallery-list",
       content: "make sure that you first own nfts so that you are able to sell one",
@@ -135,52 +164,44 @@ export const steps: TourSteps = {
     {
       target: ".tour-4-nft-sell-button",
       content: "click the 'sell' button below the nft to get started selling it",
-      // spotlightClicks: true,
+      spotlightClicks: true,
       disableBeacon: true,
       internalLink: "/sell-nft"
     },
     {
       target: "#sell-nft-price",
-      content: "set the price you would like to sell your nft for. you can choose 'SOL' or 'USDC'",
+      content: "set the price you would like to sell your nft for",
       spotlightClicks: true,
-      // disableBeacon: true
+      disableBeacon: true
+    },
+    {
+      target: "#sell-nft-currency",
+      content: "make sure you have selected your desired currency. current options are 'sol' or 'usdc'",
+      spotlightClicks: true,
+      disableBeacon: true,
     },
     {
       target: "#submit-sell-nft-form-button",
-      content: "click to sell the nft when you're ready",
+      content: "click to initiate selling the nft when you're ready",
       disableBeacon: true
     },
   ],
   // TODO: fill in with content
-  "4": [
-    {
-      target: "#root",
-      content: "selling-your-nfts",
-      disableBeacon: true
-    },
-  ],
   "5": [
     {
       target: "#root",
-      content: "connecting-your-wallet",
+      content: "connecting-your-wallet (coming soon)",
       disableBeacon: true
     },
   ],
   "6": [
     {
-      target: "#buy-nfts-here",
-      content: "here are all of the nfts we have listed. click one to continue",
-      // spotlightClicks: true,
-      placementBeacon: "top",
-      // disableBeacon: true,
-      showSkipButton: false,
-      internalLink: "/marketplace/1"
+      target: "#root",
+      content: "importing-from-wormhole (coming soon)",
+      disableBeacon: true
     },
-    {
-      target: "#buy-nft-button",
-      content: "if for sale, you will be able to click this button to buy the nft",
-    },
-  ]
+  ],
+  
 }
 
 

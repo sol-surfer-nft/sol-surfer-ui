@@ -35,11 +35,10 @@ const LearnPage = () => {
       activeLessonId: lessonId
     }))
 
-    if(lessonId === "0") {
-      history.push("/")
-    }
-    else if(lessonId === "1") {
-      history.push('/add-nft')
+    let lesson = lessonItems[lessonId]
+    if(!lesson) return;
+    if(lesson.internalLink) {
+      history.push(lesson.internalLink)
     }
   }
 
@@ -57,7 +56,7 @@ const LearnPage = () => {
     <StyledLearnPage>
       <div className="lessons-container">
         <div id="tour-1-question">
-          <PageHeader title="Learn Page!" />
+          <PageHeader title="Learn" />
         </div>
         {lessonItems.map((lessonItem, index) => (
           <div className="lesson-item" onClick={() => handleItemClick(lessonItem.id)}>

@@ -56,7 +56,7 @@ const GalleryPage = () => {
           </Typography.Title>
         </div>
 
-        <div className="nft-item-gallery" id="tour-3-nft-gallery-list">
+        <div className="nft-item-gallery" id="tour-4-nft-gallery-list">
           {mockGalleryNfts.map(nft => (
             <div className="gallery-nft-item" key={nft.id}>
               <div className="gallery-nft-image-container">
@@ -93,7 +93,7 @@ const GalleryPage = () => {
         </Typography.Title>
       </div>
 
-      <div className="nft-item-gallery" id="tour-3-nft-gallery-list">
+      <div className="nft-item-gallery" id="tour-4-nft-gallery-list">
         {nfts?.length > 0 ? (
           nfts.map(nft => (
             <div className="gallery-nft-item" key={nft.id}>
@@ -107,7 +107,7 @@ const GalleryPage = () => {
                 </Link>
               ) : (
                 <Link to={`/sell-nft/${nft.id}`} className="gallery-nft-action-link">
-                  <Button size="large" shape="round" className="gallery-nft-action-button">Sell NFT</Button>
+                  <Button size="large" shape="round" className="gallery-nft-action-button tour-4-nft-sell-button">Sell NFT</Button>
                 </Link>
               )}
             </div>
