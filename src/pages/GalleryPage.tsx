@@ -9,7 +9,7 @@ import { nftGalleryItemsState } from '../atoms'
 import { StatusSurface } from '../components/surfaces/StatusSurface'
 import { mockGalleryNfts } from '../data/marketplace.data'
 
-const MOCK_NAME = "demo owner"
+// const MOCK_NAME = "demo owner"
 const MOCK_ADDRESS = "abcdefghijklmnopqrstuvwxyz"
 
 const GalleryPage = () => {
