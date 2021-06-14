@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
-import { Form, Button, Input, Select, Row, Col, Image } from 'antd'
+import { Form, Button, Input, Select, Row, Col, Image, Modal, Typography } from 'antd'
 import { NFTItem } from '../../types/NFTItem'
 import { nftItems } from '../../data/marketplace.data'
+import { useWallet } from '../../contexts/wallet'
 
 interface SellNFTFormProps {
   sellNft: (data: any) => void
@@ -23,12 +24,12 @@ const layout = {
   wrapperCol: { span: 24 },
 };
 
-const mockOwner = "temp-owner"
-
 export const SellNFTForm: React.FC<SellNFTFormProps> = ({
   nftId,
   sellNft,
 }) => {
+  const { connected, wallet } = useWallet()
+  
   const [form] = Form.useForm()
 
   const [nftData, setNftData] = useState<NFTItem | null>(null)
@@ -38,14 +39,30 @@ export const SellNFTForm: React.FC<SellNFTFormProps> = ({
       // Find the nft by id
       let nftItem = nftItems.find(nft => nft.id === nftId)
       setNftData(nftItem || null)
-      form.setFieldsValue({ "sell-nft-title": nftItem?.title, "sell-nft-owner": mockOwner })
+      form.setFieldsValue({ "sell-nft-title": nftItem?.title, "sell-nft-owner": connected ? wallet?.publicKey ? `${wallet.publicKey}` : "unknown" : "not connected" })
     }
 
     return () => {
       form.resetFields()
       setNftData(null)
     }
-  }, [form, nftId])
+  }, [connected, form, nftId, wallet])
+
+  useEffect(() => {
+    if(!connected) {
+      // show the warning modal
+      Modal.info({
+        title: "Not Connected to Wallet",
+        content: (
+          <div>
+            <Typography.Paragraph>You won't be able to sell an NFT until you are connected to your solana wallet</Typography.Paragraph>
+            <Typography.Paragraph>Click <strong>'Connect'</strong> in the top right of the screen to get started</Typography.Paragraph>
+          </div>
+        // View Tutorial Link Here: (Wrap into custom hook?)
+        )
+      })
+    }
+  }, [connected])
 
   const handleFinishedForm = (e: any) => {
     
@@ -62,13 +79,16 @@ export const SellNFTForm: React.FC<SellNFTFormProps> = ({
       if(!nftSolPrice && !nftUsdcPrice) {
         alert("currency has not been selected! please select one")
       }
+      else if(!connected || !wallet?.publicKey) {
+        alert("you are not connected. cannot sell")
+      }
       else {
         sellNft({
           title: formValues["sell-nft-title"],
           price: nftSolPrice,
           usdcPrice: nftUsdcPrice,
           currency: currencySelected,
-          owner: mockOwner
+          owner: wallet?.publicKey
         })
       }
     }
@@ -81,7 +101,7 @@ export const SellNFTForm: React.FC<SellNFTFormProps> = ({
   const resetForm = () => {
     form.resetFields();
     form.setFieldsValue({
-      "sell-nft-owner": mockOwner,
+      "sell-nft-owner": wallet?.publicKey || "unknown",
       "sell-nft-title": nftData?.title,
     })
   }
@@ -97,7 +117,7 @@ export const SellNFTForm: React.FC<SellNFTFormProps> = ({
     >
       <div className="left-form-container">
         <Form.Item name="sell-nft-owner" label="Creator" >
-          <Input value={mockOwner} disabled />
+          <Input value={`${wallet?.publicKey}` || "unknown"} disabled />
         </Form.Item>
 
         <Form.Item name="sell-nft-title" label="Title">
@@ -119,7 +139,7 @@ export const SellNFTForm: React.FC<SellNFTFormProps> = ({
                 noStyle
                 rules={[{ required: true, message: 'Please select currency' }]}
               >
-                <Select placeholder="Currency">
+                <Select placeholder="Currency" id="sell-nft-currency">
                   <Select.Option value="sol">SOL</Select.Option>
                   <Select.Option value="usdc">USDC</Select.Option>
                 </Select>
@@ -128,7 +148,7 @@ export const SellNFTForm: React.FC<SellNFTFormProps> = ({
           </Row>
         </Form.Item>
 
-        <Button htmlType="submit" id="#submit-sell-nft-form-button">Submit</Button>
+        <Button htmlType="submit" id="submit-sell-nft-form-button" disabled={!connected}>Submit</Button>
         <Button htmlType="reset" onClick={resetForm}>Clear</Button>
       </div>
 

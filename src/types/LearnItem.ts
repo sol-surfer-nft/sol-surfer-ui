@@ -3,4 +3,5 @@ export interface LearnItem {
   lessonTitle: string
   numberOfLessons: number
   stepId: string
+  internalLink?: string
 }
