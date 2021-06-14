@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { Typography, Button, Popover } from 'antd'
-import { DownOutlined, ExportOutlined } from '@ant-design/icons';
+import { Typography, Button, Popover, Tooltip, notification } from 'antd'
+import { CopyOutlined, DownOutlined, ExportOutlined, CheckCircleFilled } from '@ant-design/icons';
 import { LAMPORTS_PER_SOL } from '@solana/web3.js';
+import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { Identicon } from './Identicon';
 import { useWallet } from '../../contexts/wallet';
 import { useNativeAccount } from '../../contexts/accounts';
@@ -12,12 +13,24 @@ export const CurrentUserBadge = (props: {}) => {
   const { wallet, disconnect } = useWallet();
   const { account } = useNativeAccount();
   const [isOpen, setIsOpen] = useState(false)
+  const [copied, setCopied] = useState(false)
 
   useEffect(() => {
     return () => {
       setIsOpen(false)
     }
   }, [])
+
+  useEffect(() => {
+    if(copied) {
+      notification.info({
+        message: "Copied Address",
+        placement: "bottomLeft",
+        icon: <CheckCircleFilled style={{color: "#52c41a"}} />
+      })
+      setCopied(false)
+    }
+  }, [copied])
 
   const getExplorerLink = () => {
     // Gets the link to the account on solana's explorer
@@ -34,7 +47,15 @@ export const CurrentUserBadge = (props: {}) => {
   const renderAccountPopoverContent = () => {
     return (
       <StyledAccountOverlay className="account-overlay-container">
-        <Typography.Title level={5} style={{textAlign: 'center'}}>Account Info</Typography.Title>
+        <Typography.Title level={5} style={{textAlign: 'center', marginBottom: 0, opacity: 0.8, fontSize: 16}}>Account</Typography.Title>
+        <Typography.Title level={5} style={{textAlign: 'center', marginTop: 0}}>
+          <span>{shortenAddress(`${wallet.publicKey}`)}</span>
+          <Tooltip title="Copy Address">
+            <CopyToClipboard text={wallet?.publicKey} onCopy={() => setCopied(true)}>
+              <Button shape="circle" icon={<CopyOutlined />} style={{border: 0, outline: 0}} />
+            </CopyToClipboard>
+          </Tooltip>
+        </Typography.Title>
         <div className="account-overlay-price-container">
           <Typography.Title level={3} style={{textAlign: 'center'}}>{formatNumber.format((account?.lamports || 0) / LAMPORTS_PER_SOL)}&nbsp;<span style={{fontSize: 18}}>SOL</span></Typography.Title>
         </div>

@@ -34,7 +34,7 @@ const StyledErrorSurface = styled.div`
   text-align: center;
   margin: 4rem;
   padding: 2rem;
-  background: ${props => props.theme.colors.bg2};
+  // background: ${props => props.theme.colors.bg2};
 
   .error-title {
     margin-bottom: 2rem;

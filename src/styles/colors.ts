@@ -12,6 +12,7 @@ export const colors: Colors = {
   white: "#fff",
   black: "#000",
   red: "#FF0000",
+  green: "#52c41a"
 }
 
 export const darkColors = {
@@ -33,6 +34,7 @@ export interface Colors {
   white: string
   black: string
   red: string
+  green: string
 }
 
 export interface ThemeColors extends Colors {
