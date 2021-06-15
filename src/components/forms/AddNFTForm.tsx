@@ -58,7 +58,7 @@ export const AddNFTForm: React.FC<AddNFTFormProps> = ({
         content: (
           <div>
             <Typography.Paragraph>You won't be able to add an NFT until you are connected to your solana wallet</Typography.Paragraph>
-            <Typography.Paragraph>Click <strong>'Connect'</strong> in the top right of the screen to get started</Typography.Paragraph>
+            <Typography.Paragraph>Click <Button className="null-button">Connect</Button> in the top right of the screen to get started</Typography.Paragraph>
           </div>
         // View Tutorial Link Here: (Wrap into custom hook?)
         )
