@@ -2,11 +2,17 @@ import { atom } from 'recoil'
 import { nftItems } from './data/marketplace.data'
 import { steps, initialTourProgress } from './data/steps.data'
 
+/**
+ * General UI State
+ */
 export const darkModeState = atom({
   key: 'isDarkMode',
   default: true
 })
 
+/**
+ * NFT Items Feature
+ */
 export const nftItemsState = atom({
   key: 'nftItems',
   default: nftItems
@@ -18,6 +24,10 @@ export const nftGalleryItemsState = atom({
   default: nftItems.filter((nftItem, index) => index % 2 === 0)
 })
 
+/**
+ * Joyride / Tutorials Feature
+ */
+
 export const joyrideState = atom({
   key: 'joyride',
   default: {
@@ -27,6 +37,10 @@ export const joyrideState = atom({
     activeLessonId: ""
   }
 })
+
+/**
+ * Onboarding Feature
+ */
 
 export const onboardingState = atom({
   key: 'onboarding',
@@ -42,12 +56,4 @@ export const activeIndexState = atom({
 export const showOnboardingState = atom({
   key: 'showOnboarding',
   default: true
-})
-
-// Global App Error State
-export const errorState = atom({
-  key: "errorState",
-  default: {
-    hasError: false
-  }
 })
