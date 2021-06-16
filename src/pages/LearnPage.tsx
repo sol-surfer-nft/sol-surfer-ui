@@ -6,25 +6,20 @@ import { Typography } from 'antd'
 import { CheckOutlined, PlayCircleOutlined } from '@ant-design/icons'
 import { PageHeader } from '../components/PageHeader/PageHeader'
 import lessonItems from '../data/learn.data'
-import { steps as allSteps } from '../data/steps.data'
 import { joyrideState } from '../atoms'
+import { JoyrideState, JoyrideProgress } from '../utils/Joyride'
 // import { Step } from 'react-joyride'
 
-interface LessonProgress {
-  lessonId: string
-  progress: number
-}
-
 const LearnPage = () => {
-  const { progress } = useRecoilValue(joyrideState)
+  const { progress, steps } = useRecoilValue(joyrideState)
   const setJoyrideState = useSetRecoilState(joyrideState)
 
   const history = useHistory()
 
   const handleItemClick = (lessonId: string) => {
     // Begin intro with the given id
-    let steps = allSteps[lessonId]
-    if(!steps) {
+    let activeSteps = steps[lessonId]
+    if(!activeSteps) {
       alert("error starting lesson")
       return;
     }
@@ -43,7 +38,8 @@ const LearnPage = () => {
   }
 
   const isLessonComplete = (lessonId: string, numberOfLessons: number) => {
-    if(progress[lessonId] && progress[lessonId].progress > 0) return progress[lessonId].progress > progress[lessonId].maxSteps
+    if(progress[lessonId] && progress[lessonId].progress > 0)
+      return progress[lessonId].progress > progress[lessonId].maxSteps
     return false;
   }
 

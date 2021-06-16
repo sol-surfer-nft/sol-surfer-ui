@@ -1,5 +1,5 @@
 import React from 'react'
-import { useRecoilState } from 'recoil'
+import { useRecoilValue, useSetRecoilState } from 'recoil'
 import Joyride, { CallBackProps } from 'react-joyride'
 // import { useHistory, useLocation } from 'react-router-dom'
 import { joyrideState } from '../atoms'
@@ -11,12 +11,18 @@ interface Props {
 export const JoyrideContainer: React.FC<Props> = () => {
   // const history = useHistory()
   // const location = useLocation()
-  const [{ steps, isJoyrideActive, activeLessonId }, setJoyrideState] = useRecoilState(joyrideState)
+  const { steps, isJoyrideActive, activeLessonId } = useRecoilValue(joyrideState)
+  const setJoyrideState = useSetRecoilState(joyrideState)
 
   const handleJoyrideCallback = (event: CallBackProps) => {
     if(event.action === "next" && event.lifecycle === "complete") {
       // user clicked next option
       console.log('question index:', event.index)
+
+      // let activeSteps = steps[activeLessonId];
+
+      // TODO: save to local storage based on callback action, lifecycle, and other helpful properties in joyride object
+      
 
       // get question data from the index
       // if(steps[activeLessonId][event.index]) {

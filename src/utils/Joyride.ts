@@ -12,6 +12,16 @@ export interface JoyrideProgress {
   [id: string]: number
 }
 
-export const incrementJoyrideState = (progressId: string, progress: ) => {
+export const incrementJoyrideState = (progressId: string, progress: JoyrideProgress) => {
+  return {
+    ...progress,
+    [progressId]: progress[progressId] + 1
+  }
+}
 
+export const decrementJoyrideState = (progressId: string, progress: JoyrideProgress) => {
+  return {
+    ...progress,
+    [progressId]: progress[progressId] > 0 ? progress[progressId] - 1 : 0
+  }
 }
