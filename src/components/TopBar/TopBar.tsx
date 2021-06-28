@@ -219,7 +219,7 @@ export default function TopBar() {
               key="/learn"
               title={<span id="tour-1-learn">Learn</span>}
               onTitleClick={() => history.push('/learn')}
-              style={{ margin: '0 0px 0 10px', textTransform: 'uppercase', background: '#212121 !important' }}
+              style={{ margin: '0 10px', textTransform: 'uppercase', background: '#212121 !important' }}
             >
               {learnItems.map((learnItem) => (
                 <Menu.Item
