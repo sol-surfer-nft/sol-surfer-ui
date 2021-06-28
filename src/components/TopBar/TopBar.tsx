@@ -57,6 +57,7 @@ const LogoWrapper = styled.div`
 
 const EXTERNAL_LINKS = {
   '/docs': 'https://sol-surfer.gitbook.io/solsurfer/',
+  '/feedback': 'https://forms.gle/5RkyWQMfAavPgFrN9',
 };
 
 export default function TopBar() {
@@ -247,6 +248,23 @@ export default function TopBar() {
               </a>
             </Menu.Item>
           )}
+          {!searchFocussed && (
+            <Menu.Item
+              key="/feedback"
+              style={{ margin: '0 10px', textTransform: 'uppercase' }}
+              className="navbar-menu-item-link"
+            >
+              <a
+                href={"https://forms.gle/5RkyWQMfAavPgFrN9"}
+                className="navbar-menu-item-link"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Feedback
+              </a>
+            </Menu.Item>
+          )}
+          {/*  */}
         </Menu>
 
         {/* TopBar - Right Side */}
