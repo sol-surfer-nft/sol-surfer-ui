@@ -44,6 +44,12 @@ export const showOnboardingState = atom({
   default: true
 })
 
+export const showRoundAlertState = atom({
+  key: 'showRoundAlert',
+  default: true
+})
+
+
 // Global App Error State
 export const errorState = atom({
   key: "errorState",

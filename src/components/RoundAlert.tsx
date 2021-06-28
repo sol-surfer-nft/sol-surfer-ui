@@ -32,13 +32,11 @@ const RoundAlertLabel = styled.div`
 `;
 
 interface RoundAlertProps {
-  open?: boolean
-  setOpen?: (value: any) => void
+  close?: () => void
 }
 
 export const RoundAlert: React.FC<RoundAlertProps> = ({
-  open,
-  setOpen
+  close
 }) => {
 
   return (
@@ -46,9 +44,9 @@ export const RoundAlert: React.FC<RoundAlertProps> = ({
       <RoundAlertLabel>
         <Typography.Paragraph style={{fontWeight:"bold", marginRight: 5, color:"#fff", display:'inline'}}>Localnet Only</Typography.Paragraph>
         <Typography.Paragraph style={{color: "#fff", fontWeight: 400, display: "inline"}}>This app is still under development</Typography.Paragraph>
-        {open && setOpen && (
+        {close && (
           <div className="close-container">
-            <CloseOutlined onClick={() => setOpen(false)} />
+            <CloseOutlined onClick={() => close()} />
           </div>
         )}
       </RoundAlertLabel>
