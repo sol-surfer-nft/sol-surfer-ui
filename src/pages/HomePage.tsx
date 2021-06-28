@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { useRecoilState } from 'recoil'
 import styled from 'styled-components'
 import { Button, Tooltip } from 'antd'
@@ -6,11 +6,11 @@ import { QuestionOutlined } from '@ant-design/icons'
 import MarketplacePage from './MarketplacePage'
 import { UserOnboarding } from '../components/UserOnboarding'
 import { RoundAlert } from '../components/RoundAlert'
-import { showOnboardingState } from '../atoms'
+import { showOnboardingState, showRoundAlertState } from '../atoms'
 
 const HomePage = () => {
   const [showOnboarding, setShowOnboarding] = useRecoilState(showOnboardingState)
-  const [showRoundAlert, setShowRoundAlert] = useState(true)
+  const [showRoundAlert, setShowRoundAlert] = useRecoilState(showRoundAlertState)
 
   useEffect(() => {
     let hasSeenOnboarding = localStorage.getItem("sol-surfer-has-seen-onboarding")
@@ -30,10 +30,14 @@ const HomePage = () => {
     localStorage.setItem("sol-surfer-has-seen-onboarding", "false")
   }
 
+  const closeRoundAlert = () => {
+    setShowRoundAlert(false)
+  }
+
   return (
     <HomePageStyled>
       {showRoundAlert && (
-        <RoundAlert open={showRoundAlert} setOpen={setShowRoundAlert} />
+        <RoundAlert close={closeRoundAlert} />
       )}
       {showOnboarding ? (
         <UserOnboarding exitOnboarding={exitOnboarding} />

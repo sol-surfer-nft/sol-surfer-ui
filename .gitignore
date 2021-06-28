@@ -28,3 +28,5 @@ yarn-error.log*
 
 public/light-theme.css
 public/dark-theme.css
+
+test-ledger/
