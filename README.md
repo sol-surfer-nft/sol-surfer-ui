@@ -2,7 +2,8 @@
 
 An implementation of a UI for Sol Surfer, an NFT exchange powered by Solana. This project started as a submission for the SolanaSzn Hackathon.
 
-[https://solsurfer.xyz](https://solsurfer.xyz)
+Marketplace: [https://solsurfer.xyz](https://solsurfer.xyz)
+Landing Page: [https://app.solsurfer.xyz](https://app.solsurfer.xyz)
 
 ### App Pages
 
