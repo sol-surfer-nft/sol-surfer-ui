@@ -4,14 +4,18 @@ import { Button, Typography } from 'antd'
 import { LAMPORTS_PER_SOL } from '@solana/web3.js';
 import { PageHeader } from '../components/PageHeader/PageHeader'
 import { useWallet } from '../contexts/wallet'
+import { useConnection } from '../contexts/connection'
 import { useNativeAccount } from '../contexts/accounts'
 import { formatNumber } from '../utils/utils';
+import { notify } from "../utils/notifications";
 
-const SOL_PER_FAUCET = 2
+const SOL_PER_AIRDROP = 2
 
 const FaucetPage = () => {
   const { wallet, connected } = useWallet();
   const { account } = useNativeAccount();
+  const connection = useConnection()
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     if(!connected) {
@@ -20,10 +24,32 @@ const FaucetPage = () => {
     }
     console.log('wallet:', wallet)
     console.log('native account:', account)
-  }, [account, connected, wallet])
+    console.log('connection:', connection)
+  }, [account, connected, wallet, connection])
 
-  const getFaucet = () => {
+  const getFaucet = async () => {
     console.log('getting faucet')
+    if(!wallet?.publicKey) return;
+    setLoading(true)
+    try {
+      let response = await connection.requestAirdrop(wallet.publicKey, SOL_PER_AIRDROP * LAMPORTS_PER_SOL)
+      if(response) {
+        console.log('response:', response)
+        notify({
+          message: "Airdrop success",
+          type: "success"
+        })
+      }
+    }
+    catch (error) {
+      console.log('error with airdrop:', error)
+      notify({
+        message: "Airdrop failed",
+        description: error.toString(),
+        type: "error"
+      })
+    }
+    setLoading(false)
   }
 
   const getSolAmount = () => {
@@ -40,7 +66,9 @@ const FaucetPage = () => {
       </div>
 
       <div className="faucet-section">
-        <Button onClick={getFaucet}>Get Faucet</Button>{' '}<span style={{marginLeft: 8}}>{SOL_PER_FAUCET} SOL per faucet</span>
+        <Button onClick={getFaucet} disabled={loading}>{loading ? "..." : "Get Faucet"}</Button>
+        {' '}
+        <span style={{marginLeft: 8}}>{SOL_PER_AIRDROP} SOL per faucet</span>
       </div>
     </StyledFaucetPage>
   )
