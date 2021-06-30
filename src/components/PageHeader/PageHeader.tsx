@@ -16,8 +16,8 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
 
   return (
     <PageHeaderStyled>
-      <Typography.Title className="page-header-title" level={level}>{title}</Typography.Title>
-      {description && <Typography className="page-header-description">{description}</Typography>}
+      <Typography.Title className="page-header-title" level={level} style={{marginBottom: description ? 0 : "initial", paddingBottom: description ? 0 : "initial"}}>{title}</Typography.Title>
+      {description && <Typography.Paragraph className="page-header-description">{description}</Typography.Paragraph>}
     </PageHeaderStyled>
   )
 }

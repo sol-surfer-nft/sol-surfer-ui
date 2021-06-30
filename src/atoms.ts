@@ -57,3 +57,10 @@ export const errorState = atom({
     hasError: false
   }
 })
+
+export const devModeState = atom({
+  key: "devMode",
+  default: {
+    active: false
+  }
+})

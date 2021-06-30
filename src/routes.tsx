@@ -16,6 +16,7 @@ import GalleryPage from './pages/GalleryPage';
 import LearnPage from './pages/LearnPage';
 import FAQPage from './pages/FAQPage';
 import NotFoundPage from './pages/NotFoundPage';
+import FaucetPage from './pages/FaucetPage';
 
 // TODO: Remove old Serum Pages
 // [x] import ListNewMarketPage from './pages/ListNewMarketPage';
@@ -84,6 +85,8 @@ export function Routes() {
               <Route exact path="/marketplace/:nftId" component={NFTDetailPage} />
               <Route exact path="/learn" component={LearnPage} />
               <Route exact path="/faq" component={FAQPage} />
+
+              <Route exact path="/faucet" component={FaucetPage} />
 
               {/* Not Found catch-all, prompts to redirect user back to Home */}
               <Route path="/">

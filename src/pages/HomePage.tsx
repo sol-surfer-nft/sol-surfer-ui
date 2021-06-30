@@ -1,16 +1,18 @@
 import React, { useEffect } from 'react'
-import { useRecoilState } from 'recoil'
+import { Link } from 'react-router-dom'
+import { useRecoilState, useRecoilValue } from 'recoil'
 import styled from 'styled-components'
 import { Button, Tooltip } from 'antd'
 import { QuestionOutlined } from '@ant-design/icons'
 import MarketplacePage from './MarketplacePage'
 import { UserOnboarding } from '../components/UserOnboarding'
 import { RoundAlert } from '../components/RoundAlert'
-import { showOnboardingState, showRoundAlertState } from '../atoms'
+import { devModeState, showOnboardingState, showRoundAlertState } from '../atoms'
 
 const HomePage = () => {
   const [showOnboarding, setShowOnboarding] = useRecoilState(showOnboardingState)
   const [showRoundAlert, setShowRoundAlert] = useRecoilState(showRoundAlertState)
+  const { active: isDevMode } = useRecoilValue(devModeState)
 
   useEffect(() => {
     let hasSeenOnboarding = localStorage.getItem("sol-surfer-has-seen-onboarding")
@@ -36,6 +38,11 @@ const HomePage = () => {
 
   return (
     <HomePageStyled>
+      {isDevMode && (
+        <div className="dev-link-container">
+          <Link to="/faucet">Faucet</Link>
+        </div>
+      )}
       {showRoundAlert && (
         <RoundAlert close={closeRoundAlert} />
       )}
@@ -70,6 +77,12 @@ const HomePageStyled = styled.div`
     height: 40px;
     width: 40px;
     border-radius: 50%;
+  }
+
+  .dev-link-container {
+    text-align: center;
+    margin: 10px auto;
+    padding: 10px;
   }
 
   @media(min-width: ${props => props.theme.breakpoints.md}px) {
