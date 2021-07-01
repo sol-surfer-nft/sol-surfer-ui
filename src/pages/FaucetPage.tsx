@@ -8,13 +8,15 @@ import { useNativeAccount } from '../contexts/accounts'
 import { formatNumber } from '../utils/utils';
 import { notify } from "../utils/notifications";
 
-import { SystemProgram, Account, Transaction, PublicKey, TransactionInstruction, LAMPORTS_PER_SOL } from '@solana/web3.js';
+import { SystemProgram, Account, Transaction, PublicKey, TransactionInstruction, LAMPORTS_PER_SOL, sendAndConfirmTransaction } from '@solana/web3.js';
 
 const SOL_PER_AIRDROP = 2
 
 const TEST_RECIPIENT_ADDRESS = "4FvypZ9Q9e2Hg6Y5nNMfq5dadQbLBuA24msh4PAcpiMA"
 const TEST_ADDRESS_2 = "HwsLSSa6sHpAcxxHUskK9AZLKmin4HRbswcokGSJM6dq"
 const TEST_ADDRESS_SOLFLARE = "4sam79hQK2QNaWitt9cedK5jvBCc52YNMyaCedTV9Dh5"
+
+const RECENT_BLOCKHASH = "47RR7WRSibkahYdGvaTFujGg8ndPBFQifgToeXvTjvF5"
 
 const FaucetPage = () => {
   const { wallet, connected } = useWallet();
@@ -68,7 +70,11 @@ const FaucetPage = () => {
   }
 
   const handleChange = (e) => {
-    setFormData(data => ({ ...data, [e.target.name]: [e.target.value] }))
+    console.log('handle change:', e)
+    console.log(e.target);
+    console.log(e.target.value)
+    console.log(e.target.name)
+    setFormData(data => ({ ...data, [e.target.name]: e.target.value }))
   }
   const handleNumberChange = (value) => {
     setFormData(data => ({ ...data, amount: Number(value) }))
@@ -106,6 +112,7 @@ const FaucetPage = () => {
       const lamportsToSend = formData.amount * LAMPORTS_PER_SOL;
 
       console.log('wallet pub key:', wallet!.publicKey!)
+
       // Prepare instruction
       const instruction = SystemProgram.transfer({
         fromPubkey: wallet!.publicKey!,
@@ -119,14 +126,37 @@ const FaucetPage = () => {
       let transaction = new Transaction();
       transaction.add(instruction);
       transaction.feePayer = wallet!.publicKey!;
-      let hash = await connection.getRecentBlockhash();
-      console.log('blockhash:', hash)
-      transaction.recentBlockhash = hash.blockhash;
 
-      console.log('transaction:', transaction)
+      // Is this hash correct?? Says "blockhash not found"
+      // let hash = await connection.getRecentBlockhash(); // singleGossip
+      // let singleGossipHash = await connection.getRecentBlockhash("singleGossip")
+      // let recentHash = await connection.getRecentBlockhash("recent")
+      // console.log('blockhash:', hash)
+      // console.log('single gossip blockhash:', singleGossipHash)
+      // console.log('recent blockhash:', recentHash)
+      transaction.recentBlockhash = (await connection.getRecentBlockhash("max")).blockhash;
+
+      // transaction.setSigners(wallet.publicKey, ...signers.map((s)))
+      // transaction.recentBlockhash = RECENT_BLOCKHASH
+
+      // console.log('transaction:', transaction)
+
+      // solana transfer --from test_wallet_1.json 8d6JZYG7edkX6aEaPyZpJYuPbGaALjHqVHGo2p8mmHgS 1 --allow-unfunded-recipient --fee-payer test_wallet_1.json
+
+      // await sendAndConfirmTransaction(
+      //   connection,
+      //   transaction,
+      //   [walletAccountInfo, receiverAccountInfo],
+      //   {
+      //     commitment: 'singleGossip',
+      //     preflightCommitment: 'singleGossip',
+      //   },
+      // );
 
       // Prepare Signature
       const signedTransaction = await wallet!.signTransaction(transaction);
+      // const simulatedTransaction = await wallet!.simulateTransaction(transaction);
+      // console.log('simulated transaction:', simulatedTransaction);
       console.log('signed transaction:', signedTransaction)
       const signature = await connection.sendRawTransaction(signedTransaction.serialize())
       console.log('sent raw transaction')
