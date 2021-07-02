@@ -38,7 +38,7 @@ export const CurrentUserBadge = (props: {}) => {
 
   const getExplorerLink = () => {
     // Gets the link to the account on solana's explorer
-    console.log('active endpoint:', activeEndpoint)
+    // console.log('active endpoint:', activeEndpoint)
     
     let link = "https://explorer.solana.com/address/" + wallet?.publicKey
 

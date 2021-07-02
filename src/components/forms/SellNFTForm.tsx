@@ -95,7 +95,7 @@ export const SellNFTForm: React.FC<SellNFTFormProps> = ({
   }
 
   const handleFinishFailed = (e: any) => {
-    console.log('finish failed. event:', e)
+    // console.log('finish failed. event:', e)
   }
 
   const resetForm = () => {
