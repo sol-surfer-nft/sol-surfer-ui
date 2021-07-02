@@ -7,12 +7,12 @@ import { QuestionOutlined } from '@ant-design/icons'
 import MarketplacePage from './MarketplacePage'
 import { UserOnboarding } from '../components/UserOnboarding'
 import { RoundAlert } from '../components/RoundAlert'
-import { devModeState, showOnboardingState, showRoundAlertState } from '../atoms'
+import { isDevModeState, showOnboardingState, showRoundAlertState } from '../atoms'
 
 const HomePage = () => {
   const [showOnboarding, setShowOnboarding] = useRecoilState(showOnboardingState)
   const [showRoundAlert, setShowRoundAlert] = useRecoilState(showRoundAlertState)
-  const { active: isDevMode } = useRecoilValue(devModeState)
+  const isDevMode = useRecoilValue(isDevModeState)
 
   useEffect(() => {
     let hasSeenOnboarding = localStorage.getItem("sol-surfer-has-seen-onboarding")

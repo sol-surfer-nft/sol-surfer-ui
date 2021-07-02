@@ -3,7 +3,6 @@ import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { useHistory, useLocation } from 'react-router-dom';
 import { useThemeSwitcher } from 'react-css-theme-switcher'
 import styled from 'styled-components';
-// import { Connection } from '@solana/web3.js';
 import { Button, Col, Menu, Popover, Row, Select, Tooltip, Typography, Dropdown } from 'antd';
 import {
   InfoCircleOutlined,
@@ -13,18 +12,15 @@ import {
   BulbFilled,
   DownOutlined
 } from '@ant-design/icons';
-import Settings from './Settings';
+import { Settings } from './Settings';
 import CustomClusterEndpointDialog from './CustomClusterEndpointDialog';
-// import WalletConnect from './ConnectWallet/WalletConnect';
 import { ConnectButton } from './ConnectButton'
 import { CurrentUserBadge } from './CurrentUserBadge'
 import AppSearch from './AppSearch';
-// import { EndpointInfo } from '../utils/types';
-// import { notify } from '../utils/notifications';
 import learnItems from '../../data/learn.data';
 import { colors } from '../../styles/colors';
 import logo from '../../assets/logo.svg';
-import { darkModeState, joyrideState } from '../../atoms';
+import { activeEndpointState, darkModeState, joyrideState } from '../../atoms';
 
 import { ENDPOINTS, useConnectionConfig } from '../../contexts/connection';
 import { useWallet } from '../../contexts/wallet';
@@ -84,6 +80,7 @@ export default function TopBar() {
   const setIsDarkMode = useSetRecoilState(darkModeState)
   const { steps/*, progress, activeLessonId, isJoyrideActive*/ } = useRecoilValue(joyrideState)
   const setJoyrideState = useSetRecoilState(joyrideState)
+  const setActiveEndpoint = useSetRecoilState(activeEndpointState)
 
   const handleClick = useCallback(
     (e) => {
@@ -113,6 +110,11 @@ export default function TopBar() {
     switcher({ theme: isDarkMode ? themes.light : themes.dark })
     setIsDarkMode((prevTheme) => !prevTheme);
   };
+
+  const changeEndpoint = (value, optionData) => {
+    setEndpoint(value)
+    setActiveEndpoint(optionData.key)
+  }
 
   return (
     <>
@@ -263,12 +265,12 @@ export default function TopBar() {
             <Col>
               <Select
                 id="tour-1-mainnet"
-                onSelect={setEndpoint}
+                onSelect={changeEndpoint}
                 value={endpoint}
                 style={{ marginRight: 8, width: '150px' }}
               >
                 {ENDPOINTS.map(({ name, endpoint }) => (
-                  <Select.Option value={endpoint} key={endpoint}>
+                  <Select.Option value={endpoint} key={name}>
                     {name}
                   </Select.Option>
                 ))}

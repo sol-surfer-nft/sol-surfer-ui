@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useRecoilValue } from 'recoil'
 import styled from 'styled-components';
 import { Typography, Button, Popover, Tooltip, notification } from 'antd'
 import { CopyOutlined, DownOutlined, ExportOutlined, CheckCircleFilled } from '@ant-design/icons';
@@ -7,13 +8,16 @@ import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { Identicon } from './Identicon';
 import { useWallet } from '../../contexts/wallet';
 import { useNativeAccount } from '../../contexts/accounts';
+import { ENDPOINTS } from '../../contexts/connection'
 import { formatNumber, shortenAddress } from '../../utils/utils';
+import { activeEndpointState } from '../../atoms';
 
 export const CurrentUserBadge = (props: {}) => {
   const { wallet, disconnect } = useWallet();
   const { account } = useNativeAccount();
   const [isOpen, setIsOpen] = useState(false)
   const [copied, setCopied] = useState(false)
+  const activeEndpoint = useRecoilValue(activeEndpointState)
 
   useEffect(() => {
     return () => {
@@ -34,10 +38,26 @@ export const CurrentUserBadge = (props: {}) => {
 
   const getExplorerLink = () => {
     // Gets the link to the account on solana's explorer
+    console.log('active endpoint:', activeEndpoint)
+    
+    let link = "https://explorer.solana.com/address/" + wallet?.publicKey
 
     // 1. Need to determine if on Mainnet Beta, Testnet, or Devnet (or custom?)
+    switch(activeEndpoint) {
+      case "localnet":
+        link += "?cluster=custom&customUrl=" + ENDPOINTS[3].endpoint
+        break;
+      case "testnet":
+        link += "?cluster=testnet"
+        break;
+      case "devnet":
+        link += "?cluster=devnet"
+        break;
+      default:
+        break;;
+    }
 
-    return "https://explorer.solana.com/address/" + wallet?.publicKey
+    return link
   }
 
   if (!wallet?.publicKey) {

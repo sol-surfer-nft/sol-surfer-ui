@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import styled from 'styled-components'
 import { Button, Typography, Input, InputNumber } from 'antd'
 import { PageHeader } from '../components/PageHeader/PageHeader'
@@ -6,17 +6,16 @@ import { useWallet } from '../contexts/wallet'
 import { useConnection } from '../contexts/connection'
 import { useNativeAccount } from '../contexts/accounts'
 import { formatNumber } from '../utils/utils';
+import { printObject } from '../utils/surfer-utils'
 import { notify } from "../utils/notifications";
 
-import { SystemProgram, Account, Transaction, PublicKey, TransactionInstruction, LAMPORTS_PER_SOL, sendAndConfirmTransaction } from '@solana/web3.js';
+import { SystemProgram, Transaction, PublicKey, LAMPORTS_PER_SOL } from '@solana/web3.js';
 
 const SOL_PER_AIRDROP = 2
 
 const TEST_RECIPIENT_ADDRESS = "4FvypZ9Q9e2Hg6Y5nNMfq5dadQbLBuA24msh4PAcpiMA"
 const TEST_ADDRESS_2 = "HwsLSSa6sHpAcxxHUskK9AZLKmin4HRbswcokGSJM6dq"
-const TEST_ADDRESS_SOLFLARE = "4sam79hQK2QNaWitt9cedK5jvBCc52YNMyaCedTV9Dh5"
-
-const RECENT_BLOCKHASH = "47RR7WRSibkahYdGvaTFujGg8ndPBFQifgToeXvTjvF5"
+// const TEST_ADDRESS_SOLFLARE = "4sam79hQK2QNaWitt9cedK5jvBCc52YNMyaCedTV9Dh5"
 
 const FaucetPage = () => {
   const { wallet, connected } = useWallet();
@@ -30,24 +29,40 @@ const FaucetPage = () => {
     amount: 1
   })
 
+  const solAmount = useMemo(() => {
+    if(!connected) return formatNumber.format(0);
+    return formatNumber.format((account?.lamports || 0) / LAMPORTS_PER_SOL)
+  }, [account, connected])
+
   useEffect(() => {
+    const logConnection = () => {
+      console.log('----wallet info----')
+      console.log('wallet:', wallet)
+      console.log('native account:', account)
+      console.log('connection:', connection)
+    }
     if(!connected) {
       console.log("not connected")
       return;
     }
-    console.log('wallet:', wallet)
-    console.log('native account:', account)
-    console.log('connection:', connection)
+    
+    logConnection()
   }, [account, connected, wallet, connection])
 
+  useEffect(() => {
+    if(connected) {
+      if(`${wallet?.publicKey}` === TEST_RECIPIENT_ADDRESS) {
+        setFormData(prevState => ({...prevState, recipientAddress: TEST_ADDRESS_2}))
+      }
+    }
+  }, [connected, wallet])
+
   const getFaucet = async () => {
-    console.log('getting faucet')
     if(!wallet?.publicKey) return;
     setLoadingFaucet(true)
     try {
       let response = await connection.requestAirdrop(wallet.publicKey, SOL_PER_AIRDROP * LAMPORTS_PER_SOL)
       if(response) {
-        console.log('response:', response)
         notify({
           message: "Airdrop success",
           type: "success"
@@ -55,7 +70,6 @@ const FaucetPage = () => {
       }
     }
     catch (error) {
-      console.log('error with airdrop:', error)
       notify({
         message: "Airdrop failed",
         description: error.toString(),
@@ -65,26 +79,9 @@ const FaucetPage = () => {
     setLoadingFaucet(false)
   }
 
-  const getSolAmount = () => {
-    return formatNumber.format((account?.lamports || 0) / LAMPORTS_PER_SOL)
-  }
+  const handleChange = (e) => setFormData(data => ({ ...data, [e.target.name]: e.target.value }))
 
-  const handleChange = (e) => {
-    console.log('handle change:', e)
-    console.log(e.target);
-    console.log(e.target.value)
-    console.log(e.target.name)
-    setFormData(data => ({ ...data, [e.target.name]: e.target.value }))
-  }
-  const handleNumberChange = (value) => {
-    setFormData(data => ({ ...data, amount: Number(value) }))
-  }
-  const printFormData = () => {
-    console.log('-----FORM DATA-----')
-    Object.keys(formData).forEach(key => {
-      console.log(`${key}: ${formData[key]}`)
-    })
-  }
+  const handleNumberChange = (value) => setFormData(data => ({ ...data, amount: Number(value) }))
 
   const sendTransaction = async () => {
     if(!formData.amount || !formData.recipientAddress) {
@@ -92,7 +89,7 @@ const FaucetPage = () => {
       return;
     }
     else {
-      printFormData()
+      printObject(formData, "form data")
     }
 
     notify({ type: "info", message: "Sending transaction" })
@@ -191,11 +188,11 @@ const FaucetPage = () => {
 
   return (
     <StyledFaucetPage>
-      <PageHeader title="Faucet" description="local, dev, testnets only" />
+      <PageHeader title="Faucet" />
 
       <div className="faucet-section">
         <Typography.Paragraph>Address: {`${wallet?.publicKey}`}</Typography.Paragraph>
-        <Typography.Title level={3}>SOL: {getSolAmount()}</Typography.Title>
+        <Typography.Title level={3}>SOL: {solAmount}</Typography.Title>
       </div>
 
       <div className="faucet-section">

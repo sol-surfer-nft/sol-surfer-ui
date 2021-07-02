@@ -58,9 +58,19 @@ export const errorState = atom({
   }
 })
 
-export const devModeState = atom({
-  key: "devMode",
-  default: {
-    active: false
-  }
+// export const devModeState = atom({
+//   key: "devMode",
+//   default: {
+//     active: false
+//   }
+// })
+
+export const isDevModeState = atom({
+  key: "isDevMode",
+  default: false
+})
+
+export const activeEndpointState = atom({
+  key: "activeEndpoint",
+  default: "mainnet-beta"
 })
