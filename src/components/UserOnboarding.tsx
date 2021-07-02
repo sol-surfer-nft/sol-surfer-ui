@@ -32,7 +32,7 @@ export const UserOnboarding: React.FC<Props> = ({
     if(answer.tutorialId) {
       // do tutorial
       if(joyrideData.steps[answer.tutorialId]) {
-        console.log('tutorial starting:', joyrideData.steps[answer.tutorialId])
+        // console.log('tutorial starting:', joyrideData.steps[answer.tutorialId])
         setJoyrideData(oldJoyrideState => ({
           ...oldJoyrideState,
           isJoyrideActive: true,

@@ -37,12 +37,10 @@ const NFTDetailPage = () => {
   }, [params.nftId, nfts])
 
   const handleBuyNft = (id: string) => {
-    console.log('wanted to buy nft with id:', id)
     // TODO: Add solana hooks functionality here
   }
 
   const getIsNFTForSale = (id: string) => {
-    console.log('checking if the nft item is for sale by its id:', id)
     return Math.random() > 0.2
   }
 

@@ -18,9 +18,11 @@ export class ErrorBoundary extends React.Component<any, ErrorBoundaryState> {
   componentDidCatch(error, errorInfo) {
     // You can also log the error to an error reporting service
     // logErrorToMyService(error, errorInfo);
-    console.log('error received in global error boundary')
-    console.log('error:', error)
-    console.log('errorInfo:', errorInfo)
+    if(process.env.NODE_ENV !== "production") {
+      console.log('error received in global error boundary:')
+      console.log('error:', error)
+      console.log('errorInfo:', errorInfo)
+    }
   }
 
   render() {

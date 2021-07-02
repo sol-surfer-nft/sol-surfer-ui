@@ -3,7 +3,6 @@ import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { useHistory, useLocation } from 'react-router-dom';
 import { useThemeSwitcher } from 'react-css-theme-switcher'
 import styled from 'styled-components';
-// import { Connection } from '@solana/web3.js';
 import { Button, Col, Menu, Popover, Row, Select, Tooltip, Typography, Dropdown } from 'antd';
 import {
   InfoCircleOutlined,
@@ -13,18 +12,15 @@ import {
   BulbFilled,
   DownOutlined
 } from '@ant-design/icons';
-import Settings from './Settings';
+import { Settings } from './Settings';
 import CustomClusterEndpointDialog from './CustomClusterEndpointDialog';
-// import WalletConnect from './ConnectWallet/WalletConnect';
 import { ConnectButton } from './ConnectButton'
 import { CurrentUserBadge } from './CurrentUserBadge'
 import AppSearch from './AppSearch';
-// import { EndpointInfo } from '../utils/types';
-// import { notify } from '../utils/notifications';
 import learnItems from '../../data/learn.data';
 import { colors } from '../../styles/colors';
 import logo from '../../assets/logo.svg';
-import { darkModeState, joyrideState } from '../../atoms';
+import { activeEndpointState, darkModeState, joyrideState } from '../../atoms';
 
 import { ENDPOINTS, useConnectionConfig } from '../../contexts/connection';
 import { useWallet } from '../../contexts/wallet';
@@ -37,6 +33,14 @@ const Wrapper = styled.div`
   justify-content: flex-end;
   padding: 0px 30px;
   flex-wrap: wrap;
+
+  .top-bar-nav-menu-items {
+    display: flex;
+    align-items: flex-end;
+    flex: 1;
+    border-bottom: none;
+    background-color: transparent;
+  }
 
   .navbar-menu-item-link {
     color: ${props => props.theme.colors.font};
@@ -65,12 +69,8 @@ export default function TopBar() {
   const {
     endpoint,
     setEndpoint,
-    // endpointInfo,
-    // availableEndpoints,
-    // setCustomEndpoints,
   } = useConnectionConfig();
   const [addEndpointVisible, setAddEndpointVisible] = useState(false);
-  // const [testingConnection, setTestingConnection] = useState(false);
   const [searchFocussed, setSearchFocussed] = useState(false);
   const location = useLocation();
   const history = useHistory();
@@ -80,6 +80,7 @@ export default function TopBar() {
   const setIsDarkMode = useSetRecoilState(darkModeState)
   const { steps/*, progress, activeLessonId, isJoyrideActive*/ } = useRecoilValue(joyrideState)
   const setJoyrideState = useSetRecoilState(joyrideState)
+  const setActiveEndpoint = useSetRecoilState(activeEndpointState)
 
   const handleClick = useCallback(
     (e) => {
@@ -89,48 +90,6 @@ export default function TopBar() {
     },
     [history],
   );
-
-  // const onAddCustomEndpoint = (info: EndpointInfo) => {
-  //   const existingEndpoint = availableEndpoints.some(
-  //     (e) => e.endpoint === info.endpoint,
-  //   );
-  //   if (existingEndpoint) {
-  //     notify({
-  //       message: `An endpoint with the given url already exists`,
-  //       type: 'error',
-  //     });
-  //     return;
-  //   }
-
-  //   const handleError = (e) => {
-  //     console.log(`Connection to ${info.endpoint} failed: ${e}`);
-  //     notify({
-  //       message: `Failed to connect to ${info.endpoint}`,
-  //       type: 'error',
-  //     });
-  //   };
-
-  //   try {
-  //     const connection = new Connection(info.endpoint, 'recent');
-  //     connection
-  //       .getEpochInfo()
-  //       .then((result) => {
-  //         setTestingConnection(true);
-  //         console.log(`testing connection to ${info.endpoint}`);
-  //         const newCustomEndpoints = [
-  //           ...availableEndpoints.filter((e) => e.custom),
-  //           info,
-  //         ];
-  //         setEndpoint(info.endpoint);
-  //         setCustomEndpoints(newCustomEndpoints);
-  //       })
-  //       .catch(handleError);
-  //   } catch (e) {
-  //     handleError(e);
-  //   } finally {
-  //     setTestingConnection(false);
-  //   }
-  // };
 
   const handleLearnItemClick = (lessonId: string) => {
     let lesson = learnItems[lessonId]
@@ -146,29 +105,21 @@ export default function TopBar() {
     }
   };
 
-  // const endpointInfoCustom = endpointInfo && endpointInfo.custom;
-  // useEffect(() => {
-  //   const handler = () => {
-  //     if (endpointInfoCustom) {
-  //       setEndpoint(ENDPOINTS[0].endpoint);
-  //     }
-  //   };
-  //   window.addEventListener('beforeunload', handler);
-  //   return () => window.removeEventListener('beforeunload', handler);
-  // }, [endpointInfoCustom, setEndpoint]);
-
   const toggleDarkMode = () => {
     localStorage.setItem("solsurfer.theme", isDarkMode ? "light" : "dark")
     switcher({ theme: isDarkMode ? themes.light : themes.dark })
     setIsDarkMode((prevTheme) => !prevTheme);
   };
 
+  const changeEndpoint = (value, optionData) => {
+    setEndpoint(value)
+    setActiveEndpoint(optionData.key)
+  }
+
   return (
     <>
       <CustomClusterEndpointDialog
         visible={addEndpointVisible}
-        // testingConnection={testingConnection}
-        // onAddCustomEndpoint={onAddCustomEndpoint}
         onClose={() => setAddEndpointVisible(false)}
       />
       <Wrapper>
@@ -177,16 +128,10 @@ export default function TopBar() {
           {'SolSurfer'}
         </LogoWrapper>
         <Menu
+          className="top-bar-nav-menu-items"
           mode="horizontal"
           onClick={handleClick}
           selectedKeys={[location.pathname]}
-          style={{
-            borderBottom: 'none',
-            backgroundColor: 'transparent',
-            display: 'flex',
-            alignItems: 'flex-end',
-            flex: 1,
-          }}
         >
           {(!searchFocussed || location.pathname === '/add-nft') && (
             <Menu.Item
@@ -320,12 +265,12 @@ export default function TopBar() {
             <Col>
               <Select
                 id="tour-1-mainnet"
-                onSelect={setEndpoint}
+                onSelect={changeEndpoint}
                 value={endpoint}
                 style={{ marginRight: 8, width: '150px' }}
               >
                 {ENDPOINTS.map(({ name, endpoint }) => (
-                  <Select.Option value={endpoint} key={endpoint}>
+                  <Select.Option value={endpoint} key={name}>
                     {name}
                   </Select.Option>
                 ))}

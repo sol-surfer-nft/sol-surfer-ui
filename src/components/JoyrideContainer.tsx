@@ -16,7 +16,7 @@ export const JoyrideContainer: React.FC<Props> = () => {
   const handleJoyrideCallback = (event: CallBackProps) => {
     if(event.action === "next" && event.lifecycle === "complete") {
       // user clicked next option
-      console.log('question index:', event.index)
+      // console.log('question index:', event.index)
 
       // get question data from the index
       // if(steps[activeLessonId][event.index]) {
@@ -35,7 +35,7 @@ export const JoyrideContainer: React.FC<Props> = () => {
       //   }
       // }
     }
-    console.log('react joyride callback event:', event)
+    // console.log('react joyride callback event:', event)
     if(event.lifecycle === "complete" && event.status === "finished") {
       setJoyrideState(oldJoyrideState => ({...oldJoyrideState, isJoyrideActive: false }))
     }

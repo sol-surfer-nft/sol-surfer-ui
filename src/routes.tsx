@@ -1,11 +1,13 @@
 import React, { useEffect } from 'react';
 import { useRecoilState } from 'recoil'
 import { ThemeProvider as StyledThemeProvider } from 'styled-components'
-import { HashRouter, Route, Switch } from 'react-router-dom';
+import { HashRouter, Route, Switch, Redirect, RouteProps } from 'react-router-dom';
 import { theme, darkTheme } from './styles/themes'
 import { useThemeSwitcher } from 'react-css-theme-switcher'
 
 import BasicLayout from './components/BasicLayout';
+import { JoyrideContainer } from './components/JoyrideContainer'
+import { ContentLayout } from './components/ContentLayout'
 
 import HomePage from './pages/HomePage';
 import AddNFTPage from './pages/AddNFTPage';
@@ -16,27 +18,36 @@ import GalleryPage from './pages/GalleryPage';
 import LearnPage from './pages/LearnPage';
 import FAQPage from './pages/FAQPage';
 import NotFoundPage from './pages/NotFoundPage';
+import FaucetPage from './pages/FaucetPage';
 
-// TODO: Remove old Serum Pages
-// [x] import ListNewMarketPage from './pages/ListNewMarketPage';
-// [x] import NewPoolPage from './pages/pools/NewPoolPage';
-// [x] import PoolPage from './pages/pools/PoolPage';
-// [x] import PoolListPage from './pages/pools/PoolListPage';
-// [x] import BalancesPage from './pages/BalancesPage';
-// [x] import ConvertPage from './pages/ConvertPage';
-// [x] import TradePage from './pages/TradePage';
-// [x] import OpenOrdersPage from './pages/OpenOrdersPage';
-import { JoyrideContainer } from './components/JoyrideContainer'
-import { ContentLayout } from './components/ContentLayout'
 import { darkModeState, nftItemsState } from './atoms'
+import { useWallet } from './contexts/wallet';
 import { generateRandomNft } from './utils/generateRandomNft'
 
 const MIN_NFT_LENGTH = 5
+
+interface ProtectedRouteProps extends RouteProps {
+  component: any
+  isAllowed: boolean
+  exact?: boolean
+  path?: string
+}
+export const ProtectedRoute: React.FC<ProtectedRouteProps> = (props) => {
+  const { component: Component, isAllowed, ...rest } = props;
+  return (
+    <Route {...rest} render={(routeProps) => isAllowed ? (
+      <Component {...routeProps} />
+    ) : (
+      <Redirect to={{pathname: '/', state: { from: routeProps.location }}} />
+    )} />
+  )
+}
 
 export function Routes() {
   const [isDarkMode, setIsDarkMode] = useRecoilState(darkModeState)
   const [nftItems, setNftItems] = useRecoilState(nftItemsState)
   const { currentTheme, status, switcher } = useThemeSwitcher()
+  const { connected } = useWallet()
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('solsurfer.theme');
@@ -84,6 +95,8 @@ export function Routes() {
               <Route exact path="/marketplace/:nftId" component={NFTDetailPage} />
               <Route exact path="/learn" component={LearnPage} />
               <Route exact path="/faq" component={FAQPage} />
+
+              <ProtectedRoute isAllowed={connected || process.env.NODE_ENV==="development"} exact path="/faucet" component={FaucetPage} />
 
               {/* Not Found catch-all, prompts to redirect user back to Home */}
               <Route path="/">
