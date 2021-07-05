@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil'
-import { useHistory, useLocation } from 'react-router-dom';
+import { useHistory, useLocation, Link } from 'react-router-dom';
 import { useThemeSwitcher } from 'react-css-theme-switcher'
 import styled from 'styled-components';
 import { Button, Col, Menu, Popover, Row, Select, Tooltip, Typography, Dropdown } from 'antd';
@@ -10,7 +10,9 @@ import {
   SettingOutlined,
   BulbOutlined,
   BulbFilled,
-  DownOutlined
+  DownOutlined,
+  CaretDownOutlined,
+  LinkOutlined,
 } from '@ant-design/icons';
 import { Settings } from './Settings';
 import CustomClusterEndpointDialog from './CustomClusterEndpointDialog';
@@ -25,44 +27,33 @@ import { activeEndpointState, darkModeState, joyrideState } from '../../atoms';
 import { ENDPOINTS, useConnectionConfig } from '../../contexts/connection';
 import { useWallet } from '../../contexts/wallet';
 
-const Wrapper = styled.div`
-  // background-color: #0d1017;
-  background-color: ${props => props.theme.colors.bg2};
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-  padding: 0px 30px;
-  flex-wrap: wrap;
-
-  .top-bar-nav-menu-items {
-    display: flex;
-    align-items: flex-end;
-    flex: 1;
-    border-bottom: none;
-    background-color: transparent;
-  }
-
-  .navbar-menu-item-link {
-    color: ${props => props.theme.colors.font};
-  }
-`;
-const LogoWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  color: ${(props) => props.theme.colors.font};
-  font-size: 22px;
-  font-weight: bold;
-  cursor: pointer;
-  img {
-    height: 30px;
-    margin-right: 8px;
-  }
-`;
-
 const EXTERNAL_LINKS = {
   '/docs': 'https://sol-surfer.gitbook.io/solsurfer/',
   '/feedback': 'https://forms.gle/5RkyWQMfAavPgFrN9',
 };
+
+interface MoreLinks {
+  name: string
+  link: string
+  external?: boolean
+}
+const moreLinks: MoreLinks[] = [
+  {
+    name: "FAQ",
+    link: "/faq",
+    external: false
+  },
+  {
+    name: "Documentation",
+    link: "/docs",
+    external: true
+  },
+  {
+    name: "Feedback",
+    link: "/feedback",
+    external: true
+  },
+]
 
 export default function TopBar() {
   const { connected } = useWallet();
@@ -151,18 +142,10 @@ export default function TopBar() {
               Gallery
             </Menu.Item>
           )}
-          {(!searchFocussed || location.pathname === '/faq') && (
-            <Menu.Item
-              key="/faq"
-              style={{ margin: '0 10px', textTransform: 'uppercase' }}
-            >
-              Faq
-            </Menu.Item>
-          )}
           {!searchFocussed && (
             <Menu.SubMenu
               key="/learn"
-              title={<span id="tour-1-learn">Learn</span>}
+              title={<span id="tour-1-learn">Learn<CaretDownOutlined style={{marginLeft: 4, marginRight: 0, paddingRight: 0}} /></span>}
               onTitleClick={() => history.push('/learn')}
               style={{ margin: '0 10px', textTransform: 'uppercase', background: '#212121 !important' }}
             >
@@ -178,39 +161,42 @@ export default function TopBar() {
             </Menu.SubMenu>
           )}
           {!searchFocussed && (
-            <Menu.Item
-              key="/docs"
-              style={{ margin: '0 10px', textTransform: 'uppercase' }}
-              className="navbar-menu-item-link"
+            <Menu.SubMenu
+              key="_more"
+              title={<span>More<CaretDownOutlined style={{marginLeft: 4}} /></span>}
+              style={{ margin: '0 10px', textTransform: 'uppercase', background: '#212121 !important' }}
             >
-              <a
-                href={"https://sol-surfer.gitbook.io/solsurfer/"}
-                className="navbar-menu-item-link"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Docs
-              </a>
-            </Menu.Item>
+              {moreLinks.map((moreLink) => (
+                <Menu.Item
+                  key={moreLink.link}
+                  style={{background: "#212121 !important"}}
+                >
+                  {moreLink.external ? (
+                    <a
+                      href={EXTERNAL_LINKS[moreLink.link]}
+                      className="navbar-menu-item-link"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {moreLink.name}
+                      <LinkOutlined style={{marginLeft: 5}} />
+                    </a>
+                  ) : (
+                    moreLink.name
+                  )}
+                </Menu.Item>
+              ))}
+            </Menu.SubMenu>
           )}
-          {!searchFocussed && (
-            <Menu.Item
-              key="/feedback"
-              style={{ margin: '0 10px', textTransform: 'uppercase' }}
-              className="navbar-menu-item-link"
-            >
-              <a
-                href={"https://forms.gle/5RkyWQMfAavPgFrN9"}
-                className="navbar-menu-item-link"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Feedback
-              </a>
-            </Menu.Item>
-          )}
-          {/*  */}
         </Menu>
+
+        {connected && (
+          <div className="topbar-sell-nft">
+            <Link to="/sell-nft">
+              <Button type="primary">Sell NFT</Button>
+            </Link>
+          </div>
+        )}
 
         {/* TopBar - Right Side */}
         <div className="dark-toggle-container" style={{paddingRight: 10, paddingLeft: 5}}>
@@ -331,3 +317,41 @@ export default function TopBar() {
     </>
   );
 }
+
+const Wrapper = styled.div`
+  // background-color: #0d1017;
+  background-color: ${props => props.theme.colors.bg2};
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  padding: 0px 30px;
+  flex-wrap: wrap;
+
+  .top-bar-nav-menu-items {
+    display: flex;
+    align-items: flex-end;
+    flex: 1;
+    border-bottom: none;
+    background-color: transparent;
+  }
+
+  .navbar-menu-item-link {
+    color: ${props => props.theme.colors.font};
+  }
+
+  .topbar-sell-nft {
+    margin-right: 10px;
+  }
+`;
+const LogoWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  color: ${(props) => props.theme.colors.font};
+  font-size: 22px;
+  font-weight: bold;
+  cursor: pointer;
+  img {
+    height: 30px;
+    margin-right: 8px;
+  }
+`;

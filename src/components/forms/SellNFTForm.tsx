@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
-import { Form, Button, Input, Select, Row, Col, Image, Modal, Typography } from 'antd'
+import { Form, Button, Input, Select, Row, Col, Image, Modal, Typography, Tooltip } from 'antd'
 import { NFTItem } from '../../types/NFTItem'
 import { nftItems } from '../../data/marketplace.data'
 import { useWallet } from '../../contexts/wallet'
+import { FORM_LABELS } from './AddNFTForm'
 
 interface SellNFTFormProps {
   sellNft: (data: any) => void
@@ -24,6 +25,11 @@ const layout = {
   wrapperCol: { span: 24 },
 };
 
+const initialValues = {
+  supply: 1,
+  currency: "sol"
+}
+
 export const SellNFTForm: React.FC<SellNFTFormProps> = ({
   nftId,
   sellNft,
@@ -33,6 +39,7 @@ export const SellNFTForm: React.FC<SellNFTFormProps> = ({
   const [form] = Form.useForm()
 
   const [nftData, setNftData] = useState<NFTItem | null>(null)
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     if(nftId) {
@@ -65,7 +72,7 @@ export const SellNFTForm: React.FC<SellNFTFormProps> = ({
   }, [connected])
 
   const handleFinishedForm = (e: any) => {
-    
+    setLoading(true)
     const formValues = form.getFieldsValue(true)
     
     if(!formValues["sell-nft-title"] || !formValues["sell-nft-price"] || !formValues["sell-nft-currency"]) {
@@ -92,6 +99,7 @@ export const SellNFTForm: React.FC<SellNFTFormProps> = ({
         })
       }
     }
+    setLoading(false)
   }
 
   const handleFinishFailed = (e: any) => {
@@ -111,20 +119,21 @@ export const SellNFTForm: React.FC<SellNFTFormProps> = ({
       {...layout}
       name="sell-nft-form"
       layout="vertical"
+      initialValues={initialValues}
       form={form}
       onFinish={handleFinishedForm}
       onFinishFailed={handleFinishFailed}
     >
       <div className="left-form-container">
-        <Form.Item name="sell-nft-owner" label="Creator" >
+        <Form.Item name="sell-nft-owner" label="Creator" tooltip={<Tooltip title="Creator Tooltip">{FORM_LABELS.CREATOR}</Tooltip>} >
           <Input value={`${wallet?.publicKey}` || "unknown"} disabled />
         </Form.Item>
 
-        <Form.Item name="sell-nft-title" label="Title">
+        <Form.Item name="sell-nft-title" label="Title" tooltip={FORM_LABELS.TITLE} rules={[{ required: true }]}>
           <Input value={nftData?.title} disabled />
         </Form.Item>
 
-        <Form.Item initialValue={nftData?.usdcPrice || nftData?.price} label="Price">
+        <Form.Item label="Price" required tooltip={FORM_LABELS.PRICE_CURRENCY}>
           <Row>
             <Col>
               <Form.Item name="sell-nft-price" noStyle rules={[{ required: true }]}>
@@ -148,7 +157,7 @@ export const SellNFTForm: React.FC<SellNFTFormProps> = ({
           </Row>
         </Form.Item>
 
-        <Button htmlType="submit" id="submit-sell-nft-form-button" disabled={!connected}>Submit</Button>
+        <Button htmlType="submit" id="submit-sell-nft-form-button" disabled={!connected || loading}>Submit</Button>
         <Button htmlType="reset" onClick={resetForm}>Clear</Button>
       </div>
 
@@ -157,8 +166,8 @@ export const SellNFTForm: React.FC<SellNFTFormProps> = ({
         <Image
           src={nftData?.url}
           placeholder={true}
-          style={{ width: '100%', maxHeight: 400 }}
-          alt={`listing nft for sale: ${nftData?.title}`}
+          style={{ width: '100%', maxHeight: 400, height: 400 }}
+          alt={`listing nft for sale: ${nftData?.title || "nft not selected"}`}
         />
       </div>
     </StyledForm>

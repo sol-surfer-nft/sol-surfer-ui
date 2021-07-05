@@ -11,6 +11,7 @@ import { ContentLayout } from './components/ContentLayout'
 
 import HomePage from './pages/HomePage';
 import AddNFTPage from './pages/AddNFTPage';
+import SellNFTMenuPage from './pages/SellNFTMenuPage';
 import SellNFTPage from './pages/SellNFTPage';
 import MarketplacePage from './pages/MarketplacePage';
 import NFTDetailPage from './pages/NFTDetailPage';
@@ -88,7 +89,7 @@ export function Routes() {
             <Switch>
               <Route exact path="/" component={HomePage} />
               <Route exact path="/add-nft" component={AddNFTPage} />
-              <Route exact path="/sell-nft/" component={SellNFTPage} />
+              <Route exact path="/sell-nft/" component={SellNFTMenuPage} />
               <Route exact path="/sell-nft/:nftId" component={SellNFTPage} />
               <Route exact path="/marketplace" component={MarketplacePage} />
               <Route exact path="/gallery" component={GalleryPage} />

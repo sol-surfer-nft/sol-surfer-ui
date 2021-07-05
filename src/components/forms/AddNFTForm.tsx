@@ -18,10 +18,10 @@ const layout = {
 
 const initialValues = {
   supply: 1,
-  currency: "usdc"
+  currency: "sol"
 }
 
-const FORM_LABELS = {
+export const FORM_LABELS = {
   TITLE: "The Title of your NFT",
   CREATOR: "The wallet address of the person creating the NFT",
   PRICE_CURRENCY: "Set the price of the nft and the currency that the price is in",
@@ -36,6 +36,7 @@ export const AddNFTForm: React.FC<AddNFTFormProps> = ({
   addNft
 }) => {
   const { connected, wallet } = useWallet()
+  const [loading, setLoading] = useState(false)
   // const [imageUrl, setImageUrl] = useState("")
   // const [imageTitle, setImageTitle] = useState("")
   const [fileList, setFileList] = useState<any[]>([])
@@ -67,6 +68,7 @@ export const AddNFTForm: React.FC<AddNFTFormProps> = ({
   }, [connected])
 
   const onFinish = (e: any) => {
+    setLoading(true)
     // TODO: set the image url, set preview
     const values = form.getFieldsValue(true) // gets all field values
     if(!values["add-nft-title"] || fileList.length !== 1 || !values["add-nft-currency"] || !values["add-nft-price"]) {
@@ -91,6 +93,7 @@ export const AddNFTForm: React.FC<AddNFTFormProps> = ({
         })
       }
     }
+    setLoading(false)
   };
 
   // function getBase64(file) {
@@ -151,7 +154,7 @@ export const AddNFTForm: React.FC<AddNFTFormProps> = ({
 
         <Form.Item
           tooltip={FORM_LABELS.TITLE}
-          label={"Title"}
+          label="Title"
           name="add-nft-title"
           rules={[{ required: true }]}
         >
@@ -184,7 +187,7 @@ export const AddNFTForm: React.FC<AddNFTFormProps> = ({
           </Row>
         </Form.Item>
         
-        <Button id="add-nft-submit-button" htmlType="submit" disabled={!connected}>Submit</Button>
+        <Button id="add-nft-submit-button" htmlType="submit" disabled={!connected || loading}>Submit</Button>
         <Button htmlType="reset" onClick={resetForm}>Clear</Button>
       </div>
 
